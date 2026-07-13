@@ -1,8 +1,5 @@
 # Building Soccer Environment for Unitree Go2 in Isaac Lab
 
-**Project:** Isaac-Go2-Soccer  
-**Report Type:** Research Progress Report  
-**Current Stage:** Environment Integration and Physical Skill Development  
 **Author:** Lishengqi Jiang 
 **Date:** 07/13/2026  
 

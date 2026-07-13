@@ -1,708 +1,716 @@
-# Learning a Physical Contact Kick Skill for a Unitree Go2 Soccer Agent
+# Building a Franklin-Compatible Soccer Environment for Unitree Go2 in Isaac Lab
 
-**Project:** Isaac Go2 Soccer  
+**Project:** Isaac-Go2-Soccer  
 **Report Type:** Research Progress Report  
-**Current Stage:** Low-Level Physical Kick Skill Learning  
+**Current Stage:** Environment Integration and Physical Kick Skill Development  
 **Author:** Alex Walker  
 **Date:** July 2026  
 
 ---
 
-## 1. Executive Summary
+## 1. Project Overview
 
-The long-term goal of this project is to train a Unitree Go2 quadruped to autonomously locate a soccer ball, approach it, position itself appropriately, align the ball with a desired target direction, and perform a physical kick in Isaac Lab.
+The long-term goal of this project is to train a Unitree Go2 quadruped to autonomously play a simplified 1v0 soccer task in Isaac Lab.
 
-The system follows a hierarchical control structure:
+The robot should eventually be able to:
 
-1. A high-level soccer policy selects discrete locomotion and kick actions.
-2. A pretrained low-level locomotion policy executes walking and turning.
-3. A separately trained low-level kick policy executes the whole-body kicking motion.
-4. Isaac Lab and PhysX simulate the robot, ball, contacts, and field dynamics.
+1. observe the ball and field state;
+2. locate the ball without being directly given a scripted route;
+3. approach the ball using pretrained locomotion skills;
+4. reposition itself relative to the ball and goal;
+5. select an appropriate kick action;
+6. physically contact the ball;
+7. score using only simulated robot–ball interaction.
 
-The current work focuses only on the low-level physical kick skill. At this stage, a kick does not mean scoring a goal. It means producing a stable physical behavior in which one foot leaves the ground, swings forward, contacts the ball, transfers momentum to it, and returns to a stable stance.
+The project is based on an existing Franklin-style soccer environment. The original Franklin code already defines the high-level reinforcement-learning interface, including:
 
-The main difficulty identified so far was reward exploitation. An earlier policy appeared to generate a strong forward kick according to its original body-relative tracking metric. However, world-frame diagnostics showed that the kicking foot barely moved. Instead, the robot lowered and translated its torso around a mostly planted foot.
+- an 86-dimensional observation;
+- a 13-action discrete action space;
+- soccer event and reward logic;
+- high-level episode timing;
+- goal and field-state representations.
 
-To address this, I replaced the body-relative reference with a trajectory anchored to the robot’s initial world pose. The revised policy now produces genuine world-frame foot lifting and forward motion.
+The main engineering problem is therefore not to redesign the high-level task from scratch. It is to transfer the Franklin interface into an Isaac Lab environment in which actions are executed by a physically simulated Unitree Go2.
 
-The latest measured behavior achieved:
-
-| Metric | Current Result |
-|---|---:|
-| Maximum policy action magnitude | 2.625 |
-| Maximum joint-position change | 0.756 rad |
-| Maximum world-frame foot displacement | 0.170 m |
-| Forward foot displacement | 0.167 m |
-| Foot lift height | 0.100 m |
-| Maximum total root displacement | 0.185 m |
-| Base-contact termination | 0 |
-| Invalid or non-finite actions | 0 |
-
-The foot now performs a real swing rather than remaining planted. However, the robot still relies on substantial whole-body displacement. The current objective is therefore to strengthen the strike while reducing unnecessary base translation and excessive lowering before reintroducing the soccer ball.
-
----
-
-## 2. Long-Term System Architecture
-
-The final soccer system is intended to use hierarchical reinforcement learning.
+The resulting system is hierarchical:
 
 ```text
-High-level soccer policy
-Franklin-style observation: 86 dimensions
-Discrete action space: 13 actions
-                  |
-                  v
-+-----------------------------------------+
-| Actions 0–4                             |
-| Pretrained Unitree Go2 locomotion       |
-|                                         |
-| 0: Stop                                 |
-| 1: Move forward                         |
-| 2: Move backward                        |
-| 3: Turn left                            |
-| 4: Turn right                           |
-+-----------------------------------------+
-                  |
-                  |
-+-----------------------------------------+
-| Actions 5–12                            |
-| Strength-conditioned physical kick      |
-|                                         |
-| Low-level policy outputs                |
-| 12 joint-position targets               |
-+-----------------------------------------+
-                  |
-                  v
-        Isaac Lab / PhysX simulation
-                  |
-                  v
-       Physical robot–ball interaction
+Franklin-style high-level soccer policy
+                |
+                v
+        13 discrete actions
+                |
+      +---------+----------+
+      |                    |
+      v                    v
+Pretrained Go2        Learned physical
+locomotion policy     kick policy
+      |                    |
+      +---------+----------+
+                |
+                v
+        12 Go2 joint targets
+                |
+                v
+       Isaac Lab / PhysX
+                |
+                v
+     Physical robot and ball state
+                |
+                v
+Franklin-compatible observation and reward
 ```
-
-The high-level policy will eventually learn:
-
-- where the ball is relative to the robot;
-- how to approach the ball;
-- how to move behind or around the ball;
-- how to align the robot, ball, and target direction;
-- when to initiate a kick;
-- which kick strength to select.
-
-The current report concerns only the low-level kick component.
 
 ---
 
-## 3. Locomotion Status
+## 2. Transition from Franklin to Isaac Lab
 
-The locomotion actions use an existing pretrained Unitree Go2 velocity policy.
+The Franklin code provides a useful high-level soccer abstraction, but it does not directly solve the low-level control problem of a quadruped robot.
 
-The robot has been tested with the ball placed in several relative positions:
+The migration strategy is therefore to preserve the Franklin task interface while replacing its abstract execution backend with an Isaac Lab physical simulation.
 
-- directly in front;
+### Components retained from Franklin
+
+The following concepts are preserved:
+
+- observation dimension and feature ordering;
+- discrete action semantics;
+- team and goal representation;
+- game-time representation;
+- episode-step accounting;
+- sparse soccer reward;
+- high-level policy interface.
+
+The intended high-level observation remains:
+
+```text
+Observation dimension: 86
+```
+
+The intended high-level action space remains:
+
+| Action | Meaning |
+|---:|---|
+| 0 | Stop |
+| 1 | Move forward |
+| 2 | Move backward |
+| 3 | Turn left |
+| 4 | Turn right |
+| 5–12 | Kick with different requested strengths |
+
+The soccer reward remains intentionally sparse:
+
+| Event | Reward |
+|---|---:|
+| Team A scores | +1 |
+| Team B scores | -1 |
+| Other transitions | 0 |
+
+### Components replaced or extended
+
+The Franklin environment previously treated actions as high-level state transitions. In Isaac Lab, each high-level action must be connected to a real physical controller.
+
+The new backend must provide:
+
+- a Unitree Go2 articulation;
+- pretrained low-level locomotion;
+- physical joint commands;
+- a rigid soccer ball;
+- collision and contact sensing;
+- field boundaries and goals;
+- real robot position, orientation, and velocity;
+- real ball position and velocity;
+- episode reset of all physical and policy states.
+
+The main design principle is:
+
+> Franklin defines what the soccer agent observes and decides, while Isaac Lab defines how those decisions are physically executed.
+
+---
+
+## 3. Environment Architecture
+
+The environment is divided into several layers so that the Franklin logic does not depend directly on Isaac Lab implementation details.
+
+### 3.1 High-level RL environment
+
+The high-level environment exposes the Franklin-compatible interface:
+
+```text
+observation: 86-dimensional vector
+action: one integer from 0 to 12
+reward: soccer event reward
+termination: episode or task condition
+```
+
+The high-level policy does not directly output joint positions.
+
+Instead, it selects a locomotion or kick primitive.
+
+### 3.2 Action execution layer
+
+The action execution layer translates the 13 discrete actions into low-level controllers.
+
+```text
+Actions 0–4
+    -> pretrained Go2 locomotion policy
+
+Actions 5–12
+    -> physical kick policy
+```
+
+For locomotion actions, the high-level command is converted into a body-frame velocity command:
+
+```text
+[forward velocity, lateral velocity, yaw rate]
+```
+
+The pretrained locomotion policy then converts this command and the robot state into 12 joint actions.
+
+For kick actions, the intended design is:
+
+```text
+kick policy(
+    robot state,
+    ball-relative state,
+    requested kick strength,
+    motion phase
+)
+-> 12 joint-position targets
+```
+
+### 3.3 Isaac Lab physical backend
+
+The physical backend is responsible for:
+
+- stepping the simulation;
+- applying joint targets;
+- maintaining contact sensors;
+- reading robot root state;
+- reading joint states;
+- reading ball rigid-body state;
+- detecting goals and out-of-bounds events;
+- resetting robot, ball, controllers, and histories.
+
+The ball must never be assigned a velocity as the result of a high-level kick action.
+
+All official kick behavior must satisfy:
+
+```text
+robot joint motion
+-> foot–ball contact
+-> PhysX impulse
+-> ball motion
+```
+
+### 3.4 Observation and event adapters
+
+The simulation state must be converted back into the Franklin observation format.
+
+This adapter is responsible for calculating features such as:
+
+- robot position;
+- robot orientation;
+- robot linear and angular velocity;
+- ball position relative to the robot;
+- ball velocity;
+- goal-relative information;
+- field-relative information;
+- high-level time remaining;
+- previous action or task state where required.
+
+This separation makes it possible to retain the Franklin policy definition even though the underlying environment has changed from an abstract simulator to a quadruped physics simulator.
+
+---
+
+## 4. Observation, Action, Reward, and Timing Design
+
+### 4.1 Observation design
+
+The final high-level policy is expected to use the existing 86-dimensional Franklin observation.
+
+A major requirement is that all dynamic features come from real simulation state.
+
+For example:
+
+```text
+robot yaw
+robot velocity
+ball-relative position
+ball-relative velocity
+```
+
+must be derived from the Isaac Lab articulation and rigid-body tensors.
+
+They must not be inferred only from the command that was sent to the robot.
+
+This distinction is important because the low-level locomotion policy may:
+
+- move more slowly than commanded;
+- turn along an arc;
+- experience slip;
+- overshoot;
+- temporarily lose balance;
+- respond asymmetrically to left and right commands.
+
+The high-level policy must observe what physically happened, not what the controller was asked to do.
+
+### 4.2 Action duration
+
+Each Franklin action is a high-level decision, not a single physics step.
+
+A locomotion action should remain active for a short interval, currently designed around approximately:
+
+```text
+0.2 seconds per high-level decision
+```
+
+During this interval:
+
+1. the high-level velocity command remains fixed;
+2. the low-level locomotion policy is evaluated repeatedly;
+3. joint commands are applied;
+4. the simulator advances;
+5. the resulting state is returned to the high-level environment.
+
+A kick action is different because it represents a complete motion primitive:
+
+```text
+prepare
+-> transfer weight
+-> lift leg
+-> strike
+-> retract
+-> recover
+```
+
+Its duration may therefore be longer than an ordinary locomotion decision.
+
+### 4.3 Reward design
+
+The final 1v0 task is intended to preserve the Franklin sparse reward.
+
+This means the high-level policy will not necessarily receive dense rewards for:
+
+- approaching the ball;
+- facing the ball;
+- aligning with the goal;
+- selecting a kick action.
+
+The benefit is that the final policy remains consistent with the original task definition.
+
+The risk is that discovering a successful sequence may be difficult:
+
+```text
+locate ball
+-> approach ball
+-> move behind ball
+-> align with goal
+-> select kick
+-> physically contact ball
+-> score
+```
+
+A curriculum or temporary shaping reward may therefore be needed if sparse exploration produces too few goals.
+
+---
+
+## 5. Locomotion Integration and Validation
+
+The low-level locomotion component uses a pretrained Unitree Go2 velocity policy in an Isaac Lab manager-based environment.
+
+The locomotion policy already handles:
+
+- robot joint ordering;
+- default joint pose;
+- action scaling;
+- low-level observation construction;
+- velocity-command tracking;
+- balance;
+- simulation decimation;
+- joint control.
+
+This avoids rebuilding the complete locomotion controller inside the original standalone soccer scene.
+
+### 5.1 Validated discrete actions
+
+The following high-level actions have been connected to locomotion commands:
+
+| Action | Low-Level Intent |
+|---:|---|
+| 0 | Stand or stop |
+| 1 | Move forward |
+| 2 | Move backward |
+| 3 | Turn left |
+| 4 | Turn right |
+
+The first test used a predetermined sequence of actions. This confirmed that:
+
+- forward commands moved the robot forward;
+- backward commands moved it backward;
+- positive yaw commands turned it left;
+- negative yaw commands turned it right;
+- the robot remained physically simulated and did not teleport.
+
+However, a predetermined sequence does not prove that the action set can support soccer navigation.
+
+### 5.2 Ball-approach validation
+
+A simple non-learning controller was therefore created to test closed-loop reachability.
+
+The controller used the current robot pose and fixed ball position:
+
+```text
+if ball bearing is too far left:
+    turn left
+
+if ball bearing is too far right:
+    turn right
+
+if ball is approximately ahead:
+    move forward
+
+if the robot reaches the target distance:
+    stop
+```
+
+The ball was tested in several relative positions:
+
+- directly ahead;
 - front-left;
 - front-right;
 - directly behind;
 - rear-left;
 - rear-right.
 
-A simple closed-loop controller was used only for validation. It turned the robot toward the ball, moved forward when aligned, and stopped when it reached the required distance.
+The robot was able to turn and approach the ball in all tested regions.
 
-The robot successfully approached the ball in all tested regions. Rightward rotation appeared slower than leftward rotation, but both directions were functional.
+The tests also revealed that rightward turning was slower than leftward turning. This asymmetry may later affect the high-level policy but does not prevent the robot from reaching the ball.
 
-These tests demonstrate that the current locomotion primitives are sufficient for reaching a ball from different relative positions. They do not yet demonstrate full autonomous soccer behavior because the validation controller was given the ball position directly.
+### 5.3 Remaining locomotion question
+
+The current locomotion tests demonstrate navigation toward a stationary ball.
+
+They do not demonstrate dribbling.
+
+When the robot walks near a ball, it may:
+
+- contact the ball with the wrong foot;
+- push it with a calf or body link;
+- step over it;
+- trap it between the legs;
+- lose it while turning.
+
+For the first autonomous 1v0 system, the intended strategy is therefore:
+
+```text
+approach the ball
+-> stop near the ball
+-> reposition and align
+-> execute a separate kick primitive
+```
+
+Continuous dribbling can be developed later as an additional low-level skill.
 
 ---
 
-## 4. Low-Level Kick Reinforcement-Learning Setup
+## 6. Reinforcement-Learning and Training Pipeline
+
+The low-level skill policies use PPO through RSL-RL.
+
+### Current low-level configuration
 
 | Component | Current Setting |
 |---|---|
 | Simulator | Isaac Lab / Isaac Sim / PhysX |
-| Reinforcement-learning library | RSL-RL |
-| Algorithm | PPO |
 | Robot | Unitree Go2 |
-| Current observation dimension | 60 |
-| Current action dimension | 12 |
-| Action type | Joint-position targets |
-| Kick leg | Front-right leg |
-| Support legs | Front-left, rear-left, rear-right |
-| Episode length | 70 environment steps |
+| RL library | RSL-RL |
+| Algorithm | PPO |
+| Policy action | 12 joint-position targets |
+| Kick-motion observation | 60 dimensions |
+| Episode length | Approximately 70 control steps |
 | Parallel environments | 128–256 locally |
-| Initialization | Warm-start from an earlier motion-prior policy |
-| Current task | Ball-free whole-body swing motion |
-| Next task | Physical contact with a Size 3 soccer ball |
+| Device | CUDA GPU |
+| Initialization | Warm-start from previous skill checkpoint |
 
-The policy is trained without a ball during the current motion-prior stage.
+The high-level Franklin policy will be trained only after the locomotion and kick skills are available.
 
-This separation was introduced because direct contact training requires several difficult behaviors to emerge simultaneously:
+The intended final training structure is:
 
-1. shifting weight onto the support legs;
-2. lifting the kicking foot;
-3. generating sufficient forward reach;
-4. accelerating the foot;
-5. maintaining balance;
-6. intersecting the ball;
-7. recovering after the motion.
+```text
+pretrained locomotion policy: frozen
+physical kick policy: frozen
+Franklin high-level policy: trainable
+```
 
-If all of these are trained together from the beginning, the contact reward is extremely sparse and the cause of failure becomes difficult to diagnose.
+The high-level actor will learn only the selection and sequencing of skills.
 
----
+### Current development workflow
 
-## 5. Definition of the Kick Skill
+The project currently uses separate Git branches and worktrees for major stages, including:
 
-The low-level kick policy is not required to aim at a goal.
+```text
+locomotion validation
+physical contact environment
+motion-prior training
+ground-anchored kick motion
+contact-kick training
+```
 
-A successful low-level kick should:
+Training outputs and model checkpoints are kept outside Git.
 
-1. start from a stable four-leg stance;
-2. transfer weight onto three support legs;
-3. lift the front-right foot;
-4. move the foot forward with sufficient velocity;
-5. physically contact the ball;
-6. transfer momentum to the ball;
-7. retract the front-right leg;
-8. recover to a stable stance.
+Each major skill stage is expected to provide:
 
-The environment must never directly assign velocity to the ball during an episode. All ball motion must be generated by PhysX contact.
-
-### Proposed Acceptance Criteria
-
-| Metric | Target |
-|---|---:|
-| Forward foot displacement | At least 0.18 m |
-| Foot lift height | At least 0.10 m |
-| Peak foot speed | At least 0.80 m/s |
-| Swing-foot air fraction | At least 0.75 |
-| Base vertical drop | No more than 0.08 m |
-| Base horizontal drift | No more than 0.07 m |
-| Base-contact termination | 0 |
-| Contact by non-kicking bodies | Approximately 0 |
-| Ball motion | Caused only by physical contact |
-
-Some body movement is expected. A quadruped normally needs to transfer its center of mass when lifting one leg. The goal is not to keep the torso completely fixed, but to prevent the torso from replacing the kicking leg as the main source of motion.
+- a task configuration;
+- an RSL-RL configuration;
+- a training entry point;
+- a deterministic playback or evaluation entry point;
+- quantitative summary output;
+- a checkpoint suitable for the next curriculum stage.
 
 ---
 
-## 6. Why the Task Has Proven Difficult
+## 7. Physical Kick Experiment Design
 
-### 6.1 Reward Exploitation
+The physical kick is being trained as a separate low-level skill.
 
-The first major problem was that the original policy optimized the reward without learning the intended physical behavior.
+A kick is defined as physical contact behavior, not as scoring a goal.
 
-The original motion-prior objective measured the kicking-foot position relative to the robot’s current body frame. According to this metric, the policy achieved approximately 0.219 m of forward foot motion.
+The policy should learn:
 
-However, later world-frame measurements showed that the actual forward movement of the foot was only approximately 0.013 m.
+1. stable initial stance;
+2. weight transfer to three support legs;
+3. lifting the front-right foot;
+4. forward foot acceleration;
+5. foot–ball contact;
+6. transfer of momentum;
+7. leg retraction;
+8. recovery to a stable stance.
 
-| Measurement | Earlier Result |
-|---|---:|
-| Reported body-relative forward motion | 0.219 m |
-| Measured world-frame forward motion | Approximately 0.013 m |
-| Maximum base drop | 0.228 m |
-| Physical foot–ball contact | None |
+### 7.1 Motion-prior stage
 
-The robot lowered and translated its torso while leaving the kicking foot almost stationary on the ground. Relative to the moving torso, the foot appeared to move forward and upward.
+The first stage is trained without a ball.
 
-This was a clear example of reward exploitation: the policy optimized the mathematical proxy but did not produce the desired physical skill.
+The purpose is to learn a stable swing motion before adding sparse contact feedback.
 
-### 6.2 Whole-Body Coordination
+The kick policy outputs all 12 joint targets. The other three legs are not frozen because they must actively maintain balance.
 
-A quadruped kick cannot be treated as an isolated leg motion.
+A piecewise foot trajectory is used:
 
-Lifting one front leg changes the support polygon and requires coordinated behavior from:
+```text
+settle
+-> lift
+-> forward strike
+-> retract
+-> recover
+```
 
-- the three support legs;
-- the torso;
-- the hips and shoulders;
-- the center-of-mass trajectory;
-- the body orientation.
+The original trajectory was measured relative to the robot body.
 
-This creates a reward-design trade-off:
+This produced reward exploitation: the robot lowered and translated its torso while the foot remained nearly fixed in world coordinates.
 
-- weak stability penalties allow excessive crouching and torso translation;
-- very strong stability penalties can prevent the weight transfer required to lift and accelerate the leg;
-- large foot-trajectory rewards can encourage unstable or unnatural joint motion;
-- large support rewards can encourage the kicking foot to remain on the ground.
+The revised objective anchors the trajectory to the initial world pose.
 
-### 6.3 Sparse Physical Contact
+The new rewards include:
 
-Before a foot–ball contact reward can occur, the policy must already produce the correct:
+- world-frame foot-position tracking;
+- world-frame foot-velocity tracking;
+- strike-phase tracking;
+- swing-foot air reward;
+- swing-foot ground-contact penalty;
+- support-foot contact reward;
+- upright-body reward;
+- base horizontal-drift penalty;
+- excessive height-change penalty;
+- recovery reward.
 
-- foot height;
-- forward reach;
-- lateral alignment;
-- timing;
-- velocity;
-- body posture.
+### 7.2 Planned contact stage
 
-If the foot misses the ball by even a small distance, the contact reward remains zero.
+After the motion prior is accepted, a Size 3 soccer ball will be placed along the measured physical foot path.
 
-Direct contact learning therefore provides little information about whether the failure was caused by reach, height, timing, alignment, balance, or velocity.
+The first contact stage will use:
 
-### 6.4 Misleading Simulator Signals
+```text
+fixed ball position
+fixed forward kick direction
+fixed maximum strength
+```
 
-Several early observations were misleading:
+The reward will include:
 
-- periodic ball velocity was initially caused by the ball falling to the ground, not by the robot kicking it;
-- an early contact-sensor configuration did not isolate the correct kicking foot;
-- ball placement based on reset-time body poses sometimes used stale robot-state information;
-- runtime repositioning of the rigid ball blocked in the current simulation setup;
-- a moving ball did not necessarily imply that the kicking foot had contacted it;
-- a high trajectory reward did not necessarily imply meaningful world-frame foot motion.
+- front-right-foot contact;
+- forward ball speed;
+- forward ball displacement;
+- stable recovery.
 
-The debugging process therefore required separate measurements of:
+Penalties will include:
 
-- kicking-foot contact force;
-- contact force from other robot bodies;
-- ball absolute velocity;
-- foot–ball distance;
-- world-frame foot position;
-- joint movement;
-- base translation;
-- base height;
-- episode termination state.
+- body contact with the ball;
+- contact by another leg;
+- lateral or vertical ball motion;
+- excessive body translation;
+- falling or base contact.
 
----
+The task will not contain a goal or scoring reward.
 
-## 7. Experiment 1: Original Body-Relative Motion Prior
+After reliable contact is learned, later stages will add:
 
-### Objective
-
-Learn a stable whole-body motion that follows a predefined front-right-foot trajectory.
-
-### Initial Interpretation
-
-The learned movement appeared visually plausible. The robot lowered its body, shifted its weight, and moved the front-right leg.
-
-The original tracking metric also reported substantial forward foot motion.
-
-### Diagnostic Result
-
-World-frame measurements showed that most of the apparent foot movement came from torso motion.
-
-The front-right foot remained close to its original world position while the body moved around it.
-
-### Conclusion
-
-The original policy was not a valid physical kick prior.
-
-The failure was not simply insufficient training. The reward definition allowed a behavior that was mathematically successful but physically incorrect.
+- ball-position randomization;
+- ball-relative observation;
+- requested kick direction;
+- requested kick strength;
+- mapping to high-level actions 5–12.
 
 ---
 
-## 8. Experiment 2: Fixed-Ball Contact Probes
+## 8. Kick Difficulties and Current Progress
 
-A Size 3 soccer ball was placed at several fixed positions along the expected front-right-foot path.
+The most important difficulty was that the original reward did not measure the intended physical behavior.
 
-The ball parameters were:
+### 8.1 Reward exploitation
 
-| Property | Value |
+The earlier policy reported approximately:
+
+```text
+body-relative forward foot motion: 0.219 m
+```
+
+World-frame diagnostics showed:
+
+```text
+actual forward foot motion: approximately 0.013 m
+maximum base drop: approximately 0.228 m
+```
+
+The robot had learned to move its body around a mostly planted foot.
+
+This was not a weak kick. It was an incorrect reward proxy.
+
+### 8.2 Ground-anchored correction
+
+The corrected policy uses an initial world-frame anchor.
+
+A separate execution probe verified:
+
+| Metric | Current Result |
 |---|---:|
-| Radius | 0.0889 m |
-| Mass | Approximately 0.318 kg |
-
-The tested positions included:
-
-| Ball X Position | Minimum Foot–Ball Distance | Kick Force | Forward Ball Motion |
-|---:|---:|---:|---:|
-| 0.445 m | 0.241 m | 0 N | 0 m |
-| 0.475 m | 0.271 m | 0 N | 0 m |
-| 0.505 m | 0.301 m | 0 N | 0 m |
-
-No real foot contact occurred.
-
-Moving the ball closer did not solve the problem because the underlying foot motion was not physically valid. The policy was mostly moving the torso while the foot remained near the ground.
-
-### Conclusion
-
-Ball-contact training was paused. The motion prior needed to be corrected before additional contact optimization would be meaningful.
-
----
-
-## 9. Experiment 3: Ground-Anchored Motion Prior
-
-The revised stage, referred to as K2A3, uses a trajectory anchored to the robot’s initial world pose.
-
-### Main Changes
-
-The revised objective:
-
-- disables the original body-relative foot-tracking rewards;
-- tracks the front-right foot in a fixed world-anchored reference frame;
-- tracks front-right-foot velocity during the strike phase;
-- rewards the front-right foot for leaving the ground;
-- penalizes front-right-foot ground contact during the swing;
-- rewards the three support feet for maintaining contact;
-- rewards an upright body orientation;
-- penalizes excessive base horizontal drift;
-- penalizes excessive base-height change;
-- rewards recovery near the end of the motion.
-
-### Representative Training Metrics
-
-| Reward or Termination Term | Representative Value |
-|---|---:|
-| Anchored foot tracking | 5.1106 |
-| Anchored strike tracking | 0.0952 |
-| Anchored velocity tracking | 0.7512 |
-| Swing-foot air reward | 1.9221 |
-| Swing-foot ground-contact penalty | -0.0109 |
-| Base horizontal-drift penalty | -0.1123 |
-| Excessive base-height penalty | -0.1865 |
-| Base-contact termination | 0 |
-| Time-out termination | 1.0 |
-
-The older body-relative tracking terms were disabled and remained at zero.
-
-### Execution-Probe Result
-
-A separate execution probe was written to verify that:
-
-- the checkpoint generated non-zero actions;
-- the actions were finite;
-- the environment executed each action;
-- the simulated joint positions changed;
-- the front-right foot moved in world coordinates.
-
-The probe measured:
-
-| Metric | Result |
-|---|---:|
-| Maximum policy action magnitude | 2.625 |
+| Maximum action magnitude | 2.625 |
 | Maximum joint-position change | 0.756 rad |
 | Maximum total foot displacement | 0.170 m |
 | Maximum forward foot displacement | 0.167 m |
-| Maximum foot height | 0.100 m |
+| Maximum foot lift height | 0.100 m |
 | Maximum total root displacement | 0.185 m |
-| Environment execution | Successful |
+| Base-contact termination | 0 |
 | Non-finite actions | None |
 
-Example intermediate measurements included approximately:
+The new policy therefore produces real joint motion and real front-right-foot movement.
 
-| Motion Stage | Forward Foot Movement | Foot Height |
-|---|---:|---:|
-| Mid-swing sample | 0.145 m | 0.043 m |
-| Later swing sample | 0.089 m | 0.077 m |
-| Maximum over the episode | 0.167 m | 0.100 m |
+The current remaining issue is that whole-body displacement is still relatively large.
 
-### Interpretation
-
-K2A3 corrected the complete failure mode of the earlier policy.
-
-The front-right foot now genuinely leaves the ground and moves forward in world coordinates. The policy is no longer relying entirely on moving the torso around a planted foot.
-
-However, the maximum total root displacement is still approximately 0.185 m. This value combines vertical lowering and horizontal translation, so the next diagnostic separates:
+The next refinement separates:
 
 - base vertical drop;
 - base horizontal drift;
 - foot speed;
-- genuine foot displacement.
+- foot forward displacement;
+- foot lift height.
 
-The current policy is therefore promising but not yet ready for final ball-contact learning.
+### Current acceptance targets
 
----
-
-## 10. Current Status
-
-### Demonstrated Successfully
-
-- The locomotion policy can approach the ball from multiple relative directions.
-- The low-level kick checkpoint produces non-zero actions.
-- The 12-dimensional action pipeline changes the simulated robot joints.
-- The front-right foot performs genuine world-frame lifting.
-- The front-right foot performs genuine forward movement.
-- The motion completes without base-contact termination.
-- The original body-relative reward-exploitation mechanism has been identified.
-- The new world-anchored objective substantially reduces the earlier failure.
-
-### Not Yet Demonstrated
-
-- Reliable contact between the front-right foot and the ball;
-- significant forward ball velocity generated by the foot;
-- recovery after physical ball impact;
-- kick-strength conditioning;
-- reliable kick execution from small variations in ball position;
-- integration into high-level actions 5–12;
-- autonomous alignment of the robot, ball, and goal;
-- final autonomous 1v0 training.
-
----
-
-## 11. Current Hypothesis
-
-The current limiting factor is the balance between strike strength and whole-body stability.
-
-The policy can now generate a real foot swing. However, the robot may still rely on too much base translation or vertical lowering.
-
-My current hypothesis is that the next successful policy needs:
-
-1. stronger strike-phase foot-position tracking;
-2. stronger strike-phase foot-velocity tracking;
-3. a moderate increase in the swing-foot air reward;
-4. stronger penalties for unnecessary base horizontal drift;
-5. stronger penalties for excessive body lowering;
-6. a stronger recovery objective;
-7. a lower learning rate for refinement;
-8. lower exploration entropy during fine-tuning.
-
-The base should still be allowed to perform a physically reasonable center-of-mass shift. The purpose of the penalties is not to freeze the body, but to ensure that the kicking foot is the main source of the strike.
-
----
-
-## 12. Immediate Next Experiment
-
-The next stage is a short stability and strike refinement of K2A3.
-
-The new evaluation will measure base motion as separate components:
-
-- base vertical drop;
-- base horizontal displacement;
-- front-right-foot speed;
-- front-right-foot forward displacement;
-- front-right-foot lift height.
-
-### Acceptance Criteria
-
-| Metric | Required Result |
+| Metric | Target |
 |---|---:|
-| Forward foot displacement | At least 0.18 m |
-| Foot lift height | At least 0.10 m |
-| Peak foot speed | At least 0.80 m/s |
-| Base vertical drop | No more than 0.08 m |
-| Base horizontal drift | No more than 0.07 m |
+| Forward foot displacement | ≥ 0.18 m |
+| Foot lift height | ≥ 0.10 m |
+| Peak foot speed | ≥ 0.80 m/s |
+| Base vertical drop | ≤ 0.08 m |
+| Base horizontal drift | ≤ 0.07 m |
 | Base-contact termination | 0 |
 
-If these criteria are met, the motion prior will be considered sufficiently stable to resume physical contact training.
+Physical ball-contact training will resume only after the swing motion satisfies these conditions.
 
 ---
 
-## 13. Planned Physical Contact Stages
+## 9. Current Status and Next Steps
 
-### 13.1 Fixed-Position Contact Learning
+### Completed
 
-The first physical-contact task will use a fixed Size 3 ball position.
+- Preserved the Franklin 86-dimensional observation contract.
+- Preserved the Franklin 13-action high-level interface.
+- Preserved sparse soccer event rewards.
+- Connected actions 0–4 to pretrained Go2 locomotion.
+- Validated forward, backward, left-turn, and right-turn execution.
+- Validated approach behavior with the ball in multiple relative positions.
+- Built an Isaac Lab physical ball and contact-sensor environment.
+- Removed the invalid direct-ball-velocity kick behavior.
+- Built a full-body 12-joint kick-motion training environment.
+- Identified body-relative reward exploitation.
+- Replaced the original objective with world-anchored foot tracking.
+- Verified real joint and world-frame foot motion.
 
-The policy will be rewarded for:
+### In progress
 
-- front-right-foot contact with the ball;
-- forward ball velocity;
-- meaningful ball displacement;
-- appropriate foot velocity before impact;
-- stable recovery after impact.
+- Reducing unnecessary base translation and lowering;
+- increasing physical strike reach;
+- measuring real foot speed;
+- preparing a reliable fixed-position contact task.
 
-The policy will be penalized for:
-
-- the torso contacting the ball;
-- another leg contacting the ball;
-- excessive lateral ball velocity;
-- excessive vertical ball velocity;
-- falling;
-- base contact;
-- joint-limit violations;
-- excessive body translation.
-
-No goal or scoring reward will be included.
-
-The purpose of this stage is only to learn a reliable physical kick.
-
-### 13.2 Ball-Position Robustness
-
-After contact is reliable, the ball position will be randomized over a small region.
-
-The policy observation will then include ball-relative information so that the policy can adjust the foot trajectory.
-
-Possible inputs include:
-
-- ball position relative to the robot;
-- ball position relative to the kicking foot;
-- ball velocity;
-- desired kick direction;
-- requested kick strength;
-- motion phase.
-
-### 13.3 Strength-Conditioned Kick
-
-The intended final design is one continuous kick policy rather than eight completely separate policies.
-
-The policy will receive a requested kick-strength input.
-
-The eight high-level kick actions will map to different strength values:
+### Remaining stages
 
 ```text
-Action 5  -> Weakest kick
-Action 6  -> Slightly stronger kick
-Action 7  -> Stronger kick
-Action 8  -> Stronger kick
-Action 9  -> Stronger kick
-Action 10 -> Stronger kick
-Action 11 -> Stronger kick
-Action 12 -> Strongest kick
+1. Complete stable world-anchored swing motion
+2. Train fixed-position physical contact
+3. Add ball-position robustness
+4. Add continuous strength conditioning
+5. Map the kick policy to actions 5–12
+6. Integrate locomotion and kick skills into one environment
+7. Validate the Franklin 86-dimensional observation dynamically
+8. Train the final 1v0 high-level policy
+9. Evaluate the final checkpoint
+10. Reproduce locally and record a video
 ```
 
-This allows all kick actions to share the same balance and contact skill while producing different ball speeds.
+The final high-level policy must learn a more difficult behavior than simply reaching the ball.
 
----
-
-## 14. Final High-Level Soccer Training
-
-After the locomotion and kick skills are validated, both low-level policies will be frozen.
-
-The high-level policy will use the existing Franklin-style interface:
-
-| Component | Planned Value |
-|---|---:|
-| Observation dimension | 86 |
-| Discrete actions | 13 |
-| Locomotion actions | 0–4 |
-| Physical kick actions | 5–12 |
-| Main task | Autonomous 1v0 soccer |
-
-The high-level policy must learn to:
-
-1. infer the relative ball position from its observation;
-2. turn toward the ball;
-3. approach it;
-4. move to an appropriate side of the ball;
-5. align the robot, ball, and goal direction;
-6. choose a kick strength;
-7. execute the physical kick;
-8. score using only simulated physical interaction.
-
-This alignment behavior cannot be solved by the low-level kick policy alone.
-
-The high-level policy must understand both:
-
-- the relative location of the ball;
-- the relative location of the target goal.
-
-A successful kick generally requires the robot to reach a state in which the robot heading, the ball, and the intended target direction are sufficiently aligned.
-
-The current movement actions should theoretically support this behavior because the robot can:
-
-- move forward;
-- move backward;
-- turn left;
-- turn right;
-- stop.
-
-However, the action set does not contain a lateral stepping action. Repositioning around the ball therefore requires combinations of turning and forward or backward motion.
-
-Whether the high-level policy can reliably learn this behavior from sparse scoring rewards remains an open experimental question.
-
----
-
-## 15. Questions for Feedback
-
-I would especially appreciate feedback on the following questions.
-
-1. Is a motion-prior-first curriculum appropriate for learning this kick, or would residual control over a pretrained standing or locomotion policy be more effective?
-
-2. Is a world-anchored task-space foot trajectory a reasonable objective, or would a demonstration-based imitation objective be preferable?
-
-3. How should necessary center-of-mass transfer be distinguished from excessive torso translation or crouching?
-
-4. Are the current acceptance metrics sufficient to distinguish a genuine kick from reward exploitation?
-
-5. Would it be useful to measure support-leg force distribution or center-of-pressure movement explicitly?
-
-6. Should the policy receive ball-relative observations during the first contact-learning stage, or should deterministic contact be learned before introducing ball-position conditioning?
-
-7. Is it preferable to train one continuous strength-conditioned kick policy or several discrete kick primitives?
-
-8. Should the kick policy be trained as a complete 12-joint policy, or as a residual policy on top of a pretrained standing controller?
-
-9. Would a reference trajectory generated through inverse kinematics or motion optimization provide a better starting point than the manually designed foot trajectory?
-
-10. For the final high-level task, is the current discrete movement set sufficient for moving behind and aligning with the ball, or would a lateral movement action significantly improve learnability?
-
-11. Is sparse goal reward likely to be sufficient after freezing the locomotion and kick skills, or would a curriculum or temporary shaping reward be advisable?
-
-12. Are there additional diagnostics that would make the current failure analysis more convincing?
-
----
-
-## 16. Reproducibility Information
-
-The current experiments use:
+Before kicking, it may need to move so that:
 
 ```text
-Simulator: Isaac Lab / Isaac Sim / PhysX
-RL library: RSL-RL
-Algorithm: PPO
-Robot: Unitree Go2
-Policy observation: 60 dimensions
-Policy action: 12 joint-position targets
-Episode length: 70 environment steps
-Parallel environments: 128–256
-Kick leg: Front-right
+robot heading
+ball position
+goal direction
 ```
 
-The current motion-prior experiment produces:
+are sufficiently aligned.
 
-```text
-Maximum joint-position change: 0.756 rad
-Maximum total foot displacement: 0.170 m
-Maximum forward foot displacement: 0.167 m
-Maximum foot height: 0.100 m
-Maximum root displacement: 0.185 m
-Base-contact termination: 0
-```
+The current action space should theoretically support this because the robot can move forward, backward, turn left, turn right, and stop.
 
-Training checkpoints and large output files are not included in the report repository.
+However, the lack of a lateral stepping action may make repositioning around the ball less efficient.
 
 ---
 
-## 17. Limitations of the Current Results
+## 10. Questions for Feedback
 
-The reported measurements come from simulation and have not been tested on a physical Unitree Go2.
+I would especially appreciate feedback on the following questions:
 
-The current motion prior:
+1. Is preserving the Franklin observation, action, and reward interface while replacing only the execution backend a reasonable system design?
 
-- uses one selected kicking leg;
-- uses a fixed reference motion;
-- does not currently observe a ball;
-- does not currently account for impact uncertainty;
-- does not currently adapt its contact point;
-- has not yet been evaluated under domain randomization;
-- has not yet been integrated with the high-level soccer policy.
+2. Are there important differences between an abstract soccer environment and a physical quadruped environment that should lead to changes in the high-level observation?
 
-The current results should therefore be interpreted as progress toward a usable simulation skill, not as a complete soccer system.
+3. Should the high-level policy directly observe the robot’s joint or stability state, or should those details remain hidden behind the low-level skills?
 
----
+4. Is the current division between pretrained locomotion, separately trained kicking, and high-level soccer control appropriate?
 
-## 18. Summary
+5. Is the current five-action locomotion set sufficient for moving behind and aligning with the ball, or would a lateral movement action significantly improve learnability?
 
-The project initially appeared to have a kick motion, but detailed world-frame diagnostics showed that the policy had exploited a body-relative reward. The robot lowered and translated its torso while leaving the kicking foot mostly planted.
+6. Is a motion-prior-first curriculum appropriate for the kick, or would residual control over a pretrained standing policy be more effective?
 
-A revised world-anchored objective has now produced genuine front-right-foot lifting and forward movement.
+7. Are world-anchored foot tracking and explicit base-motion penalties appropriate ways to avoid reward exploitation?
 
-The latest policy reaches approximately:
+8. Should ball-relative observations be introduced during the first contact stage, or only after deterministic contact has been learned?
 
-- 0.167 m of forward foot displacement;
-- 0.100 m of foot lift;
-- 0.170 m of total foot displacement;
-- 0.756 rad of joint-position change;
-- no base-contact termination.
+9. Is one strength-conditioned kick policy preferable to several separate kick policies?
 
-The remaining issue is excessive whole-body displacement. The next experiment will refine strike velocity and stability before returning to physical ball contact.
+10. Is sparse Franklin goal reward likely to be sufficient for the final high-level task after freezing the low-level skills, or would a temporary curriculum or shaping reward be necessary?
 
-The most important feedback I am seeking concerns:
+11. Are the current validation stages sufficient before beginning long high-level training?
 
-- the choice of motion-prior curriculum;
-- the balance between stability and necessary weight transfer;
-- the world-anchored reward design;
-- the transition to contact-based learning;
-- the sufficiency of the high-level discrete action space.
-
----
-
-## 19. Suggested Media
-
-The following supporting materials can be added later:
-
-- K2A2 reward-exploitation video;
-- K2A3 world-anchored swing video;
-- training-metrics screenshot;
-- execution-probe screenshot;
-- comparison of body-relative and world-frame foot motion;
-- final contact-learning video.
-
+12. What additional experiments or measurements would make the environment design and current progress easier to evaluate?

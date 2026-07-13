@@ -1,1 +1,0 @@
-# go2-kick-progress-report

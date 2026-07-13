@@ -1,10 +1,10 @@
-# Building a Franklin-Compatible Soccer Environment for Unitree Go2 in Isaac Lab
+# Building Soccer Environment for Unitree Go2 in Isaac Lab
 
 **Project:** Isaac-Go2-Soccer  
 **Report Type:** Research Progress Report  
 **Current Stage:** Environment Integration and Physical Skill Development  
-**Author:** [Your Name]  
-**Date:** July 2026  
+**Author:** Lishengqi Jiang 
+**Date:** 07/13/2026  
 
 ---
 

@@ -698,155 +698,28 @@ The current locomotion actions can theoretically produce this alignment through 
 
 ---
 
-## 10. Open Questions and Feedback Requested
+## 10. Specific Questions for Feedback
 
-The following issues are currently the most relevant to the next development stages.
+1. **Which additional orientation and stability variables should be included when transferring the Franklin observation from a 2D soccer environment to a 3D quadruped environment?**  
+   The current design preserves the Franklin observation structure and derives planar position, yaw, and relative ball geometry from Isaac Lab. However, roll, pitch, base height, and support stability may also affect whether a locomotion or kick action is physically executable. Would a compact stability indicator be sufficient, or should these variables be included separately?
 
-### 10.1 Orientation representation during the transition from 2D to 3D
+2. **How should the low-level skill rewards be designed so that the pretrained actions remain useful after integration into the high-level soccer policy?**  
+   The kick experiments showed that a policy can obtain a high tracking reward while producing physically unsuitable behavior. Should the low-level objectives place greater emphasis on repeatable state transitions, standardized recovery postures, and predictable action outcomes rather than maximum foot displacement or ball speed?
 
-The Franklin environment represents soccer primarily through planar position and direction. The Isaac Lab environment also contains roll, pitch, vertical motion, support configuration, and transient imbalance.
+3. **What is an appropriate definition of the physical kick-trigger region?**  
+   The current candidate conditions include robot–ball distance, ball bearing, lateral offset, robot tilt, base velocity, and support stability. Should kick availability be implemented as a fixed geometric rule, an action mask, or a learned kick-readiness estimator?
 
-The current plan is to preserve the Franklin observation while deriving yaw and relative geometry from the simulated three-dimensional state.
+4. **How should left- and right-leg kick selection be represented?**  
+   The current motion prior uses the front-right leg only. Possible designs include two mirrored policies, one policy conditioned on the selected leg, or separate high-level left-kick and right-kick actions. Which design is most likely to preserve symmetry while avoiding unnecessary duplication in training?
 
-Feedback would be useful on:
+5. **Should ball-relative observations be included during the first physical-contact training stage?**  
+   A fixed ball position simplifies the initial contact problem, but it may produce a motion that does not adapt to small placement errors. Would limited ball-position randomization and ball-relative observation improve robustness, or make the initial contact-learning problem unnecessarily difficult?
 
-- whether yaw and relative positions are sufficient for high-level control;
-- whether roll, pitch, base height, or a stability indicator should be added;
-- whether orientation should be represented as an angle, sine and cosine, or a body-frame direction vector;
-- how temporary low-level instability should affect high-level decisions.
+6. **Is the current locomotion action set sufficient for positioning around the ball?**  
+   The available actions are stop, forward, backward, left turn, and right turn. These actions can reach the ball from all tested directions, but moving behind the ball may require long curved trajectories. Would adding a lateral stepping action materially improve alignment, or would it unnecessarily change the original Franklin action interface?
 
-### 10.2 Reward design for pretrained action skills
+7. **How should leg-based dribbling be handled in the first version of the environment?**  
+   Locomotion near the ball may produce unintended contacts, gait disturbances, or loss of stability. Should dribbling be excluded by requiring the robot to stop before kicking, treated as a separate pretrained skill, or allowed to emerge from the existing locomotion controller?
 
-The locomotion and kick actions are trained separately before being integrated into the high-level environment.
-
-The low-level rewards must produce skills that:
-
-- execute reliably;
-- have predictable effects;
-- expose meaningful differences between actions;
-- recover to states from which another action can begin;
-- do not optimize proxies that conflict with the final soccer task.
-
-The kick experiments showed that a locally successful reward can produce behavior that is unsuitable for high-level control.
-
-Feedback would be useful on:
-
-- how strongly low-level rewards should prioritize repeatability over maximum performance;
-- whether action skills should terminate in standardized postures;
-- how much variation should be introduced before high-level training;
-- whether the high-level policy should receive a skill-success or skill-readiness signal.
-
-### 10.3 Kick trigger region
-
-A physical kick should only begin from a feasible robot–ball configuration.
-
-The trigger condition may include:
-
-- robot–ball distance;
-- ball bearing;
-- ball lateral offset;
-- goal-relative direction;
-- base tilt;
-- support stability;
-- foot reachability;
-- current locomotion velocity.
-
-A trigger region that is too narrow may prevent exploration. A trigger region that is too broad may repeatedly activate a kick that cannot contact the ball.
-
-Feedback would be useful on whether the trigger should be:
-
-- a fixed geometric rule;
-- an action mask;
-- a learned kick-readiness estimator;
-- part of the low-level policy observation;
-- gradually narrowed through curriculum training.
-
-### 10.4 Selection of the left or right kicking leg
-
-The current motion prior uses the front-right leg.
-
-A complete soccer policy may need to select the kicking leg based on:
-
-- the lateral position of the ball;
-- the required kick direction;
-- the robot heading;
-- the support-leg configuration;
-- the space available around the ball.
-
-Feedback would be useful on whether to train:
-
-- one policy with an explicit leg-selection input;
-- two mirrored policies;
-- one symmetric policy with reflected observations and actions;
-- a high-level left-kick/right-kick action split.
-
-### 10.5 Locomotion near the ball and leg-based dribbling
-
-The current locomotion tests stop the robot near the ball before kicking.
-
-Leg-based dribbling has not yet been tested systematically. Walking near the ball may cause:
-
-- unintended contact;
-- asymmetric gait changes;
-- support loss;
-- the ball becoming trapped between the legs;
-- the ball moving outside the expected observation range.
-
-Feedback would be useful on whether dribbling should be:
-
-- treated as a separate low-level skill;
-- allowed to emerge from locomotion training with a ball;
-- excluded from the first 1v0 task;
-- represented through additional high-level actions.
-
-### 10.6 Sufficiency of the current high-level action space
-
-The current movement set contains:
-
-```text
-stop
-forward
-backward
-turn left
-turn right
-```
-
-There is no lateral stepping action.
-
-Feedback would be useful on whether this action set is sufficient for:
-
-- moving behind the ball;
-- correcting lateral alignment;
-- maintaining distance while rotating;
-- aligning the ball with the goal.
-
-A lateral action may simplify alignment but would also modify the Franklin action contract.
-
-### 10.7 Sparse reward in the final 1v0 task
-
-The final Franklin reward provides a signal only for goal events.
-
-The physical environment introduces a longer sequence between the first decision and a successful goal.
-
-Feedback would be useful on whether to use:
-
-- the original sparse reward from the beginning;
-- a curriculum with easier initial ball positions;
-- temporary approach and alignment rewards;
-- demonstrations or behavior cloning;
-- hierarchical skill-success rewards;
-- reward shaping that is removed after initial learning.
-
-### 10.8 Validation of the complete environment
-
-Before long high-level training, the environment must confirm that:
-
-- the 86 observation values update from physical state;
-- the action effects are repeatable;
-- the high-level timing is correct;
-- locomotion and kick resets do not interfere;
-- goal events result from physical ball motion;
-- invalid kick requests do not modify the ball;
-- the policy can reposition around the ball rather than only approach it.
-
-Feedback on additional validation criteria or failure cases would be useful before starting the final 1v0 training stage.
+8. **What quantitative measurements would best distinguish useful whole-body weight transfer from excessive base motion during a kick?**  
+   The current evaluation separates foot displacement, foot speed, base vertical drop, base horizontal drift, and support contact. Would support-foot force distribution, center-of-pressure motion, or body angular momentum provide a more reliable assessment?

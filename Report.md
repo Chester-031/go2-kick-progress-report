@@ -722,6 +722,37 @@ The report intentionally excludes the earlier body-motion bar chart because it c
 
 ---
 
+
+<!-- K2C_CONTACT_TIMING_FAILURE_START -->
+### 8.5 Contact-timing failure observed after adding the ball
+
+[![Current contact-timing failure: the right foot traps and pulls the ball backward](assets/previews/right_foot_contact_timing_failure.png)](assets/videos/right_foot_contact_timing_failure.mp4)
+
+**Video:** [Open the MP4 recording](assets/videos/right_foot_contact_timing_failure.mp4)  
+**Execution log:** [Open the simulator log](assets/logs/right_foot_contact_timing_failure.txt)
+
+This recording is retained as **failure evidence**, rather than presented as a successful kick.
+
+The world-anchored motion prior produces a real front-right-foot swing, but the ball exposes a missing contact constraint. During the lift portion of the motion, the foot descends onto or overlaps the ball before the intended forward-strike phase. The ball is then trapped under the foot and can be pulled backward instead of receiving a forward impulse.
+
+The observation is important for the next training stage because it separates two objectives that were previously treated as one:
+
+1. producing a repeatable world-frame swing trajectory;
+2. producing correctly timed, directional foot-ball contact.
+
+The current motion prior has made progress on the first objective, but it does not yet solve the second. A successful physical kick requires:
+
+- no foot-ball contact during the preparation and lift phases;
+- contact concentrated inside the forward-strike phase;
+- positive foot velocity along the requested kick direction at impact;
+- positive ball velocity and displacement along that direction;
+- a penalty for backward ball motion;
+- a penalty for top-down trapping or dragging contact;
+- stable recovery after the impact.
+
+The next contact-learning stage therefore places the ball farther along the measured forward swing path and uses phase-gated contact rewards. The policy is warm-started from the current world-anchored checkpoint, while the ball is initially fixed with only narrow position randomization.
+<!-- K2C_CONTACT_TIMING_FAILURE_END -->
+
 ## 9. Current Status and Next Steps
 
 ### Completed

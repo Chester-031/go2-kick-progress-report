@@ -1,0 +1,868 @@
+/home/ubuntu/miniconda3/envs/isaaclab232/lib/python3.11/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+[INFO][AppLauncher]: Using device: cuda:0
+[INFO][AppLauncher]: Loading experience file: /home/ubuntu/IsaacLab_232/apps/isaaclab.python.kit
+Loading user config located at: '/home/ubuntu/miniconda3/envs/isaaclab232/lib/python3.11/site-packages/isaacsim/kit/data/Kit/Isaac-Sim/5.1/user.config.json'
+[Info] [carb] Logging to file: /home/ubuntu/miniconda3/envs/isaaclab232/lib/python3.11/site-packages/isaacsim/kit/logs/Kit/Isaac-Sim/5.1/kit_20260716_044045.log
+[0.045s] [ext: omni.kit.async_engine-0.0.3] startup
+[0.106s] [ext: omni.metrics.core-0.0.3] startup
+[0.106s] [ext: omni.client.lib-1.1.0] startup
+[0.113s] [ext: omni.blobkey-1.1.2] startup
+[0.114s] [ext: omni.stats-1.0.1] startup
+[0.114s] [ext: omni.datastore-0.0.0] startup
+[0.118s] [ext: omni.client-1.3.0] startup
+[0.121s] [ext: omni.ujitso.default-1.0.0] startup
+[0.122s] [ext: omni.hsscclient-1.1.2] startup
+[0.124s] [ext: omni.gpu_foundation.shadercache.vulkan-1.0.0] startup
+[0.125s] [ext: omni.assets.plugins-0.0.0] startup
+[0.126s] [ext: omni.gpu_foundation-0.0.0] startup
+[0.131s] [ext: carb.windowing.plugins-1.0.0] startup
+[0.136s] [ext: omni.kit.renderer.init-0.0.0] startup
+2026-07-15T20:40:45Z [134ms] [Error] [omni.platforminfo.plugin] failed to find the package that core 1 belongs to.
+2026-07-15T20:40:45Z [135ms] [Error] [omni.platforminfo.plugin] failed to find the package that core 2 belongs to.
+2026-07-15T20:40:45Z [135ms] [Error] [omni.platforminfo.plugin] failed to find the package that core 3 belongs to.
+2026-07-15T20:40:45Z [135ms] [Error] [omni.platforminfo.plugin] failed to find the package that core 4 belongs to.
+2026-07-15T20:40:45Z [135ms] [Error] [omni.platforminfo.plugin] failed to find the package that core 5 belongs to.
+2026-07-15T20:40:45Z [135ms] [Error] [omni.platforminfo.plugin] failed to find the package that core 6 belongs to.
+2026-07-15T20:40:45Z [135ms] [Error] [omni.platforminfo.plugin] failed to find the package that core 7 belongs to.
+2026-07-15T20:40:45Z [135ms] [Error] [omni.platforminfo.plugin] failed to find the package that core 8 belongs to.
+2026-07-15T20:40:45Z [135ms] [Error] [omni.platforminfo.plugin] failed to find the package that core 9 belongs to.
+2026-07-15T20:40:45Z [135ms] [Error] [omni.platforminfo.plugin] failed to find the package that core 10 belongs to.
+2026-07-15T20:40:45Z [135ms] [Error] [omni.platforminfo.plugin] failed to find the package that core 11 belongs to.
+2026-07-15T20:40:45Z [135ms] [Error] [omni.platforminfo.plugin] failed to find the package that core 12 belongs to.
+2026-07-15T20:40:45Z [135ms] [Error] [omni.platforminfo.plugin] failed to find the package that core 13 belongs to.
+2026-07-15T20:40:45Z [135ms] [Error] [omni.platforminfo.plugin] failed to find the package that core 14 belongs to.
+2026-07-15T20:40:45Z [135ms] [Error] [omni.platforminfo.plugin] failed to find the package that core 15 belongs to.
+2026-07-15T20:40:45Z [135ms] [Error] [omni.platforminfo.plugin] failed to find the package that core 16 belongs to.
+2026-07-15T20:40:45Z [135ms] [Error] [omni.platforminfo.plugin] failed to find the package that core 17 belongs to.
+2026-07-15T20:40:45Z [135ms] [Error] [omni.platforminfo.plugin] failed to find the package that core 18 belongs to.
+2026-07-15T20:40:45Z [135ms] [Error] [omni.platforminfo.plugin] failed to find the package that core 19 belongs to.
+2026-07-15T20:40:45Z [135ms] [Error] [omni.platforminfo.plugin] failed to find the package that core 20 belongs to.
+2026-07-15T20:40:45Z [135ms] [Error] [omni.platforminfo.plugin] failed to find the package that core 21 belongs to.
+2026-07-15T20:40:45Z [135ms] [Error] [omni.platforminfo.plugin] failed to find the package that core 22 belongs to.
+2026-07-15T20:40:45Z [135ms] [Error] [omni.platforminfo.plugin] failed to find the package that core 23 belongs to.
+MESA: warning: Driver does not support the 0x7d67 PCI ID.
+MESA: warning: Driver does not support the 0x7d67 PCI ID.
+
+|---------------------------------------------------------------------------------------------|
+| Driver Version: 580.159.03    | Graphics API: Vulkan
+|=============================================================================================|
+| GPU | Name                             | Active | LDA | GPU Memory | Vendor-ID | LUID       |
+|     |                                  |        |     |            | Device-ID | UUID       |
+|     |                                  |        |     |            | Bus-ID    |            |
+|---------------------------------------------------------------------------------------------|
+| 0   | NVIDIA GeForce RTX 5070 Ti Lap.. | Yes: 0 |     | 12227   MB | 10de      | 0          |
+|     |                                  |        |     |            | 2f58      | 58ba18bb.. |
+|     |                                  |        |     |            | 2         |            |
+|=============================================================================================|
+| OS: 22.04.5 LTS (Jammy Jellyfish) ubuntu, Version: 22.04.5, Kernel: 6.8.0-124-generic
+| XServer Vendor: The X.Org Foundation, XServer Version: 12101004 (1.21.1.4)
+| Processor: Intel(R) Core(TM) Ultra 9 275HX
+| Cores: 1 | Logical Cores: 1
+|---------------------------------------------------------------------------------------------|
+| Total Memory (MB): 31516 | Free Memory: 24368
+| Total Page/Swap (MB): 16383 | Free Page/Swap: 16383
+|---------------------------------------------------------------------------------------------|
+2026-07-15T20:40:45Z [708ms] [Warning] [gpu.foundation.plugin] Different types of CPU governors are being used accross cores.
+2026-07-15T20:40:45Z [708ms] [Warning] [gpu.foundation.plugin] CPU performance profile is set to powersave. This profile sets the CPU to the lowest frequency reducing performance.
+2026-07-15T20:40:45Z [717ms] [Warning] [gpu.foundation.plugin] IOMMU is enabled.
+[0.852s] [ext: omni.materialx.libs-1.0.7] startup
+[0.857s] [ext: omni.kit.loop-isaac-1.3.7] startup
+[0.858s] [ext: omni.kit.test-2.0.1] startup
+[0.878s] [ext: omni.kit.pipapi-0.0.0] startup
+[0.879s] [ext: omni.usd.config-1.0.6] startup
+[0.880s] [ext: omni.gpucompute.plugins-0.0.0] startup
+[0.880s] [ext: omni.usd.libs-1.0.1] startup
+[0.937s] [ext: omni.kit.pip_archive-0.0.0] startup
+[0.938s] [ext: omni.mdl-56.0.3] startup
+[0.950s] [ext: omni.iray.libs-0.0.0] startup
+[0.954s] [ext: omni.mdl.neuraylib-0.2.12] startup
+[0.955s] [ext: omni.kit.usd.mdl-1.1.5] startup
+[1.013s] [ext: omni.kit.telemetry-0.5.2] startup
+[1.032s] [ext: omni.appwindow-1.1.10] startup
+[1.226s] [ext: omni.kit.renderer.core-1.1.0] startup
+[5.076s] [ext: omni.kit.renderer.capture-0.0.0] startup
+[5.078s] [ext: omni.kit.renderer.imgui-2.0.5] startup
+[5.132s] [ext: omni.ui-2.27.1] startup
+[5.139s] [ext: omni.kit.mainwindow-1.0.3] startup
+[5.139s] [ext: carb.audio-0.1.0] startup
+[5.142s] [ext: omni.uiaudio-1.0.0] startup
+[5.142s] [ext: omni.kit.uiapp-0.0.0] startup
+[5.142s] [ext: omni.usd.schema.metrics.assembler-107.3.1] startup
+[5.144s] [ext: omni.usd.schema.omnigraph-1.0.0] startup
+[5.148s] [ext: omni.usd.schema.semantics-0.0.0] startup
+[5.149s] [ext: omni.usd.schema.audio-0.0.0] startup
+[5.151s] [ext: omni.usd.schema.geospatial-0.0.0] startup
+[5.153s] [ext: omni.usd.schema.anim-0.0.0] startup
+[5.166s] [ext: omni.usd_resolver-1.0.0] startup
+[5.168s] [ext: omni.usd.core-1.5.3] startup
+[5.170s] [ext: omni.usd.schema.omni_lens_distortion-0.0.0] startup
+[5.185s] [ext: isaacsim.robot.schema-3.6.0] startup
+[5.189s] [ext: omni.usd.schema.physx-107.3.26] startup
+[5.210s] [ext: omni.usd.schema.render_settings.rtx-0.0.0] startup
+[5.210s] [ext: omni.usd.schema.omni_sensors-0.0.0] startup
+[5.211s] [ext: omni.usd.schema.omniscripting-1.0.0] startup
+[5.214s] [ext: omni.graph.exec-0.9.6] startup
+[5.214s] [ext: omni.kit.actions.core-1.0.0] startup
+[5.215s] [ext: omni.kit.usd_undo-0.1.8] startup
+[5.216s] [ext: omni.kit.exec.core-0.13.4] startup
+[5.216s] [ext: omni.kit.commands-1.4.10] startup
+[5.219s] [ext: omni.kit.window.popup_dialog-2.0.24] startup
+[5.221s] [ext: omni.activity.core-1.0.3] startup
+[5.222s] [ext: omni.resourcemonitor-107.0.1] startup
+[5.223s] [ext: omni.timeline-1.0.14] startup
+[5.224s] [ext: omni.kit.widget.nucleus_connector-2.0.1] startup
+[5.225s] [ext: usdrt.scenegraph-7.6.1] startup
+[5.249s] [ext: omni.kit.audiodeviceenum-1.0.2] startup
+[5.250s] [ext: omni.hydra.usdrt_delegate-7.5.1] startup
+[5.254s] [ext: omni.hydra.scene_delegate-0.3.4] startup
+[5.257s] [ext: omni.usd-1.13.10] startup
+[5.274s] [ext: omni.kit.asset_converter-5.0.17] startup
+[5.283s] [ext: omni.index.libs-380600.8087.0] startup
+[5.283s] [ext: omni.volume-0.5.2] startup
+[5.285s] [ext: omni.ujitso.client-0.0.0] startup
+[5.286s] [ext: omni.index-1.0.1] startup
+[5.286s] [ext: omni.hydra.rtx.shadercache.vulkan-1.0.0] startup
+[5.287s] [ext: omni.hydra.rtx-1.0.0] startup
+2026-07-15T20:40:50Z [5,283ms] [Warning] [omni.log] Source: omni.hydra was already registered.
+[5.311s] [ext: omni.kit.notification_manager-1.0.10] startup
+[5.312s] [ext: omni.kit.clipboard-1.0.5] startup
+[5.313s] [ext: omni.kit.viewport.legacy_gizmos-1.0.19] startup
+[5.314s] [ext: omni.kit.raycast.query-1.1.0] startup
+[5.318s] [ext: omni.kit.menu.core-1.1.2] startup
+[5.318s] [ext: omni.kit.widget.options_menu-1.1.6] startup
+[5.320s] [ext: omni.kit.helper.file_utils-0.1.9] startup
+[5.321s] [ext: omni.kit.widget.path_field-2.0.11] startup
+[5.321s] [ext: omni.kit.widget.context_menu-1.2.5] startup
+[5.322s] [ext: omni.kit.widget.options_button-1.0.3] startup
+[5.322s] [ext: omni.kit.widget.filebrowser-2.12.3] startup
+[5.325s] [ext: omni.kit.widget.browser_bar-2.0.10] startup
+[5.325s] [ext: omni.kit.usd.layers-2.2.11] startup
+[5.331s] [ext: omni.ui.scene-1.11.5] startup
+[5.334s] [ext: omni.kit.viewport.registry-104.0.6] startup
+[5.335s] [ext: omni.kit.window.filepicker-2.13.4] startup
+[5.343s] [ext: omni.kit.menu.utils-2.0.5] startup
+[5.347s] [ext: omni.kit.context_menu-1.8.6] startup
+[5.348s] [ext: omni.kit.viewport.scene_camera_model-1.0.6] startup
+[5.351s] [ext: omni.kit.hydra_texture-1.4.6] startup
+[5.353s] [ext: omni.kit.window.file_importer-1.1.18] startup
+[5.355s] [ext: omni.kit.widget.searchable_combobox-1.0.6] startup
+[5.355s] [ext: omni.kit.window.drop_support-1.0.5] startup
+[5.355s] [ext: omni.kit.widget.viewport-107.1.3] startup
+[5.358s] [ext: omni.kit.material.library-2.0.7] startup
+[5.361s] [ext: omni.hydra.engine.stats-1.0.3] startup
+[5.363s] [ext: omni.kit.widget.settings-1.2.6] startup
+[5.364s] [ext: omni.kit.viewport.window-107.2.0] startup
+[5.373s] [ext: omni.kit.window.preferences-1.8.0] startup
+[5.375s] [ext: omni.kit.widget.toolbar-2.0.1] startup
+[5.379s] [ext: omni.kit.viewport.utility-1.1.2] startup
+[5.379s] [ext: omni.kit.manipulator.transform-107.0.0] startup
+[5.382s] [ext: omni.kit.manipulator.tool.snap-1.5.13] startup
+[5.384s] [ext: omni.kit.manipulator.selector-1.1.3] startup
+[5.385s] [ext: omni.kit.property.adapter.core-1.0.2] startup
+[5.386s] [ext: omni.kit.viewport.manipulator.transform-107.0.4] startup
+[5.387s] [ext: omni.kit.manipulator.viewport-107.0.1] startup
+[5.387s] [ext: omni.kit.property.adapter.fabric-1.0.3] startup
+[5.388s] [ext: omni.kit.manipulator.prim.core-107.0.8] startup
+[5.391s] [ext: omni.kit.primitive.mesh-1.0.17] startup
+[5.393s] [ext: omni.kit.widget.filter-1.1.4] startup
+[5.394s] [ext: omni.kit.hotkeys.core-1.3.10] startup
+[5.394s] [ext: omni.kit.manipulator.prim.usd-107.0.3] startup
+[5.395s] [ext: omni.fabric.commands-1.1.6] startup
+[5.397s] [ext: omni.kit.window.file_exporter-1.0.33] startup
+[5.397s] [ext: omni.kit.widget.searchfield-1.1.8] startup
+[5.398s] [ext: omni.kit.manipulator.prim.fabric-107.0.4] startup
+[5.399s] [ext: omni.debugdraw-0.1.4] startup
+[5.402s] [ext: omni.kit.widget.stage-3.1.4] startup
+[5.408s] [ext: omni.kit.property.adapter.usd-1.0.2] startup
+[5.408s] [ext: omni.kit.manipulator.prim-107.0.0] startup
+[5.408s] [ext: omni.kvdb-107.3.26] startup
+[5.409s] [ext: omni.convexdecomposition-107.3.26] startup
+[5.411s] [ext: omni.physx.foundation-107.3.26] startup
+[5.412s] [ext: omni.localcache-107.3.26] startup
+[5.413s] [ext: omni.kit.window.content_browser_registry-0.0.6] startup
+[5.413s] [ext: omni.kit.widget.highlight_label-1.0.3] startup
+[5.414s] [ext: omni.kit.stage_template.core-1.1.22] startup
+[5.414s] [ext: omni.usdphysics-107.3.26] startup
+[5.415s] [ext: omni.kit.window.file-2.0.5] startup
+[5.417s] [ext: omni.physx.cooking-107.3.26] startup
+[5.419s] [ext: omni.physics-107.3.26] startup
+[5.421s] [ext: omni.kit.window.property-1.12.1] startup
+[5.422s] [ext: omni.kit.window.content_browser-3.1.3] startup
+[5.429s] [ext: omni.physx-107.3.26] startup
+[5.435s] [ext: omni.physics.stageupdate-107.3.26] startup
+[5.436s] [ext: omni.kit.property.usd-4.5.12] startup
+[5.444s] [ext: omni.kit.manipulator.selection-106.0.1] startup
+[5.445s] [ext: omni.physics.physx-107.3.26] startup
+2026-07-15T20:40:50Z [5,428ms] [Warning] [carb] Acquiring non optional plugin interface which is not listed as dependency: [omni::physx::IPhysxBenchmarks v1.0] (plugin: <default plugin>), by client: omni.physics.physx.plugin. Add it to CARB_PLUGIN_IMPL_DEPS() macro of a client.
+[5.446s] [ext: omni.kit.widget.prompt-1.0.7] startup
+[5.446s] [ext: omni.kit.viewport.menubar.core-107.2.1] startup
+[5.454s] [ext: omni.kit.viewport.actions-107.0.2] startup
+[5.456s] [ext: omni.inspect-1.0.2] startup
+[5.457s] [ext: omni.kit.widget.layers-1.8.6] startup
+[5.464s] [ext: omni.kit.viewport.menubar.display-107.0.3] startup
+[5.464s] [ext: omni.usd.metrics.assembler-107.3.1] startup
+[5.468s] [ext: omni.graph.core-2.184.5] startup
+[5.470s] [ext: omni.kit.numpy.common-0.1.3] startup
+[5.471s] [ext: omni.usdphysics.ui-107.3.26] startup
+[5.488s] [ext: omni.physx.commands-107.3.26] startup
+[5.491s] [ext: isaacsim.core.deprecation_manager-0.2.7] startup
+[5.491s] [ext: omni.isaac.dynamic_control-2.0.7] startup
+2026-07-15T20:40:50Z [5,477ms] [Warning] [omni.isaac.dynamic_control] omni.isaac.dynamic_control is deprecated as of Isaac Sim 4.5. No action is needed from end-users.
+[5.495s] [ext: omni.physx.ui-107.3.26] startup
+[5.515s] [ext: isaacsim.core.version-2.0.6] startup
+[5.515s] [ext: omni.physics.tensors-107.3.26] startup
+[5.518s] [ext: omni.warp.core-1.8.2] startup
+[5.620s] [ext: omni.usd.metrics.assembler.physics-107.3.26] startup
+[5.622s] [ext: isaacsim.storage.native-1.5.1] startup
+[5.622s] [ext: omni.physx.tensors-107.3.26] startup
+[5.626s] [ext: isaacsim.core.utils-3.5.1] startup
+[5.628s] [ext: isaacsim.core.simulation_manager-1.4.4] startup
+[5.791s] [ext: omni.kit.widget.stage_icons-1.0.8] startup
+[5.792s] [ext: omni.kit.widget.text_editor-1.1.1] startup
+[5.793s] [ext: omni.kit.window.stage-2.6.1] startup
+[5.795s] [ext: omni.kit.menu.create-2.0.1] startup
+[5.796s] [ext: omni.kit.window.extensions-1.4.27] startup
+[5.800s] [ext: omni.kit.scripting-107.3.2] startup
+[5.802s] [ext: omni.kit.stagerecorder.core-107.0.3] startup
+[5.804s] [ext: isaacsim.replicator.behavior-1.1.16] startup
+[5.804s] [ext: omni.graph.tools-1.79.2] startup
+[5.817s] [ext: omni.ui_query-1.1.8] startup
+[5.817s] [ext: omni.kit.widget.zoombar-1.0.6] startup
+[5.817s] [ext: omni.graph-1.141.2] startup
+[5.841s] [ext: omni.graph.action_core-1.1.7] startup
+[5.842s] [ext: omni.kit.ui_test-1.3.7] startup
+[5.844s] [ext: omni.kit.browser.core-2.3.13] startup
+[5.847s] [ext: omni.kit.usd.collect-2.4.5] startup
+[5.849s] [ext: omni.graph.action_nodes-1.50.4] startup
+[5.852s] [ext: omni.kit.menu.stage-1.2.7] startup
+[5.854s] [ext: omni.kit.browser.folder.core-1.10.9] startup
+[5.860s] [ext: omni.kit.usdz_export-1.0.9] startup
+[5.862s] [ext: omni.graph.visualization.nodes-2.1.3] startup
+[5.872s] [ext: omni.graph.action-1.130.0] startup
+[5.874s] [ext: omni.kit.tool.collect-2.2.18] startup
+[5.879s] [ext: omni.kit.tool.asset_importer-4.3.2] startup
+[5.895s] [ext: isaacsim.gui.components-1.2.1] startup
+[5.909s] [ext: isaacsim.examples.browser-0.2.1] startup
+[5.915s] [ext: isaacsim.asset.importer.urdf-2.4.31] startup
+[5.967s] [ext: isaacsim.core.cloner-1.4.10] startup
+[5.969s] [ext: omni.kit.stagerecorder.ui-107.0.1] startup
+[5.979s] [ext: isaacsim.asset.browser-1.3.23] startup
+[6.028s] [ext: semantics.schema.editor-2.0.2] startup
+2026-07-15T20:40:51Z [6,015ms] [Warning] [pxr.Semantics] pxr.Semantics is deprecated - please use Semantics instead
+[6.034s] [ext: omni.kit.stagerecorder.bundle-105.0.2] startup
+[6.034s] [ext: omni.kit.window.status_bar-0.1.9] startup
+[6.037s] [ext: omni.kit.widget.graph-2.0.0] startup
+[6.041s] [ext: omni.kit.stage_templates-2.0.0] startup
+[6.043s] [ext: omni.graph.image.core-0.6.1] startup
+[6.044s] [ext: omni.kit.graph.delegate.default-1.2.3] startup
+[6.044s] [ext: isaacsim.core.experimental.utils-0.3.0] startup
+[6.045s] [ext: omni.graph.image.nodes-1.3.1] startup
+[6.046s] [ext: omni.kit.graph.editor.core-1.5.3] startup
+[6.048s] [ext: omni.kit.graph.usd.commands-1.3.1] startup
+[6.049s] [ext: omni.graph.nodes-1.170.10] startup
+[6.057s] [ext: omni.graph.ui_nodes-1.50.5] startup
+[6.059s] [ext: omni.kit.widget.material_preview-1.0.16] startup
+[6.060s] [ext: omni.syntheticdata-0.6.13] startup
+[6.081s] [ext: omni.videoencoding-0.1.2] startup
+[6.083s] [ext: omni.warp-1.8.2] startup
+[6.090s] [ext: omni.kit.window.material_graph-1.9.1] startup
+[6.115s] [ext: omni.graph.scriptnode-1.50.0] startup
+[6.115s] [ext: isaacsim.core.prims-0.6.1] startup
+[6.140s] [ext: isaacsim.test.docstring-1.1.0] startup
+[6.146s] [ext: omni.replicator.core-1.12.27] startup
+2026-07-15T20:40:51Z [6,218ms] [Warning] [omni.graph.core.plugin] Found duplicate of category 'Replicator' - was 'Annotators', adding 'Fabric Reader'
+2026-07-15T20:40:51Z [6,218ms] [Warning] [omni.graph.core.plugin] Category 'Replicator' not accepted on node type 'omni.replicator.core.FabricReader' in extension 'omni.replicator.core'
+2026-07-15T20:40:51Z [6,219ms] [Warning] [omni.replicator.core.scripts.extension] No material configuration file, adding configuration to material settings directly.
+[6.238s] [ext: isaacsim.core.api-4.8.0] startup
+[6.248s] [ext: isaacsim.core.experimental.prims-0.8.1] startup
+[6.275s] [ext: isaacsim.core.nodes-3.4.3] startup
+[6.285s] [ext: isaacsim.robot.surface_gripper-3.3.1] startup
+[6.291s] [ext: isaacsim.util.debug_draw-3.1.0] startup
+[6.296s] [ext: omni.sensors.nv.common-3.0.0] startup
+[6.311s] [ext: isaacsim.robot.manipulators-3.3.6] startup
+[6.337s] [ext: isaacsim.sensors.physx-2.3.2] startup
+[6.351s] [ext: omni.sensors.nv.materials-2.0.0] startup
+[6.357s] [ext: omni.sensors.net-1.0.0] startup
+[6.364s] [ext: isaacsim.app.about-2.0.11] startup
+[6.416s] [ext: isaacsim.simulation_app-2.12.2] startup
+[6.418s] [ext: omni.sensors.nv.ids-2.0.0] startup
+[6.424s] [ext: omni.sensors.nv.lidar-3.0.0] startup
+[6.434s] [ext: omni.kit.property.audio-1.0.16] startup
+[6.465s] [ext: omni.kit.property.camera-1.0.10] startup
+[6.467s] [ext: omni.kit.property.geometry-2.0.4] startup
+[6.546s] [ext: omni.hydra.scene_api-0.1.2] startup
+[6.571s] [ext: omni.kit.property.light-1.0.12] startup
+[6.608s] [ext: omni.sensors.nv.wpm-3.0.0] startup
+[6.614s] [ext: omni.kit.selection-0.1.6] startup
+[6.615s] [ext: omni.kit.property.material-1.11.9] startup
+[6.622s] [ext: omni.kit.property.transform-1.5.13] startup
+[6.627s] [ext: omni.kit.property.render-1.2.1] startup
+[6.629s] [ext: omni.sensors.nv.radar-3.0.0] startup
+[6.632s] [ext: isaacsim.gui.menu-2.4.4] startup
+[6.648s] [ext: omni.kit.manipulator.camera-106.0.4] startup
+[6.653s] [ext: isaacsim.gui.property-1.1.3] startup
+[6.657s] [ext: omni.kit.property.bundle-1.4.1] startup
+[6.658s] [ext: isaacsim.sensors.rtx-15.8.4] startup
+[6.667s] [ext: isaacsim.sensors.physics-0.4.3] startup
+[6.676s] [ext: omni.kit.viewport.menubar.camera-107.0.6] startup
+[6.689s] [ext: omni.kit.viewport.menubar.lighting-107.3.1] startup
+[6.699s] [ext: omni.kit.viewport.menubar.settings-107.0.3] startup
+[6.705s] [ext: omni.kit.viewport.menubar.render-107.0.10] startup
+[6.713s] [ext: isaacsim.robot.policy.examples-4.1.11] startup
+[6.713s] [ext: isaacsim.asset.importer.mjcf-2.5.13] startup
+[6.719s] [ext: omni.kit.window.console-1.1.4] startup
+[6.722s] [ext: omni.rtx.window.settings-0.6.19] startup
+[6.725s] [ext: omni.ocio-0.1.1] startup
+[6.727s] [ext: omni.physx.demos-107.3.26] startup
+[6.739s] [ext: omni.kit.property.physx-107.3.26] startup
+[6.754s] [ext: omni.replicator.replicator_yaml-2.0.11] startup
+[6.763s] [ext: omni.asset_validator.core-1.1.6] startup
+[6.795s] [ext: omni.rtx.settings.core-0.6.5] startup
+[6.798s] [ext: omni.physx.vehicle-107.3.26] startup
+[6.809s] [ext: omni.usd.metrics.assembler.ui-107.3.1] startup
+[6.816s] [ext: omni.kit.window.script_editor-2.0.1] startup
+[6.818s] [ext: isaacsim.robot.wheeled_robots-4.0.24] startup
+[6.821s] [ext: omni.physx.asset_validator-107.3.26] startup
+[6.827s] [ext: omni.kit.window.toolbar-2.0.0] startup
+[6.830s] [ext: omni.physx.camera-107.3.26] startup
+[6.840s] [ext: omni.anim.curve.core-1.3.1] startup
+[6.851s] [ext: omni.physx.cct-107.3.26] startup
+[6.858s] [ext: omni.physx.graph-107.3.26] startup
+[6.866s] [ext: omni.physx.supportui-107.3.26] startup
+[6.882s] [ext: omni.physx.telemetry-107.3.26] startup
+[6.884s] [ext: isaaclab-0.54.2] startup
+[6.989s] [ext: isaaclab_contrib-0.0.2] startup
+[6.991s] [ext: isaacsim.core.throttling-2.2.2] startup
+[6.992s] [ext: omni.kit.ui.actions-1.0.5] startup
+[6.993s] [ext: semantics.schema.property-2.0.1] startup
+[6.994s] [ext: omni.physx.bundle-107.3.26] startup
+[6.995s] [ext: isaacsim.sensors.camera-1.3.6] startup
+[6.998s] [ext: isaaclab_assets-0.2.4] startup
+[7.175s] [ext: isaaclab_tasks-0.11.12] startup
+[7.304s] [ext: omni.kit.menu.common-2.0.1] startup
+[7.306s] [ext: isaaclab_rl-0.4.7] startup
+[7.306s] [ext: isaaclab_mimic-1.0.16] startup
+[7.306s] [ext: isaaclab.python-2.3.2] startup
+[7.308s] Simulation App Starting
+2026-07-15T20:40:52Z [7,625ms] [Warning] [omni.fabric.plugin] Warning: attribute viewportHandle not found for bucket id 9
+
+[7.747s] app ready
+[10.263s] Simulation App Startup Complete
+[INFO]: Parsing configuration from: isaac_go2_soccer.kick_behavior.anchored_motion.env_cfg:AnchoredSwingKickEnvCfg_PLAY
+[INFO]: Parsing configuration from: isaac_go2_soccer.kick_behavior.anchored_motion.agent_cfg:AnchoredSwingKickPPORunnerCfg
+[K2A3 EXEC] gym_make_begin
+2026-07-15T20:40:56Z [10,934ms] [Warning] [isaaclab.envs.manager_based_env] Seed not set for the environment. The environment creation may not be deterministic.
+
+[36m======================================================================================[0m
+[36m[1m[INFO][IsaacLab]: Logging to file: /tmp/isaaclab/logs/isaaclab_2026-07-16_04-40-56.log[0m
+[36m======================================================================================[0m
+
+[10.963s] [ext: omni.physx.fabric-107.3.26] startup
+[33m04:40:56 [simulation_context.py] WARNING: The `enable_external_forces_every_iteration` parameter in the PhysxCfg is set to False. If you are experiencing noisy velocities, consider enabling this flag. You may need to slightly increase the number of velocity iterations (setting it to 1 or 2 rather than 0), together with this flag, to improve the accuracy of velocity updates.[0m
+[INFO]: Base environment:
+	Environment device    : cuda:0
+	Environment seed      : None
+	Physics step-size     : 0.005
+	Rendering step-size   : 0.02
+	Environment step-size : 0.02
+[33m04:40:56 [terrain_importer.py] WARNING: Visual material specified for ground plane but no diffuse color found. Using default color: (0.0, 0.0, 0.0)[0m
+[INFO]: Time taken for scene creation : 0.667150 seconds
+[INFO]: Scene manager:  <class InteractiveScene>
+	Number of environments: 1
+	Environment spacing   : 2.5
+	Source prim name      : /World/envs/env_0
+	Global prim paths     : ['/World/ground']
+	Replicate physics     : True
+[INFO]: Starting the simulation. This may take a few seconds. Please wait...
+2026-07-15T20:40:58Z [13,009ms] [Warning] [omni.hydra] Mesh '/__Prototype_9249459249493537703/mesh_0' has corrupted data in primvar 'st': buffer size 6270 doesn't match expected size 25806 in faceVarying primvars
+2026-07-15T20:40:58Z [13,009ms] [Warning] [omni.hydra] Mesh '/__Prototype_9249459249493537703/mesh_0' has corrupted data in primvar 'st_1': buffer size 19536 doesn't match expected size 25806 in faceVarying primvars
+2026-07-15T20:40:58Z [13,009ms] [Warning] [omni.hydra] Mesh '/__Prototype_17365619108587152245/mesh_0' has corrupted data in primvar 'st': buffer size 35124 doesn't match expected size 90378 in faceVarying primvars
+2026-07-15T20:40:58Z [13,009ms] [Warning] [omni.hydra] Mesh '/__Prototype_17365619108587152245/mesh_0' has corrupted data in primvar 'st_1': buffer size 55254 doesn't match expected size 90378 in faceVarying primvars
+2026-07-15T20:40:58Z [13,009ms] [Warning] [omni.hydra] Mesh '/__Prototype_17657579462717289149/mesh_0' has corrupted data in primvar 'st': buffer size 56922 doesn't match expected size 111120 in faceVarying primvars
+2026-07-15T20:40:58Z [13,009ms] [Warning] [omni.hydra] Mesh '/__Prototype_17658574861032171226/mesh_0' has corrupted data in primvar 'st': buffer size 56922 doesn't match expected size 111120 in faceVarying primvars
+2026-07-15T20:40:58Z [13,009ms] [Warning] [omni.hydra] Mesh '/__Prototype_17657579462717289149/mesh_0' has corrupted data in primvar 'st_1': buffer size 54198 doesn't match expected size 111120 in faceVarying primvars
+2026-07-15T20:40:58Z [13,009ms] [Warning] [omni.hydra] Mesh '/__Prototype_3472759832488839835/mesh_0' has corrupted data in primvar 'st': buffer size 56922 doesn't match expected size 111120 in faceVarying primvars
+2026-07-15T20:40:58Z [13,009ms] [Warning] [omni.hydra] Mesh '/__Prototype_17658574861032171226/mesh_0' has corrupted data in primvar 'st_1': buffer size 54198 doesn't match expected size 111120 in faceVarying primvars
+2026-07-15T20:40:58Z [13,009ms] [Warning] [omni.hydra] Mesh '/__Prototype_3472759832488839835/mesh_0' has corrupted data in primvar 'st_1': buffer size 54198 doesn't match expected size 111120 in faceVarying primvars
+2026-07-15T20:40:58Z [13,009ms] [Warning] [omni.hydra] Mesh '/__Prototype_13322334623641367634/mesh_0' has corrupted data in primvar 'st': buffer size 35124 doesn't match expected size 90402 in faceVarying primvars
+2026-07-15T20:40:58Z [13,009ms] [Warning] [omni.hydra] Mesh '/__Prototype_4988299400318642876/mesh_0' has corrupted data in primvar 'st': buffer size 6270 doesn't match expected size 25806 in faceVarying primvars
+2026-07-15T20:40:58Z [13,009ms] [Warning] [omni.hydra] Mesh '/__Prototype_13322334623641367634/mesh_0' has corrupted data in primvar 'st_1': buffer size 55278 doesn't match expected size 90402 in faceVarying primvars
+2026-07-15T20:40:58Z [13,009ms] [Warning] [omni.hydra] Mesh '/__Prototype_4988299400318642876/mesh_0' has corrupted data in primvar 'st_1': buffer size 19536 doesn't match expected size 25806 in faceVarying primvars
+2026-07-15T20:40:58Z [13,009ms] [Warning] [omni.hydra] Mesh '/__Prototype_7677181754714936218/mesh_0' has corrupted data in primvar 'st': buffer size 56922 doesn't match expected size 111120 in faceVarying primvars
+2026-07-15T20:40:58Z [13,009ms] [Warning] [omni.hydra] Mesh '/__Prototype_422667710062656741/mesh_0' has corrupted data in primvar 'st': buffer size 6270 doesn't match expected size 25806 in faceVarying primvars
+2026-07-15T20:40:58Z [13,009ms] [Warning] [omni.hydra] Mesh '/__Prototype_7677181754714936218/mesh_0' has corrupted data in primvar 'st_1': buffer size 54198 doesn't match expected size 111120 in faceVarying primvars
+2026-07-15T20:40:58Z [13,009ms] [Warning] [omni.hydra] Mesh '/__Prototype_422667710062656741/mesh_0' has corrupted data in primvar 'st_1': buffer size 19536 doesn't match expected size 25806 in faceVarying primvars
+2026-07-15T20:40:58Z [13,009ms] [Warning] [omni.hydra] Mesh '/__Prototype_11920163974880798964/mesh_0' has corrupted data in primvar 'st': buffer size 6270 doesn't match expected size 25806 in faceVarying primvars
+2026-07-15T20:40:58Z [13,009ms] [Warning] [omni.hydra] Mesh '/__Prototype_11920163974880798964/mesh_0' has corrupted data in primvar 'st_1': buffer size 19536 doesn't match expected size 25806 in faceVarying primvars
+2026-07-15T20:40:58Z [13,010ms] [Warning] [omni.hydra] Mesh '/__Prototype_5020945076074816532/mesh_0' has corrupted data in primvar 'st': buffer size 35124 doesn't match expected size 90402 in faceVarying primvars
+2026-07-15T20:40:58Z [13,010ms] [Warning] [omni.hydra] Mesh '/__Prototype_5020945076074816532/mesh_0' has corrupted data in primvar 'st_1': buffer size 55278 doesn't match expected size 90402 in faceVarying primvars
+2026-07-15T20:40:58Z [13,011ms] [Warning] [omni.hydra] Mesh '/__Prototype_13474969840495255918/mesh_0' has corrupted data in primvar 'st': buffer size 178533 doesn't match expected size 233784 in faceVarying primvars
+2026-07-15T20:40:58Z [13,011ms] [Warning] [omni.hydra] Mesh '/__Prototype_13474969840495255918/mesh_0' has corrupted data in primvar 'st_4': buffer size 30390 doesn't match expected size 233784 in faceVarying primvars
+2026-07-15T20:40:58Z [13,011ms] [Warning] [omni.hydra] Mesh '/__Prototype_13474969840495255918/mesh_0' has corrupted data in primvar 'st_2': buffer size 6015 doesn't match expected size 233784 in faceVarying primvars
+2026-07-15T20:40:58Z [13,011ms] [Warning] [omni.hydra] Mesh '/__Prototype_13474969840495255918/mesh_0' has corrupted data in primvar 'st_1': buffer size 6960 doesn't match expected size 233784 in faceVarying primvars
+2026-07-15T20:40:58Z [13,011ms] [Warning] [omni.hydra] Mesh '/__Prototype_13474969840495255918/mesh_0' has corrupted data in primvar 'st_3': buffer size 11886 doesn't match expected size 233784 in faceVarying primvars
+2026-07-15T20:40:58Z [13,012ms] [Warning] [omni.hydra] Mesh '/__Prototype_9361768168784622320/mesh_0' has corrupted data in primvar 'st': buffer size 35124 doesn't match expected size 90378 in faceVarying primvars
+2026-07-15T20:40:58Z [13,012ms] [Warning] [omni.hydra] Mesh '/__Prototype_9361768168784622320/mesh_0' has corrupted data in primvar 'st_1': buffer size 55254 doesn't match expected size 90378 in faceVarying primvars
+[INFO]: Time taken for simulation start : 1.429936 seconds
+[33m04:40:58 [velocity_command.py] WARNING: The velocity command has the 'ranges.heading' attribute set to '(-3.141592653589793, 3.141592653589793)' but the heading command is not active. Consider setting the flag for the heading command to True.[0m
+[INFO] Command Manager:  <CommandManager> contains 1 active terms.
++------------------------------------------------+
+|              Active Command Terms              |
++-------+---------------+------------------------+
+| Index | Name          |          Type          |
++-------+---------------+------------------------+
+|   0   | base_velocity | UniformVelocityCommand |
++-------+---------------+------------------------+
+
+[INFO] Event Manager:  <EventManager> contains 2 active terms.
++--------------------------------------+
+| Active Event Terms in Mode: 'startup' |
++----------+---------------------------+
+|  Index   | Name                      |
++----------+---------------------------+
+|    0     | physics_material          |
++----------+---------------------------+
++-------------------------------------+
+| Active Event Terms in Mode: 'reset' |
++---------+---------------------------+
+|  Index  | Name                      |
++---------+---------------------------+
+|    0    | reset_base                |
+|    1    | reset_robot_joints        |
++---------+---------------------------+
+
+[INFO] Recorder Manager:  <RecorderManager> contains 0 active terms.
++---------------------+
+| Active Recorder Terms |
++-----------+---------+
+|   Index   | Name    |
++-----------+---------+
++-----------+---------+
+
+[INFO] Action Manager:  <ActionManager> contains 1 active terms.
++------------------------------------+
+|  Active Action Terms (shape: 12)   |
++--------+-------------+-------------+
+| Index  | Name        |   Dimension |
++--------+-------------+-------------+
+|   0    | joint_pos   |          12 |
++--------+-------------+-------------+
+
+[INFO] Observation Manager: <ObservationManager> contains 1 groups.
++--------------------------------------------------------------+
+|  Active Observation Terms in Group: 'policy' (shape: (60,))  |
++---------+------------------------------------------+---------+
+|  Index  | Name                                     |  Shape  |
++---------+------------------------------------------+---------+
+|    0    | base_lin_vel                             |   (3,)  |
+|    1    | base_ang_vel                             |   (3,)  |
+|    2    | projected_gravity                        |   (3,)  |
+|    3    | velocity_commands                        |   (3,)  |
+|    4    | joint_pos                                |  (12,)  |
+|    5    | joint_vel                                |  (12,)  |
+|    6    | actions                                  |  (12,)  |
+|    7    | kick_motion_phase                        |   (1,)  |
+|    8    | requested_kick_strength                  |   (1,)  |
+|    9    | reference_foot_offset_b                  |   (3,)  |
+|    10   | current_kicking_foot_position_b          |   (3,)  |
+|    11   | foot_reference_error_b                   |   (3,)  |
+|    12   | support_contacts                         |   (1,)  |
++---------+------------------------------------------+---------+
+
+[INFO] Termination Manager:  <TerminationManager> contains 2 active terms.
++---------------------------------+
+|     Active Termination Terms    |
++-------+--------------+----------+
+| Index | Name         | Time Out |
++-------+--------------+----------+
+|   0   | time_out     |   True   |
+|   1   | base_contact |  False   |
++-------+--------------+----------+
+
+[INFO] Reward Manager:  <RewardManager> contains 24 active terms.
++------------------------------------------------+
+|              Active Reward Terms               |
++-------+-------------------------------+--------+
+| Index | Name                          | Weight |
++-------+-------------------------------+--------+
+|   0   | track_lin_vel_xy_exp          |    0.0 |
+|   1   | track_ang_vel_z_exp           |    0.0 |
+|   2   | lin_vel_z_l2                  |   -1.0 |
+|   3   | ang_vel_xy_l2                 |   -0.1 |
+|   4   | dof_torques_l2                | -2e-05 |
+|   5   | dof_acc_l2                    | -1e-06 |
+|   6   | action_rate_l2                |  -0.01 |
+|   7   | flat_orientation_l2           |   -2.0 |
+|   8   | dof_pos_limits                |    0.0 |
+|   9   | kick_foot_tracking            |    0.0 |
+|   10  | strike_foot_tracking          |    0.0 |
+|   11  | strike_foot_velocity_tracking |    0.0 |
+|   12  | support_contacts              |    2.5 |
+|   13  | upright_quality               |    2.5 |
+|   14  | base_motion                   |   -0.6 |
+|   15  | support_slip                  |   -0.2 |
+|   16  | anchored_foot_tracking        |   18.0 |
+|   17  | anchored_strike_tracking      |   14.0 |
+|   18  | anchored_velocity_tracking    |    8.0 |
+|   19  | swing_foot_air                |    4.0 |
+|   20  | swing_foot_ground_contact     |   -8.0 |
+|   21  | base_xy_drift                 |  -80.0 |
+|   22  | excess_base_height_change     | -360.0 |
+|   23  | anchored_recovery             |    7.0 |
++-------+-------------------------------+--------+
+
+[INFO] Curriculum Manager:  <CurriculumManager> contains 0 active terms.
++----------------------+
+| Active Curriculum Terms |
++-----------+----------+
+|   Index   | Name     |
++-----------+----------+
++-----------+----------+
+
+Creating window for environment.
+[INFO]: Completed setting up the environment...
+[BALL DEMO] wrapped_env=Isaac-Go2-Anchored-SwingKick-Play-v0
+[K2A3 EXEC] gym_make_complete
+[BALL DEMO] ball_asset=kick_demo_ball foot=[0.17782148718833923, -0.17260189354419708, 0.099779412150383] ball=[0.30782148718833924, -0.17260189354419708, 0.098] radius=0.095
+[BALL DEMO] camera_locked eye=[0.2885196692347527, -0.5276708520948887, 1.75] target=[0.2185196692347527, -0.07767085209488869, 0.0]
+[BALL DEMO] scene_keys=['terrain', 'robot', 'kick_demo_ball', 'contact_forces', 'sky_light']
+[BALL DEMO] reset_complete
+/home/ubuntu/miniconda3/envs/isaaclab232/lib/python3.11/site-packages/rsl_rl/utils/utils.py:245: UserWarning: The observation configuration dictionary 'obs_groups' must contain the 'policy' key. As an observation group with the name 'policy' was found, this is assumed to be the observation set. Consider adding the 'policy' key to the 'obs_groups' dictionary for clarity. This behavior will be removed in a future version.
+  warnings.warn(
+/home/ubuntu/miniconda3/envs/isaaclab232/lib/python3.11/site-packages/rsl_rl/utils/utils.py:291: UserWarning: The observation configuration dictionary 'obs_groups' must contain the 'critic' key. As the configuration for 'critic' is missing, the observations from the 'policy' set are used. Consider adding the 'critic' key to the 'obs_groups' dictionary for clarity. This behavior will be removed in a future version.
+  warnings.warn(
+--------------------------------------------------------------------------------
+Resolved observation sets: 
+	 policy :  ['policy']
+	 critic :  ['policy']
+--------------------------------------------------------------------------------
+Actor MLP: MLP(
+  (0): Linear(in_features=60, out_features=256, bias=True)
+  (1): ELU(alpha=1.0)
+  (2): Linear(in_features=256, out_features=256, bias=True)
+  (3): ELU(alpha=1.0)
+  (4): Linear(in_features=256, out_features=128, bias=True)
+  (5): ELU(alpha=1.0)
+  (6): Linear(in_features=128, out_features=12, bias=True)
+)
+Critic MLP: MLP(
+  (0): Linear(in_features=60, out_features=256, bias=True)
+  (1): ELU(alpha=1.0)
+  (2): Linear(in_features=256, out_features=256, bias=True)
+  (3): ELU(alpha=1.0)
+  (4): Linear(in_features=256, out_features=128, bias=True)
+  (5): ELU(alpha=1.0)
+  (6): Linear(in_features=128, out_features=1, bias=True)
+)
+[K2A3 EXEC] checkpoint=/home/ubuntu/Isaac-Go2-Soccer-kick-anchored/outputs/kick_behavior_training/go2_anchored_swing_kick_prior/20260713_095145/model_1099.pt
+[K2A3 EXEC] observation_shape=(1,)
+[K2A3 EXEC] initial_root=[0.0, 0.0, 0.4000000059604645]
+[K2A3 EXEC] initial_foot=[0.17782148718833923, -0.17260189354419708, 0.099779412150383]
+[K2A3 EXEC] step=0 policy_begin
+[K2A3 EXEC] step=0 env_step_begin action_abs=1.25062 action_mean=0.09503 action_std=0.66330 finite=True
+[K2A3 EXEC] step=0 env_step_complete reward=0.38231 joint_delta=0.19782rad root_delta=0.00118m base_drop=0.00115m base_xy=0.00024m foot_delta=0.02333m foot_speed=1.103m/s foot_forward=0.00166m foot_height=-0.02327m done=False
+[K2A3 EXEC] step=1 policy_begin
+[K2A3 EXEC] step=1 env_step_begin action_abs=2.24072 action_mean=0.03458 action_std=1.03246 finite=True
+[K2A3 EXEC] step=2 policy_begin
+[K2A3 EXEC] step=2 env_step_begin action_abs=2.03866 action_mean=0.15930 action_std=0.94115 finite=True
+[K2A3 EXEC] step=3 policy_begin
+[K2A3 EXEC] step=3 env_step_begin action_abs=1.45447 action_mean=-0.00579 action_std=0.92440 finite=True
+[K2A3 EXEC] step=4 policy_begin
+[K2A3 EXEC] step=4 env_step_begin action_abs=2.52041 action_mean=0.27798 action_std=0.95751 finite=True
+[BALL DEMO] step=5 ball=[0.30782148241996765, -0.17260189354419708, 0.09499996155500412] displacement_xy=0.0000
+[K2A3 EXEC] step=5 policy_begin
+[K2A3 EXEC] step=5 env_step_begin action_abs=3.49501 action_mean=0.40834 action_std=1.37574 finite=True
+[K2A3 EXEC] step=5 env_step_complete reward=0.36463 joint_delta=0.61440rad root_delta=0.06157m base_drop=0.06137m base_xy=0.00502m foot_delta=0.07933m foot_speed=0.050m/s foot_forward=-0.01849m foot_height=-0.07669m done=False
+[K2A3 EXEC] step=6 policy_begin
+[K2A3 EXEC] step=6 env_step_begin action_abs=3.52030 action_mean=0.26288 action_std=1.44982 finite=True
+[K2A3 EXEC] step=7 policy_begin
+[K2A3 EXEC] step=7 env_step_begin action_abs=3.02666 action_mean=0.16396 action_std=1.34165 finite=True
+[K2A3 EXEC] step=8 policy_begin
+[K2A3 EXEC] step=8 env_step_begin action_abs=2.89660 action_mean=0.19379 action_std=1.23152 finite=True
+[K2A3 EXEC] step=9 policy_begin
+[K2A3 EXEC] step=9 env_step_begin action_abs=2.70195 action_mean=0.16879 action_std=1.12001 finite=True
+[BALL DEMO] step=10 ball=[0.30782148241996765, -0.17260189354419708, 0.09499996155500412] displacement_xy=0.0000
+[K2A3 EXEC] step=10 policy_begin
+[K2A3 EXEC] step=10 env_step_begin action_abs=2.48982 action_mean=0.15145 action_std=1.01381 finite=True
+[K2A3 EXEC] step=10 env_step_complete reward=0.39922 joint_delta=0.63815rad root_delta=0.09007m base_drop=0.08274m base_xy=0.03557m foot_delta=0.07818m foot_speed=0.575m/s foot_forward=-0.01601m foot_height=-0.07639m done=False
+[K2A3 EXEC] step=11 policy_begin
+[K2A3 EXEC] step=11 env_step_begin action_abs=2.27315 action_mean=0.17808 action_std=0.92724 finite=True
+[K2A3 EXEC] step=12 policy_begin
+[K2A3 EXEC] step=12 env_step_begin action_abs=2.34798 action_mean=0.16810 action_std=0.93948 finite=True
+[K2A3 EXEC] step=13 policy_begin
+[K2A3 EXEC] step=13 env_step_begin action_abs=2.27613 action_mean=0.09171 action_std=0.94007 finite=True
+[K2A3 EXEC] step=14 policy_begin
+[K2A3 EXEC] step=14 env_step_begin action_abs=2.16467 action_mean=0.08614 action_std=0.89727 finite=True
+[BALL DEMO] step=15 ball=[0.30782148241996765, -0.17260189354419708, 0.09499996155500412] displacement_xy=0.0000
+[K2A3 EXEC] step=15 policy_begin
+[K2A3 EXEC] step=15 env_step_begin action_abs=2.16857 action_mean=0.08849 action_std=0.89232 finite=True
+[K2A3 EXEC] step=15 env_step_complete reward=0.50748 joint_delta=0.73587rad root_delta=0.09958m base_drop=0.07536m base_xy=0.06510m foot_delta=0.03280m foot_speed=0.393m/s foot_forward=-0.01196m foot_height=-0.02964m done=False
+[K2A3 EXEC] step=16 policy_begin
+[K2A3 EXEC] step=16 env_step_begin action_abs=2.21223 action_mean=0.08193 action_std=0.91381 finite=True
+[K2A3 EXEC] step=17 policy_begin
+[K2A3 EXEC] step=17 env_step_begin action_abs=2.28510 action_mean=0.09448 action_std=0.93749 finite=True
+[K2A3 EXEC] step=18 policy_begin
+[K2A3 EXEC] step=18 env_step_begin action_abs=2.38595 action_mean=0.11147 action_std=0.97202 finite=True
+[K2A3 EXEC] step=19 policy_begin
+[K2A3 EXEC] step=19 env_step_begin action_abs=2.46998 action_mean=0.12047 action_std=1.00488 finite=True
+[BALL DEMO] step=20 ball=[0.30782148241996765, -0.17260189354419708, 0.09499996155500412] displacement_xy=0.0000
+[K2A3 EXEC] step=20 policy_begin
+[K2A3 EXEC] step=20 env_step_begin action_abs=2.52559 action_mean=0.12511 action_std=1.02909 finite=True
+[K2A3 EXEC] step=20 env_step_complete reward=0.66664 joint_delta=0.76811rad root_delta=0.10201m base_drop=0.07126m base_xy=0.07300m foot_delta=0.01540m foot_speed=0.356m/s foot_forward=-0.00536m foot_height=0.01337m done=False
+[K2A3 EXEC] step=21 policy_begin
+[K2A3 EXEC] step=21 env_step_begin action_abs=2.56307 action_mean=0.12702 action_std=1.04786 finite=True
+[K2A3 EXEC] step=22 policy_begin
+[K2A3 EXEC] step=22 env_step_begin action_abs=2.58735 action_mean=0.12577 action_std=1.06398 finite=True
+[K2A3 EXEC] step=23 policy_begin
+[K2A3 EXEC] step=23 env_step_begin action_abs=2.60472 action_mean=0.12275 action_std=1.07852 finite=True
+[K2A3 EXEC] step=24 policy_begin
+[K2A3 EXEC] step=24 env_step_begin action_abs=2.61948 action_mean=0.11912 action_std=1.09244 finite=True
+[BALL DEMO] step=25 ball=[0.30782148241996765, -0.17260189354419708, 0.09499996155500412] displacement_xy=0.0000
+[K2A3 EXEC] step=25 policy_begin
+[K2A3 EXEC] step=25 env_step_begin action_abs=2.63311 action_mean=0.11514 action_std=1.10597 finite=True
+[K2A3 EXEC] step=25 env_step_complete reward=0.60971 joint_delta=0.74355rad root_delta=0.09152m base_drop=0.06467m base_xy=0.06476m foot_delta=0.05112m foot_speed=0.344m/s foot_forward=0.01236m foot_height=0.04888m done=False
+[K2A3 EXEC] step=26 policy_begin
+[K2A3 EXEC] step=26 env_step_begin action_abs=2.64093 action_mean=0.11026 action_std=1.11714 finite=True
+[K2A3 EXEC] step=27 policy_begin
+[K2A3 EXEC] step=27 env_step_begin action_abs=2.64593 action_mean=0.10521 action_std=1.12711 finite=True
+[K2A3 EXEC] step=28 policy_begin
+[K2A3 EXEC] step=28 env_step_begin action_abs=2.64949 action_mean=0.10052 action_std=1.13602 finite=True
+[K2A3 EXEC] step=29 policy_begin
+[K2A3 EXEC] step=29 env_step_begin action_abs=2.68596 action_mean=0.10621 action_std=1.13400 finite=True
+[BALL DEMO] step=30 ball=[0.30782148241996765, -0.17260189354419708, 0.09499996155500412] displacement_xy=0.0000
+[K2A3 EXEC] step=30 policy_begin
+[K2A3 EXEC] step=30 env_step_begin action_abs=2.66301 action_mean=0.10020 action_std=1.11940 finite=True
+[K2A3 EXEC] step=30 env_step_complete reward=0.61665 joint_delta=0.67723rad root_delta=0.07642m base_drop=0.05629m base_xy=0.05168m foot_delta=0.07541m foot_speed=0.259m/s foot_forward=0.03623m foot_height=0.06545m done=False
+[K2A3 EXEC] step=31 policy_begin
+[K2A3 EXEC] step=31 env_step_begin action_abs=2.62866 action_mean=0.07182 action_std=1.10441 finite=True
+[K2A3 EXEC] step=32 policy_begin
+[K2A3 EXEC] step=32 env_step_begin action_abs=2.64668 action_mean=0.11344 action_std=1.07738 finite=True
+[K2A3 EXEC] step=33 policy_begin
+[K2A3 EXEC] step=33 env_step_begin action_abs=2.63282 action_mean=0.11379 action_std=1.05838 finite=True
+[K2A3 EXEC] step=34 policy_begin
+[K2A3 EXEC] step=34 env_step_begin action_abs=2.52526 action_mean=0.09765 action_std=1.02485 finite=True
+[BALL DEMO] step=35 ball=[0.3286634683609009, -0.1820443570613861, 0.09499995410442352] displacement_xy=0.0229
+[K2A3 EXEC] step=35 policy_begin
+[K2A3 EXEC] step=35 env_step_begin action_abs=2.40725 action_mean=0.08865 action_std=0.99608 finite=True
+[K2A3 EXEC] step=35 env_step_complete reward=0.05610 joint_delta=0.61712rad root_delta=0.06833m base_drop=0.04639m base_xy=0.05017m foot_delta=0.11848m foot_speed=0.831m/s foot_forward=0.07931m foot_height=0.08403m done=False
+[K2A3 EXEC] step=36 policy_begin
+[K2A3 EXEC] step=36 env_step_begin action_abs=2.30295 action_mean=0.08879 action_std=0.98524 finite=True
+[K2A3 EXEC] step=37 policy_begin
+[K2A3 EXEC] step=37 env_step_begin action_abs=2.22677 action_mean=0.09005 action_std=0.99702 finite=True
+[K2A3 EXEC] step=38 policy_begin
+[K2A3 EXEC] step=38 env_step_begin action_abs=2.19229 action_mean=0.09675 action_std=1.03181 finite=True
+[K2A3 EXEC] step=39 policy_begin
+[K2A3 EXEC] step=39 env_step_begin action_abs=2.18787 action_mean=0.11240 action_std=1.09071 finite=True
+[BALL DEMO] step=40 ball=[0.34957000613212585, -0.21559086441993713, 0.09499994665384293] displacement_xy=0.0599
+[K2A3 EXEC] step=40 policy_begin
+[K2A3 EXEC] step=40 env_step_begin action_abs=2.19849 action_mean=0.13901 action_std=1.16232 finite=True
+[K2A3 EXEC] step=40 env_step_complete reward=-0.04781 joint_delta=0.56919rad root_delta=0.07484m base_drop=0.04530m base_xy=0.05957m foot_delta=0.18459m foot_speed=0.722m/s foot_forward=0.12477m foot_height=0.08563m done=False
+[K2A3 EXEC] step=41 policy_begin
+[K2A3 EXEC] step=41 env_step_begin action_abs=2.16253 action_mean=0.14428 action_std=1.21622 finite=True
+[K2A3 EXEC] step=42 policy_begin
+[K2A3 EXEC] step=42 env_step_begin action_abs=2.20683 action_mean=0.16619 action_std=1.29493 finite=True
+[K2A3 EXEC] step=43 policy_begin
+[K2A3 EXEC] step=43 env_step_begin action_abs=2.45136 action_mean=0.16916 action_std=1.34781 finite=True
+[K2A3 EXEC] step=44 policy_begin
+[K2A3 EXEC] step=44 env_step_begin action_abs=2.69115 action_mean=0.18363 action_std=1.41249 finite=True
+[BALL DEMO] step=45 ball=[0.363206148147583, -0.23771773278713226, 0.09499995410442352] displacement_xy=0.0855
+[K2A3 EXEC] step=45 policy_begin
+[K2A3 EXEC] step=45 env_step_begin action_abs=3.03230 action_mean=0.22577 action_std=1.49452 finite=True
+[K2A3 EXEC] step=45 env_step_complete reward=-0.02406 joint_delta=0.84887rad root_delta=0.08377m base_drop=0.04867m base_xy=0.06818m foot_delta=0.22562m foot_speed=0.559m/s foot_forward=0.16057m foot_height=0.08338m done=False
+[K2A3 EXEC] step=46 policy_begin
+[K2A3 EXEC] step=46 env_step_begin action_abs=3.29252 action_mean=0.25185 action_std=1.54547 finite=True
+[K2A3 EXEC] step=47 policy_begin
+[K2A3 EXEC] step=47 env_step_begin action_abs=3.51374 action_mean=0.27674 action_std=1.59610 finite=True
+[K2A3 EXEC] step=48 policy_begin
+[K2A3 EXEC] step=48 env_step_begin action_abs=3.56219 action_mean=0.29846 action_std=1.57980 finite=True
+[K2A3 EXEC] step=49 policy_begin
+[K2A3 EXEC] step=49 env_step_begin action_abs=3.28080 action_mean=0.33669 action_std=1.47938 finite=True
+[BALL DEMO] step=50 ball=[0.38246217370033264, -0.22781001031398773, 0.09499990940093994] displacement_xy=0.0928
+[K2A3 EXEC] step=50 policy_begin
+[K2A3 EXEC] step=50 env_step_begin action_abs=2.56933 action_mean=0.21506 action_std=1.22345 finite=True
+[K2A3 EXEC] step=50 env_step_complete reward=-0.05608 joint_delta=0.94874rad root_delta=0.08942m base_drop=0.05122m base_xy=0.07330m foot_delta=0.22806m foot_speed=1.143m/s foot_forward=0.16861m foot_height=0.08663m done=False
+[K2A3 EXEC] step=51 policy_begin
+[K2A3 EXEC] step=51 env_step_begin action_abs=2.39964 action_mean=0.30264 action_std=1.20996 finite=True
+[K2A3 EXEC] step=52 policy_begin
+[K2A3 EXEC] step=52 env_step_begin action_abs=2.37588 action_mean=0.19885 action_std=1.14930 finite=True
+[K2A3 EXEC] step=53 policy_begin
+[K2A3 EXEC] step=53 env_step_begin action_abs=2.28605 action_mean=0.13636 action_std=1.06374 finite=True
+[K2A3 EXEC] step=54 policy_begin
+[K2A3 EXEC] step=54 env_step_begin action_abs=2.33220 action_mean=0.14993 action_std=1.01964 finite=True
+[BALL DEMO] step=55 ball=[0.3201484978199005, -0.2344430536031723, 0.09499995410442352] displacement_xy=0.0631
+[K2A3 EXEC] step=55 policy_begin
+[K2A3 EXEC] step=55 env_step_begin action_abs=2.43989 action_mean=0.18970 action_std=1.01067 finite=True
+[K2A3 EXEC] step=55 env_step_complete reward=-0.08560 joint_delta=0.64319rad root_delta=0.08803m base_drop=0.04773m base_xy=0.07398m foot_delta=0.08492m foot_speed=1.227m/s foot_forward=0.02374m foot_height=0.04044m done=False
+[K2A3 EXEC] step=56 policy_begin
+[K2A3 EXEC] step=56 env_step_begin action_abs=2.56331 action_mean=0.22770 action_std=1.02860 finite=True
+[K2A3 EXEC] step=57 policy_begin
+[K2A3 EXEC] step=57 env_step_begin action_abs=2.65587 action_mean=0.25450 action_std=1.05212 finite=True
+[K2A3 EXEC] step=58 policy_begin
+[K2A3 EXEC] step=58 env_step_begin action_abs=2.71076 action_mean=0.26982 action_std=1.07062 finite=True
+[K2A3 EXEC] step=59 policy_begin
+[K2A3 EXEC] step=59 env_step_begin action_abs=2.74631 action_mean=0.28162 action_std=1.08582 finite=True
+[BALL DEMO] step=60 ball=[0.2718282639980316, -0.24001817405223846, 0.09499995410442352] displacement_xy=0.0764
+[K2A3 EXEC] step=60 policy_begin
+[K2A3 EXEC] step=60 env_step_begin action_abs=2.76355 action_mean=0.28836 action_std=1.10053 finite=True
+[K2A3 EXEC] step=60 env_step_complete reward=0.21657 joint_delta=0.71353rad root_delta=0.08694m base_drop=0.04849m base_xy=0.07217m foot_delta=0.03495m foot_speed=0.509m/s foot_forward=-0.02089m foot_height=-0.00714m done=False
+[K2A3 EXEC] step=61 policy_begin
+[K2A3 EXEC] step=61 env_step_begin action_abs=2.78727 action_mean=0.29975 action_std=1.11955 finite=True
+[K2A3 EXEC] step=62 policy_begin
+[K2A3 EXEC] step=62 env_step_begin action_abs=2.82643 action_mean=0.31144 action_std=1.14599 finite=True
+[K2A3 EXEC] step=63 policy_begin
+[K2A3 EXEC] step=63 env_step_begin action_abs=2.84996 action_mean=0.32126 action_std=1.16723 finite=True
+[K2A3 EXEC] step=64 policy_begin
+[K2A3 EXEC] step=64 env_step_begin action_abs=2.90176 action_mean=0.33476 action_std=1.19708 finite=True
+[BALL DEMO] step=65 ball=[0.2366512417793274, -0.25551849603652954, 0.09499995410442352] displacement_xy=0.1093
+[K2A3 EXEC] step=65 policy_begin
+[K2A3 EXEC] step=65 env_step_begin action_abs=2.95726 action_mean=0.34589 action_std=1.22978 finite=True
+[K2A3 EXEC] step=65 env_step_complete reward=0.36706 joint_delta=0.75502rad root_delta=0.08021m base_drop=0.04352m base_xy=0.06738m foot_delta=0.05736m foot_speed=0.279m/s foot_forward=-0.03028m foot_height=-0.04793m done=False
+[K2A3 EXEC] step=66 policy_begin
+[K2A3 EXEC] step=66 env_step_begin action_abs=3.12606 action_mean=0.37666 action_std=1.28446 finite=True
+[K2A3 EXEC] step=67 policy_begin
+[K2A3 EXEC] step=67 env_step_begin action_abs=3.16627 action_mean=0.39127 action_std=1.31089 finite=True
+[K2A3 EXEC] step=68 policy_begin
+[K2A3 EXEC] step=68 env_step_begin action_abs=3.18015 action_mean=0.39775 action_std=1.33448 finite=True
+[K2A3 EXEC] step=69 policy_begin
+[K2A3 EXEC] step=69 env_step_begin action_abs=3.18227 action_mean=0.40257 action_std=1.35634 finite=True
+[BALL DEMO] step=70 ball=[0.20246389508247375, -0.27143847942352295, 0.09499997645616531] displacement_xy=0.1445
+[K2A3 EXEC] step=69 env_step_complete reward=0.40498 joint_delta=0.00000rad root_delta=0.00000m base_drop=0.00000m base_xy=0.00000m foot_delta=0.00000m foot_speed=0.000m/s foot_forward=0.00000m foot_height=0.00000m done=True
+[K2A3 EXEC] step=70 policy_begin
+[K2A3 EXEC] step=70 env_step_begin action_abs=1.66558 action_mean=0.17358 action_std=0.81571 finite=True
+[K2A3 EXEC] step=70 env_step_complete reward=0.36480 joint_delta=0.20908rad root_delta=0.00081m base_drop=0.00078m base_xy=0.00021m foot_delta=0.03055m foot_speed=1.567m/s foot_forward=-0.00408m foot_height=-0.02807m done=False
+[K2A3 EXEC] step=71 policy_begin
+[K2A3 EXEC] step=71 env_step_begin action_abs=2.70187 action_mean=0.00506 action_std=1.19143 finite=True
+[K2A3 EXEC] step=72 policy_begin
+[K2A3 EXEC] step=72 env_step_begin action_abs=1.97305 action_mean=0.20896 action_std=0.97690 finite=True
+[K2A3 EXEC] step=73 policy_begin
+[K2A3 EXEC] step=73 env_step_begin action_abs=1.48395 action_mean=-0.00514 action_std=0.94938 finite=True
+[K2A3 EXEC] step=74 policy_begin
+[K2A3 EXEC] step=74 env_step_begin action_abs=2.64250 action_mean=0.32594 action_std=0.97619 finite=True
+[BALL DEMO] step=75 ball=[0.1655258983373642, -0.28744620084762573, 0.09499996900558472] displacement_xy=0.1829
+[K2A3 EXEC] step=75 policy_begin
+[K2A3 EXEC] step=75 env_step_begin action_abs=3.63955 action_mean=0.43604 action_std=1.41415 finite=True
+[K2A3 EXEC] step=75 env_step_complete reward=0.38301 joint_delta=0.66391rad root_delta=0.06071m base_drop=0.06050m base_xy=0.00509m foot_delta=0.08106m foot_speed=0.049m/s foot_forward=-0.02321m foot_height=-0.07672m done=False
+[K2A3 EXEC] step=76 policy_begin
+[K2A3 EXEC] step=76 env_step_begin action_abs=3.56251 action_mean=0.27208 action_std=1.46654 finite=True
+[K2A3 EXEC] step=77 policy_begin
+[K2A3 EXEC] step=77 env_step_begin action_abs=3.01371 action_mean=0.15506 action_std=1.35152 finite=True
+[K2A3 EXEC] step=78 policy_begin
+[K2A3 EXEC] step=78 env_step_begin action_abs=2.88738 action_mean=0.19446 action_std=1.23459 finite=True
+[K2A3 EXEC] step=79 policy_begin
+[K2A3 EXEC] step=79 env_step_begin action_abs=2.67273 action_mean=0.16589 action_std=1.11536 finite=True
+[BALL DEMO] step=80 ball=[0.1279589980840683, -0.3009776473045349, 0.09499996900558472] displacement_xy=0.2210
+[K2A3 EXEC] step=80 policy_begin
+[K2A3 EXEC] step=80 env_step_begin action_abs=2.43054 action_mean=0.14609 action_std=0.99471 finite=True
+[K2A3 EXEC] step=80 env_step_complete reward=0.41451 joint_delta=0.67520rad root_delta=0.08691m base_drop=0.07951m base_xy=0.03508m foot_delta=0.08106m foot_speed=0.245m/s foot_forward=-0.02457m foot_height=-0.07645m done=False
+[K2A3 EXEC] step=81 policy_begin
+[K2A3 EXEC] step=81 env_step_begin action_abs=2.21605 action_mean=0.14119 action_std=0.90483 finite=True
+[K2A3 EXEC] step=82 policy_begin
+[K2A3 EXEC] step=82 env_step_begin action_abs=2.16299 action_mean=0.16574 action_std=0.88242 finite=True
+[K2A3 EXEC] step=83 policy_begin
+[K2A3 EXEC] step=83 env_step_begin action_abs=2.22437 action_mean=0.11181 action_std=0.90919 finite=True
+[K2A3 EXEC] step=84 policy_begin
+[K2A3 EXEC] step=84 env_step_begin action_abs=2.17871 action_mean=0.09025 action_std=0.89932 finite=True
+[BALL DEMO] step=85 ball=[0.09044484794139862, -0.3144872188568115, 0.09499997645616531] displacement_xy=0.2596
+[K2A3 EXEC] step=85 policy_begin
+[K2A3 EXEC] step=85 env_step_begin action_abs=2.25452 action_mean=0.11850 action_std=0.90650 finite=True
+[K2A3 EXEC] step=85 env_step_complete reward=0.47423 joint_delta=0.76034rad root_delta=0.09674m base_drop=0.07292m base_xy=0.06358m foot_delta=0.03898m foot_speed=0.404m/s foot_forward=-0.01091m foot_height=-0.03605m done=False
+[K2A3 EXEC] step=86 policy_begin
+[K2A3 EXEC] step=86 env_step_begin action_abs=2.35992 action_mean=0.12580 action_std=0.94466 finite=True
+[K2A3 EXEC] step=87 policy_begin
+[K2A3 EXEC] step=87 env_step_begin action_abs=2.43112 action_mean=0.13097 action_std=0.97199 finite=True
+[K2A3 EXEC] step=88 policy_begin
+[K2A3 EXEC] step=88 env_step_begin action_abs=2.49442 action_mean=0.14188 action_std=0.99420 finite=True
+[K2A3 EXEC] step=89 policy_begin
+[K2A3 EXEC] step=89 env_step_begin action_abs=2.54085 action_mean=0.14652 action_std=1.01426 finite=True
+[BALL DEMO] step=90 ball=[0.052983351051807404, -0.3279748558998108, 0.09499997645616531] displacement_xy=0.2985
+[K2A3 EXEC] step=90 policy_begin
+[K2A3 EXEC] step=90 env_step_begin action_abs=2.56976 action_mean=0.14694 action_std=1.03094 finite=True
+[K2A3 EXEC] step=90 env_step_complete reward=0.60405 joint_delta=0.77554rad root_delta=0.09822m base_drop=0.06998m base_xy=0.06892m foot_delta=0.01093m foot_speed=0.357m/s foot_forward=-0.00119m foot_height=0.00727m done=False
+[K2A3 EXEC] step=91 policy_begin
+[K2A3 EXEC] step=91 env_step_begin action_abs=2.59172 action_mean=0.14683 action_std=1.04549 finite=True
+[K2A3 EXEC] step=92 policy_begin
+[K2A3 EXEC] step=92 env_step_begin action_abs=2.61121 action_mean=0.14570 action_std=1.05993 finite=True
+[K2A3 EXEC] step=93 policy_begin
+[K2A3 EXEC] step=93 env_step_begin action_abs=2.62662 action_mean=0.14288 action_std=1.07363 finite=True
+[K2A3 EXEC] step=94 policy_begin
+[K2A3 EXEC] step=94 env_step_begin action_abs=2.64082 action_mean=0.13950 action_std=1.08721 finite=True
+[BALL DEMO] step=95 ball=[0.015574448741972446, -0.341440349817276, 0.09499998390674591] displacement_xy=0.3375
+[K2A3 EXEC] step=95 policy_begin
+[K2A3 EXEC] step=95 env_step_begin action_abs=2.65248 action_mean=0.13562 action_std=1.09922 finite=True
+[K2A3 EXEC] step=95 env_step_complete reward=0.51493 joint_delta=0.74147rad root_delta=0.08711m base_drop=0.06316m base_xy=0.06000m foot_delta=0.04822m foot_speed=0.357m/s foot_forward=0.01914m foot_height=0.04283m done=False
+[K2A3 EXEC] step=96 policy_begin
+[K2A3 EXEC] step=96 env_step_begin action_abs=2.65816 action_mean=0.13077 action_std=1.10943 finite=True
+[K2A3 EXEC] step=97 policy_begin
+[K2A3 EXEC] step=97 env_step_begin action_abs=2.66283 action_mean=0.12578 action_std=1.11905 finite=True
+2026-07-15T20:41:04Z [19,545ms] [Warning] [carb] Client gpu.foundation.plugin has acquired [gpu::unstable::IMemoryBudgetManagerFactory v0.1] 100 times. Consider accessing this interface with carb::getCachedInterface() (Performance warning)
+[K2A3 EXEC] step=98 policy_begin
+[K2A3 EXEC] step=98 env_step_begin action_abs=2.66580 action_mean=0.12133 action_std=1.12700 finite=True
+[K2A3 EXEC] step=99 policy_begin
+[K2A3 EXEC] step=99 env_step_begin action_abs=2.70213 action_mean=0.12742 action_std=1.12542 finite=True
+[BALL DEMO] step=100 ball=[-0.02178203873336315, -0.35488370060920715, 0.09499999135732651] displacement_xy=0.3766
+[K2A3 EXEC] step=100 policy_begin
+[K2A3 EXEC] step=100 env_step_begin action_abs=2.68024 action_mean=0.12180 action_std=1.11229 finite=True
+[K2A3 EXEC] step=100 env_step_complete reward=0.68583 joint_delta=0.67173rad root_delta=0.07441m base_drop=0.05481m base_xy=0.05032m foot_delta=0.07502m foot_speed=0.357m/s foot_forward=0.04377m foot_height=0.05969m done=False
+[K2A3 EXEC] step=101 policy_begin
+[K2A3 EXEC] step=101 env_step_begin action_abs=2.63477 action_mean=0.11471 action_std=1.08989 finite=True
+[K2A3 EXEC] step=102 policy_begin
+[K2A3 EXEC] step=102 env_step_begin action_abs=2.59774 action_mean=0.10902 action_std=1.07016 finite=True
+[K2A3 EXEC] step=103 policy_begin
+[K2A3 EXEC] step=103 env_step_begin action_abs=2.57939 action_mean=0.10456 action_std=1.05928 finite=True
+[K2A3 EXEC] step=104 policy_begin
+[K2A3 EXEC] step=104 env_step_begin action_abs=2.58033 action_mean=0.10372 action_std=1.05569 finite=True
+[BALL DEMO] step=105 ball=[-0.059086039662361145, -0.36830517649650574, 0.09499999135732651] displacement_xy=0.4158
+[K2A3 EXEC] step=105 policy_begin
+[K2A3 EXEC] step=105 env_step_begin action_abs=2.58297 action_mean=0.10252 action_std=1.05504 finite=True
+[K2A3 EXEC] step=105 env_step_complete reward=0.63289 joint_delta=0.59953rad root_delta=0.07189m base_drop=0.04981m base_xy=0.05183m foot_delta=0.09675m foot_speed=0.593m/s foot_forward=0.09213m foot_height=0.02756m done=False
+[K2A3 EXEC] step=106 policy_begin
+[K2A3 EXEC] step=106 env_step_begin action_abs=2.57921 action_mean=0.09912 action_std=1.05599 finite=True
+[K2A3 EXEC] step=107 policy_begin
+[K2A3 EXEC] step=107 env_step_begin action_abs=2.55670 action_mean=0.09305 action_std=1.05467 finite=True
+[K2A3 EXEC] step=108 policy_begin
+[K2A3 EXEC] step=108 env_step_begin action_abs=2.53836 action_mean=0.08838 action_std=1.05859 finite=True
+[K2A3 EXEC] step=109 policy_begin
+[K2A3 EXEC] step=109 env_step_begin action_abs=2.52212 action_mean=0.08498 action_std=1.06693 finite=True
+[BALL DEMO] step=110 ball=[-0.09633763879537582, -0.3817049264907837, 0.0950000062584877] displacement_xy=0.4550
+[K2A3 EXEC] step=110 policy_begin
+[K2A3 EXEC] step=110 env_step_begin action_abs=2.50492 action_mean=0.08180 action_std=1.07915 finite=True
+[K2A3 EXEC] step=110 env_step_complete reward=0.69231 joint_delta=0.55665rad root_delta=0.07607m base_drop=0.05021m base_xy=0.05715m foot_delta=0.14748m foot_speed=0.513m/s foot_forward=0.14687m foot_height=0.00224m done=False
+[K2A3 EXEC] step=111 policy_begin
+[K2A3 EXEC] step=111 env_step_begin action_abs=2.49301 action_mean=0.08021 action_std=1.09693 finite=True
+[K2A3 EXEC] step=112 policy_begin
+[K2A3 EXEC] step=112 env_step_begin action_abs=2.46233 action_mean=0.07564 action_std=1.11348 finite=True
+[K2A3 EXEC] step=113 policy_begin
+[K2A3 EXEC] step=113 env_step_begin action_abs=2.43528 action_mean=0.07345 action_std=1.13558 finite=True
+[K2A3 EXEC] step=114 policy_begin
+[K2A3 EXEC] step=114 env_step_begin action_abs=2.41037 action_mean=0.07204 action_std=1.16258 finite=True
+[BALL DEMO] step=115 ball=[-0.1335369199514389, -0.39508289098739624, 0.0950000062584877] displacement_xy=0.4943
+[K2A3 EXEC] step=115 policy_begin
+[K2A3 EXEC] step=115 env_step_begin action_abs=2.39171 action_mean=0.07271 action_std=1.19452 finite=True
+[K2A3 EXEC] step=115 env_step_complete reward=0.84681 joint_delta=0.63057rad root_delta=0.07959m base_drop=0.05471m base_xy=0.05781m foot_delta=0.19146m foot_speed=0.345m/s foot_forward=0.19009m foot_height=-0.01753m done=False
+[K2A3 EXEC] step=116 policy_begin
+[K2A3 EXEC] step=116 env_step_begin action_abs=2.35926 action_mean=0.07051 action_std=1.22819 finite=True
+[K2A3 EXEC] step=117 policy_begin
+[K2A3 EXEC] step=117 env_step_begin action_abs=2.38445 action_mean=0.07055 action_std=1.26678 finite=True
+[K2A3 EXEC] step=118 policy_begin
+[K2A3 EXEC] step=118 env_step_begin action_abs=2.31985 action_mean=0.08397 action_std=1.25965 finite=True
+[K2A3 EXEC] step=119 policy_begin
+[K2A3 EXEC] step=119 env_step_begin action_abs=2.42529 action_mean=0.11478 action_std=1.20678 finite=True
+[BALL DEMO] step=120 ball=[-0.1706840693950653, -0.40843886137008667, 0.0950000137090683] displacement_xy=0.5335
+[K2A3 EXEC] step=120 policy_begin
+[K2A3 EXEC] step=120 env_step_begin action_abs=2.53598 action_mean=0.10552 action_std=1.16108 finite=True
+[K2A3 EXEC] step=120 env_step_complete reward=0.39642 joint_delta=0.63213rad root_delta=0.08468m base_drop=0.06220m base_xy=0.05747m foot_delta=0.17523m foot_speed=1.215m/s foot_forward=0.17352m foot_height=-0.01781m done=False
+[K2A3 EXEC] step=121 policy_begin
+[K2A3 EXEC] step=121 env_step_begin action_abs=2.53936 action_mean=0.07149 action_std=1.10835 finite=True
+[K2A3 EXEC] step=122 policy_begin
+[K2A3 EXEC] step=122 env_step_begin action_abs=2.51600 action_mean=0.06041 action_std=1.06763 finite=True
+[K2A3 EXEC] step=123 policy_begin
+[K2A3 EXEC] step=123 env_step_begin action_abs=2.54713 action_mean=0.08138 action_std=1.05002 finite=True
+[K2A3 EXEC] step=124 policy_begin
+[K2A3 EXEC] step=124 env_step_begin action_abs=2.61827 action_mean=0.11443 action_std=1.05477 finite=True
+[BALL DEMO] step=125 ball=[-0.207779198884964, -0.42177268862724304, 0.0950000137090683] displacement_xy=0.5727
+[K2A3 EXEC] step=125 policy_begin
+[K2A3 EXEC] step=125 env_step_begin action_abs=2.68231 action_mean=0.14284 action_std=1.06957 finite=True
+[K2A3 EXEC] step=125 env_step_complete reward=0.42552 joint_delta=0.72628rad root_delta=0.08855m base_drop=0.06270m base_xy=0.06253m foot_delta=0.07221m foot_speed=0.728m/s foot_forward=0.06861m foot_height=0.00369m done=False
+[K2A3 EXEC] step=126 policy_begin
+[K2A3 EXEC] step=126 env_step_begin action_abs=2.71995 action_mean=0.16062 action_std=1.08137 finite=True

@@ -637,6 +637,60 @@ The current remaining issue is the amount of whole-body movement. The total root
 
 Ball-contact learning will resume after the motion prior satisfies these conditions.
 
+
+<!-- PHYSICAL-KICK-EVIDENCE-START -->
+### 8.3 Experimental evidence: why the original motion reward was misleading
+
+The first motion-prior objective measured the selected front foot relative to the robot's moving body. The policy could therefore improve its tracking reward by lowering or translating the torso while leaving the foot almost stationary in world coordinates.
+
+A world-frame execution probe measured only **0.013 m** of genuine forward foot movement under that original objective.
+
+The corrected objective anchors the desired trajectory to the robot's initial world pose. The latest checkpoint produced **0.200 m** of genuine world-frame forward foot movement, approximately **15.4 times** the original result.
+
+![Comparison of actual world-frame forward foot displacement](assets/plots/actual_world_frame_foot_displacement.png)
+
+**Figure 1 — Actual physical motion, not the internal tracking score.**  
+The left bar shows the failed body-relative objective. The right bar shows the corrected world-anchored objective evaluated with the latest checkpoint. This comparison demonstrates that the reward correction produced real forward movement of the selected front foot.
+
+### 8.4 Training behavior under the corrected world-anchored objective
+
+![Corrected world-anchored training curves](assets/plots/corrected_world_anchored_training_curves.png)
+
+**Figure 2 — Optimization of the corrected motion prior.**  
+The mean reward and world-anchored foot-tracking terms increase during training, while base-contact termination remains near zero. This indicates that the policy learns the revised trajectory without frequently falling. The curve is supporting evidence only; successful ball contact has not yet been demonstrated.
+
+### 8.5 Automatic Isaac Lab playback
+
+[![Preview of the automatically recorded Isaac Lab playback](assets/videos/world_anchored_motion_prior_preview.png)](assets/videos/world_anchored_motion_prior.mp4)
+
+**Video 1 — Ball-free physical motion prior.**  
+The video is recorded directly from the working execution-probe loop. It shows the selected front leg lifting and moving forward while the remaining legs support the body. This is a motion-prior result, not yet a completed kick and not a goal-scoring result.
+
+Latest execution-probe measurements:
+
+| Measurement | Result | Current interpretation |
+|---|---:|---|
+| Genuine forward foot motion | 0.200 m | Meets the current reach target |
+| Peak foot speed | 2.377 m/s | Sufficient for the next contact-learning stage |
+| Foot lift height | 0.067 m | Still below the 0.10 m target |
+| Base vertical drop | 0.082 m | Slightly above the 0.08 m target |
+| Base horizontal drift | 0.077 m | Slightly above the 0.07 m target |
+
+### 8.6 Experiment links and reproducibility
+
+[Open the interactive W&B review run](https://wandb.ai/lj2634-nyu-tandon/isaac-go2-soccer/runs/lhrxi18n)
+
+| File | Purpose |
+|---|---|
+| `tools/reporting/run_k2a3_probe_gui.py` | Forces the verified execution probe to run in the GUI, follows the robot with a close leg-focused camera, and slows the simulation for readable playback. |
+| `tools/reporting/record_k2a3_probe_video.sh` | Starts the verified probe, waits for physical motion, records the Isaac Sim window, and generates an MP4 plus a preview frame. |
+| `tools/reporting/integrate_k2a3_evidence_to_report.py` | Generates the physical-displacement comparison, copies selected evidence, updates this report, and optionally pushes the report repository. |
+| `tools/reporting/build_review_packet.py` | Generates compact plots and a manifest from TensorBoard and experiment summaries. |
+| `tools/reporting/publish_review_packet_to_wandb.py` | Publishes plots, metrics, videos, and the review artifact to W&B. |
+
+The report intentionally excludes the earlier body-motion bar chart because it compared vertical base drop with three-dimensional total root displacement. Those quantities are not directly comparable.
+<!-- PHYSICAL-KICK-EVIDENCE-END -->
+
 ---
 
 ## 9. Current Status and Next Steps

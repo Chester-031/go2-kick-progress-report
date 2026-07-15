@@ -659,6 +659,35 @@ The left bar shows the failed body-relative objective. The right bar shows the c
 **Figure 2 — Optimization of the corrected motion prior.**  
 The mean reward and world-anchored foot-tracking terms increase during training, while base-contact termination remains near zero. This indicates that the policy learns the revised trajectory without frequently falling. The curve is supporting evidence only; successful ball contact has not yet been demonstrated.
 
+#### How to read the training curves
+
+The plotted quantities are **logged, weighted episode-reward components**. They are not all expressed in the same physical unit, so their vertical magnitudes should not be compared as metres, newtons, or metres per second. The useful information is the trend of each term during the same training run.
+
+| Logged series | What it represents | Interpretation of the observed trend |
+|---|---|---|
+| `Train/mean_reward` | Mean total PPO episode reward | Rises from approximately 16 to 37 and then begins to plateau, indicating that the policy consistently improves under the corrected objective. |
+| `Episode_Reward/kick_foot_tracking` | Earlier selected-foot tracking term retained in the logs | Remains close to zero. It is not the main driver of the corrected policy and should be treated as a legacy or low-weight diagnostic term. |
+| `Episode_Reward/anchored_foot_tracking` | Tracking of the desired foot trajectory relative to the robot's initial world pose | Increases steadily from near zero to approximately 14. This is the main evidence that the corrected world-anchored trajectory is being learned. |
+| `Episode_Reward/anchored_strike_tracking` | Accuracy of the forward strike segment | Gradually increases throughout training, indicating improvement specifically during the strike phase rather than only during lift or recovery. |
+| `Episode_Reward/anchored_velocity_tracking` | Agreement between actual and desired selected-foot velocity | Rises rapidly and then remains near a plateau. This suggests that the velocity condition becomes comparatively easy or saturated before the position objective has fully converged. |
+| `Episode_Reward/swing_foot_air` | Reward for keeping the selected swing foot off the ground during the required phase | Reaches a stable value early. The policy learns foot clearance quickly, so this term provides limited discrimination later in training. |
+| `Episode_Reward/base_xy_drift` | Penalty for horizontal motion of the robot base | Remains small and negative, with a short adverse excursion near iteration 920. The excursion is temporary rather than a continuing instability. |
+| `Episode_Reward/excess_base_height_change` | Penalty for excessive vertical lowering or rising of the base | Remains slightly negative and broadly stable, showing that vertical body motion is still present but does not progressively diverge. |
+| `Episode_Termination/base_contact` | Termination caused by the robot base contacting the ground | Stays near zero, indicating that the increasing tracking reward is not obtained through repeated falling. |
+
+#### Why this plot is useful
+
+This plot is valuable because it shows **which reward terms are responsible for the increase in total reward**. In particular, the total reward grows together with the world-anchored foot-trajectory and strike-phase terms, while base-contact termination remains near zero. This is consistent with learning a repeatable swing motion rather than merely exploiting a body-relative coordinate frame.
+
+The overall trend is therefore reasonable:
+
+- the total reward and corrected trajectory terms increase;
+- the stability-related penalties remain bounded;
+- base-contact termination remains near zero;
+- the curves gradually approach a plateau instead of diverging.
+
+The plot is not, by itself, evidence of a completed physical kick. Reward curves can still hide undesirable strategies. For that reason, the report evaluates this run together with direct physical measurements of world-frame foot displacement, foot speed, base vertical drop, base horizontal drift, and the automatically recorded execution video. Ball displacement and verified foot–ball contact remain separate requirements for the contact-learning stage.
+
 ### 8.5 Automatic Isaac Lab playback
 
 [![Preview of the automatically recorded Isaac Lab playback](assets/videos/world_anchored_motion_prior_preview.png)](assets/videos/world_anchored_motion_prior.mp4)

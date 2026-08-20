@@ -1,0 +1,102 @@
+{
+  "accepted_high": {
+    "action_rate_mean": 0.04968614863089516,
+    "case_count": 13,
+    "contact_ball_rate": 0.5384615384615384,
+    "find_ball_rate": 0.7692307692307693,
+    "goal_case_rate": 0.15384615384615385,
+    "low_reward_mean": 1.485894354702155,
+    "stationary_rate": 0.0,
+    "upright_error_mean": 0.004655489108169123,
+    "wall_stall_rate": 0.3076923076923077
+  },
+  "candidates": [
+    {
+      "checkpoint": "/scratch/lj2634/runs/go2_soccer_r8_76_v4d_curriculum_high_repair/curriculum_15864427_20260816_180705/logs/high_model_199.pt",
+      "eligible": true,
+      "label": "intermediate_199",
+      "materially_improved": true,
+      "metrics": {
+        "action_rate_mean": 0.05023099253811801,
+        "case_count": 13,
+        "contact_ball_rate": 0.5384615384615384,
+        "find_ball_rate": 0.7692307692307693,
+        "goal_case_rate": 0.15384615384615385,
+        "low_reward_mean": 1.5333462601507801,
+        "stationary_rate": 0.0,
+        "upright_error_mean": 0.004745061674319242,
+        "wall_stall_rate": 0.23076923076923078
+      },
+      "score": 5.032848373051231,
+      "source_verdict": "INCONCLUSIVE_REVIEW_PER_ENV_METRICS"
+    },
+    {
+      "checkpoint": "/scratch/lj2634/runs/go2_soccer_r8_76_v4d_curriculum_high_repair/curriculum_15864427_20260816_180705/logs/high_model_449_joint_finetune.pt",
+      "eligible": true,
+      "label": "hard_mix_449",
+      "materially_improved": true,
+      "metrics": {
+        "action_rate_mean": 0.039444602901780326,
+        "case_count": 13,
+        "contact_ball_rate": 0.5384615384615384,
+        "find_ball_rate": 0.7692307692307693,
+        "goal_case_rate": 0.15384615384615385,
+        "low_reward_mean": 1.528701738281055,
+        "stationary_rate": 0.0,
+        "upright_error_mean": 0.004225871566583366,
+        "wall_stall_rate": 0.23076923076923078
+      },
+      "score": 5.062482693543761,
+      "source_verdict": "INCONCLUSIVE_REVIEW_PER_ENV_METRICS"
+    },
+    {
+      "checkpoint": "/scratch/lj2634/runs/go2_soccer_r8_76_v4d_curriculum_high_repair/curriculum_15864427_20260816_180705/logs/high_model_final.pt",
+      "eligible": true,
+      "label": "full_support_final",
+      "materially_improved": true,
+      "metrics": {
+        "action_rate_mean": 0.043198762184161806,
+        "case_count": 13,
+        "contact_ball_rate": 0.5384615384615384,
+        "find_ball_rate": 0.7692307692307693,
+        "goal_case_rate": 0.15384615384615385,
+        "low_reward_mean": 1.5222669774537703,
+        "stationary_rate": 0.0,
+        "upright_error_mean": 0.004280745924472345,
+        "wall_stall_rate": 0.23076923076923078
+      },
+      "score": 5.050659507407576,
+      "source_verdict": "INCONCLUSIVE_REVIEW_PER_ENV_METRICS"
+    }
+  ],
+  "evaluation_distribution": "r875_deterministic_full_support_cases",
+  "promotion": true,
+  "scripted": {
+    "action_rate_mean": 0.026399084295654462,
+    "case_count": 13,
+    "contact_ball_rate": 0.38461538461538464,
+    "find_ball_rate": 0.5384615384615384,
+    "goal_case_rate": 0.15384615384615385,
+    "low_reward_mean": 1.7875263620424369,
+    "stationary_rate": 0.6923076923076923,
+    "upright_error_mean": 0.0020462548373868625,
+    "wall_stall_rate": 0.0
+  },
+  "selected_checkpoint": "/scratch/lj2634/runs/go2_soccer_r8_76_v4d_curriculum_high_repair/curriculum_15864427_20260816_180705/logs/high_model_449_joint_finetune.pt",
+  "selected_label": "hard_mix_449",
+  "selected_metrics": {
+    "action_rate_mean": 0.039444602901780326,
+    "case_count": 13,
+    "contact_ball_rate": 0.5384615384615384,
+    "find_ball_rate": 0.7692307692307693,
+    "goal_case_rate": 0.15384615384615385,
+    "low_reward_mean": 1.528701738281055,
+    "stationary_rate": 0.0,
+    "upright_error_mean": 0.004225871566583366,
+    "wall_stall_rate": 0.23076923076923078
+  },
+  "selection_score": 5.062482693543761,
+  "selection_status": "PROMOTED_FOR_VIDEO",
+  "version": "r8_77_v4d_checkpoint_gate_v1",
+  "video_contract": "one_selected_checkpoint_only"
+}

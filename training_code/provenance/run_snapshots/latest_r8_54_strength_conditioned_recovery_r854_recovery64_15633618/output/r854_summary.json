@@ -1,0 +1,761 @@
+{
+  "version": "r8_54_strength_conditioned_recovery",
+  "training": true,
+  "actual_contact": true,
+  "kick_frozen": true,
+  "r853_warm_start": "/scratch/lj2634/runs/go2_soccer_r8_53_phase_recovery64/r853_recovery64_15631716/output/recovery64_final.pt",
+  "strength_observation": "64D slot63 overwritten with desired strength; environment strength remains 1.0",
+  "curriculum": "updates1-8 high; 9-16 mid+high; 17+ all",
+  "dense_reward": "pose+contact+support4+touchdown+all_now+hold3",
+  "geometry": [
+    0.20000000298023224,
+    -0.019999999552965164
+  ],
+  "strength_gain": {
+    "0.75": 0.5,
+    "1.0": 1.0,
+    "1.25": 2.0
+  },
+  "updates": 28,
+  "rollout_steps": 256,
+  "history": [
+    {
+      "update": 1,
+      "stage": "high_bootstrap",
+      "by_strength": {
+        "0.75": {
+          "real": 0,
+          "all": 0,
+          "recovery": 0
+        },
+        "1.0": {
+          "real": 0,
+          "all": 0,
+          "recovery": 0
+        },
+        "1.25": {
+          "real": 127,
+          "all": 82,
+          "recovery": 0
+        }
+      },
+      "actor_loss": -0.006550159159814939,
+      "value_loss": 2.1525956273078917,
+      "anchor": 3.7018671918076508e-06
+    },
+    {
+      "update": 2,
+      "stage": "high_bootstrap",
+      "by_strength": {
+        "0.75": {
+          "real": 0,
+          "all": 0,
+          "recovery": 0
+        },
+        "1.0": {
+          "real": 0,
+          "all": 0,
+          "recovery": 0
+        },
+        "1.25": {
+          "real": 127,
+          "all": 74,
+          "recovery": 1
+        }
+      },
+      "actor_loss": -0.0031699724146164953,
+      "value_loss": 2.1121155619621277,
+      "anchor": 1.0159498833672842e-05
+    },
+    {
+      "update": 3,
+      "stage": "high_bootstrap",
+      "by_strength": {
+        "0.75": {
+          "real": 0,
+          "all": 0,
+          "recovery": 0
+        },
+        "1.0": {
+          "real": 0,
+          "all": 0,
+          "recovery": 0
+        },
+        "1.25": {
+          "real": 127,
+          "all": 91,
+          "recovery": 0
+        }
+      },
+      "actor_loss": -0.004581911501009017,
+      "value_loss": 2.2527027487754823,
+      "anchor": 2.2367476412910035e-05
+    },
+    {
+      "update": 4,
+      "stage": "high_bootstrap",
+      "by_strength": {
+        "0.75": {
+          "real": 0,
+          "all": 0,
+          "recovery": 0
+        },
+        "1.0": {
+          "real": 0,
+          "all": 0,
+          "recovery": 0
+        },
+        "1.25": {
+          "real": 127,
+          "all": 82,
+          "recovery": 0
+        }
+      },
+      "actor_loss": -0.0017066221276763826,
+      "value_loss": 2.0942647635936735,
+      "anchor": 3.683827844724874e-05
+    },
+    {
+      "update": 5,
+      "stage": "high_bootstrap",
+      "by_strength": {
+        "0.75": {
+          "real": 0,
+          "all": 0,
+          "recovery": 0
+        },
+        "1.0": {
+          "real": 0,
+          "all": 0,
+          "recovery": 0
+        },
+        "1.25": {
+          "real": 127,
+          "all": 92,
+          "recovery": 2
+        }
+      },
+      "actor_loss": -0.004869382875040173,
+      "value_loss": 2.6248711228370665,
+      "anchor": 5.0327829194429795e-05
+    },
+    {
+      "update": 6,
+      "stage": "high_bootstrap",
+      "by_strength": {
+        "0.75": {
+          "real": 0,
+          "all": 0,
+          "recovery": 0
+        },
+        "1.0": {
+          "real": 0,
+          "all": 0,
+          "recovery": 0
+        },
+        "1.25": {
+          "real": 127,
+          "all": 114,
+          "recovery": 0
+        }
+      },
+      "actor_loss": -0.004691742919385433,
+      "value_loss": 2.5541293025016785,
+      "anchor": 6.598162890441017e-05
+    },
+    {
+      "update": 7,
+      "stage": "high_bootstrap",
+      "by_strength": {
+        "0.75": {
+          "real": 0,
+          "all": 0,
+          "recovery": 0
+        },
+        "1.0": {
+          "real": 0,
+          "all": 0,
+          "recovery": 0
+        },
+        "1.25": {
+          "real": 127,
+          "all": 110,
+          "recovery": 1
+        }
+      },
+      "actor_loss": -0.0036079928278923033,
+      "value_loss": 2.4839388012886046,
+      "anchor": 8.434264636889566e-05
+    },
+    {
+      "update": 8,
+      "stage": "high_bootstrap",
+      "by_strength": {
+        "0.75": {
+          "real": 0,
+          "all": 0,
+          "recovery": 0
+        },
+        "1.0": {
+          "real": 0,
+          "all": 0,
+          "recovery": 0
+        },
+        "1.25": {
+          "real": 127,
+          "all": 115,
+          "recovery": 0
+        }
+      },
+      "actor_loss": -0.004605746058223304,
+      "value_loss": 2.3824798107147216,
+      "anchor": 9.114249114645645e-05
+    },
+    {
+      "update": 9,
+      "stage": "mid_high",
+      "by_strength": {
+        "0.75": {
+          "real": 0,
+          "all": 0,
+          "recovery": 0
+        },
+        "1.0": {
+          "real": 62,
+          "all": 9,
+          "recovery": 0
+        },
+        "1.25": {
+          "real": 64,
+          "all": 63,
+          "recovery": 2
+        }
+      },
+      "actor_loss": -0.004022300519136479,
+      "value_loss": 2.8435563325881956,
+      "anchor": 0.00011980990966549143
+    },
+    {
+      "update": 10,
+      "stage": "mid_high",
+      "by_strength": {
+        "0.75": {
+          "real": 0,
+          "all": 0,
+          "recovery": 0
+        },
+        "1.0": {
+          "real": 57,
+          "all": 11,
+          "recovery": 1
+        },
+        "1.25": {
+          "real": 69,
+          "all": 66,
+          "recovery": 1
+        }
+      },
+      "actor_loss": -0.0023692953400313854,
+      "value_loss": 2.4870319843292235,
+      "anchor": 0.00014026590069988744
+    },
+    {
+      "update": 11,
+      "stage": "mid_high",
+      "by_strength": {
+        "0.75": {
+          "real": 0,
+          "all": 0,
+          "recovery": 0
+        },
+        "1.0": {
+          "real": 60,
+          "all": 13,
+          "recovery": 0
+        },
+        "1.25": {
+          "real": 67,
+          "all": 58,
+          "recovery": 0
+        }
+      },
+      "actor_loss": -0.0028575311182066796,
+      "value_loss": 2.0782248079776764,
+      "anchor": 0.0001592490603798069
+    },
+    {
+      "update": 12,
+      "stage": "mid_high",
+      "by_strength": {
+        "0.75": {
+          "real": 0,
+          "all": 0,
+          "recovery": 0
+        },
+        "1.0": {
+          "real": 57,
+          "all": 8,
+          "recovery": 0
+        },
+        "1.25": {
+          "real": 68,
+          "all": 68,
+          "recovery": 0
+        }
+      },
+      "actor_loss": -0.008922019379679114,
+      "value_loss": 2.247661995887756,
+      "anchor": 0.0002007931499974802
+    },
+    {
+      "update": 13,
+      "stage": "mid_high",
+      "by_strength": {
+        "0.75": {
+          "real": 0,
+          "all": 0,
+          "recovery": 0
+        },
+        "1.0": {
+          "real": 57,
+          "all": 10,
+          "recovery": 0
+        },
+        "1.25": {
+          "real": 71,
+          "all": 74,
+          "recovery": 1
+        }
+      },
+      "actor_loss": -0.0036089928849833085,
+      "value_loss": 2.0385416984558105,
+      "anchor": 0.000222123485582415
+    },
+    {
+      "update": 14,
+      "stage": "mid_high",
+      "by_strength": {
+        "0.75": {
+          "real": 0,
+          "all": 0,
+          "recovery": 0
+        },
+        "1.0": {
+          "real": 63,
+          "all": 9,
+          "recovery": 0
+        },
+        "1.25": {
+          "real": 63,
+          "all": 66,
+          "recovery": 3
+        }
+      },
+      "actor_loss": -0.006205313093960285,
+      "value_loss": 2.2780946016311647,
+      "anchor": 0.0002570971781096887
+    },
+    {
+      "update": 15,
+      "stage": "mid_high",
+      "by_strength": {
+        "0.75": {
+          "real": 0,
+          "all": 0,
+          "recovery": 0
+        },
+        "1.0": {
+          "real": 75,
+          "all": 14,
+          "recovery": 0
+        },
+        "1.25": {
+          "real": 52,
+          "all": 65,
+          "recovery": 4
+        }
+      },
+      "actor_loss": -0.006966182016185485,
+      "value_loss": 2.4471161723136903,
+      "anchor": 0.00027954051329288633
+    },
+    {
+      "update": 16,
+      "stage": "mid_high",
+      "by_strength": {
+        "0.75": {
+          "real": 0,
+          "all": 0,
+          "recovery": 0
+        },
+        "1.0": {
+          "real": 64,
+          "all": 15,
+          "recovery": 1
+        },
+        "1.25": {
+          "real": 63,
+          "all": 75,
+          "recovery": 2
+        }
+      },
+      "actor_loss": -0.004870174336974742,
+      "value_loss": 2.2393926978111267,
+      "anchor": 0.00030262442596722393
+    },
+    {
+      "update": 17,
+      "stage": "all_strengths",
+      "by_strength": {
+        "0.75": {
+          "real": 44,
+          "all": 1,
+          "recovery": 0
+        },
+        "1.0": {
+          "real": 41,
+          "all": 13,
+          "recovery": 0
+        },
+        "1.25": {
+          "real": 40,
+          "all": 40,
+          "recovery": 4
+        }
+      },
+      "actor_loss": -0.00545117449510144,
+      "value_loss": 2.2989275813102723,
+      "anchor": 0.00036090012144995853
+    },
+    {
+      "update": 18,
+      "stage": "all_strengths",
+      "by_strength": {
+        "0.75": {
+          "real": 42,
+          "all": 8,
+          "recovery": 0
+        },
+        "1.0": {
+          "real": 37,
+          "all": 3,
+          "recovery": 0
+        },
+        "1.25": {
+          "real": 47,
+          "all": 68,
+          "recovery": 3
+        }
+      },
+      "actor_loss": -0.003101556687033735,
+      "value_loss": 2.2648071229457853,
+      "anchor": 0.0003848109525279142
+    },
+    {
+      "update": 19,
+      "stage": "all_strengths",
+      "by_strength": {
+        "0.75": {
+          "real": 40,
+          "all": 11,
+          "recovery": 0
+        },
+        "1.0": {
+          "real": 42,
+          "all": 12,
+          "recovery": 0
+        },
+        "1.25": {
+          "real": 43,
+          "all": 64,
+          "recovery": 3
+        }
+      },
+      "actor_loss": -0.0040905660105636345,
+      "value_loss": 2.135828274488449,
+      "anchor": 0.0003961630063713528
+    },
+    {
+      "update": 20,
+      "stage": "all_strengths",
+      "by_strength": {
+        "0.75": {
+          "real": 38,
+          "all": 4,
+          "recovery": 0
+        },
+        "1.0": {
+          "real": 48,
+          "all": 14,
+          "recovery": 0
+        },
+        "1.25": {
+          "real": 39,
+          "all": 65,
+          "recovery": 7
+        }
+      },
+      "actor_loss": -0.003236242721322924,
+      "value_loss": 2.688037467002869,
+      "anchor": 0.0004264634539140388
+    },
+    {
+      "update": 21,
+      "stage": "all_strengths",
+      "by_strength": {
+        "0.75": {
+          "real": 43,
+          "all": 7,
+          "recovery": 0
+        },
+        "1.0": {
+          "real": 37,
+          "all": 15,
+          "recovery": 0
+        },
+        "1.25": {
+          "real": 45,
+          "all": 77,
+          "recovery": 6
+        }
+      },
+      "actor_loss": -0.00299266935326159,
+      "value_loss": 2.7432082653045655,
+      "anchor": 0.0004518148736678995
+    },
+    {
+      "update": 22,
+      "stage": "all_strengths",
+      "by_strength": {
+        "0.75": {
+          "real": 46,
+          "all": 11,
+          "recovery": 0
+        },
+        "1.0": {
+          "real": 45,
+          "all": 10,
+          "recovery": 0
+        },
+        "1.25": {
+          "real": 34,
+          "all": 57,
+          "recovery": 10
+        }
+      },
+      "actor_loss": -0.0041191787226125594,
+      "value_loss": 2.903184974193573,
+      "anchor": 0.0005028732528444379
+    },
+    {
+      "update": 23,
+      "stage": "all_strengths",
+      "by_strength": {
+        "0.75": {
+          "real": 39,
+          "all": 10,
+          "recovery": 0
+        },
+        "1.0": {
+          "real": 42,
+          "all": 17,
+          "recovery": 1
+        },
+        "1.25": {
+          "real": 44,
+          "all": 69,
+          "recovery": 7
+        }
+      },
+      "actor_loss": -0.003935452364385128,
+      "value_loss": 3.0507428288459777,
+      "anchor": 0.0005411502439528704
+    },
+    {
+      "update": 24,
+      "stage": "all_strengths",
+      "by_strength": {
+        "0.75": {
+          "real": 43,
+          "all": 14,
+          "recovery": 2
+        },
+        "1.0": {
+          "real": 38,
+          "all": 11,
+          "recovery": 0
+        },
+        "1.25": {
+          "real": 43,
+          "all": 57,
+          "recovery": 1
+        }
+      },
+      "actor_loss": -0.006034563854336738,
+      "value_loss": 2.3882962107658385,
+      "anchor": 0.000586399162421003
+    },
+    {
+      "update": 25,
+      "stage": "all_strengths",
+      "by_strength": {
+        "0.75": {
+          "real": 40,
+          "all": 21,
+          "recovery": 0
+        },
+        "1.0": {
+          "real": 36,
+          "all": 12,
+          "recovery": 0
+        },
+        "1.25": {
+          "real": 50,
+          "all": 88,
+          "recovery": 15
+        }
+      },
+      "actor_loss": -0.0029448894201777875,
+      "value_loss": 3.428809094429016,
+      "anchor": 0.000623490332509391
+    },
+    {
+      "update": 26,
+      "stage": "all_strengths",
+      "by_strength": {
+        "0.75": {
+          "real": 39,
+          "all": 19,
+          "recovery": 0
+        },
+        "1.0": {
+          "real": 42,
+          "all": 18,
+          "recovery": 1
+        },
+        "1.25": {
+          "real": 43,
+          "all": 69,
+          "recovery": 6
+        }
+      },
+      "actor_loss": -0.005574854527367279,
+      "value_loss": 2.7515705227851868,
+      "anchor": 0.0006516762252431363
+    },
+    {
+      "update": 27,
+      "stage": "all_strengths",
+      "by_strength": {
+        "0.75": {
+          "real": 34,
+          "all": 7,
+          "recovery": 0
+        },
+        "1.0": {
+          "real": 45,
+          "all": 24,
+          "recovery": 1
+        },
+        "1.25": {
+          "real": 47,
+          "all": 97,
+          "recovery": 14
+        }
+      },
+      "actor_loss": -0.002914483519271016,
+      "value_loss": 3.63459769487381,
+      "anchor": 0.0006886738818138837
+    },
+    {
+      "update": 28,
+      "stage": "all_strengths",
+      "by_strength": {
+        "0.75": {
+          "real": 46,
+          "all": 18,
+          "recovery": 0
+        },
+        "1.0": {
+          "real": 38,
+          "all": 16,
+          "recovery": 1
+        },
+        "1.25": {
+          "real": 43,
+          "all": 84,
+          "recovery": 19
+        }
+      },
+      "actor_loss": -0.006587563653010875,
+      "value_loss": 3.8222845792770386,
+      "anchor": 0.0007298403652384877
+    }
+  ],
+  "strength_confirm": [
+    {
+      "strength": 0.75,
+      "episodes": 1024,
+      "clean_rate": 1.0,
+      "real_rate": 0.9716796875,
+      "wrong_rate": 0.0,
+      "body_rate": 0.0,
+      "recovery_given_real": 0.022110552763819097,
+      "mean_peak_speed_mps": 0.18232292437460274,
+      "mean_disp_m": 0.1342128759715706,
+      "candidate_given_real": 1.0,
+      "return_given_real": 0.9065326633165829,
+      "contact_given_real": 0.30251256281407035,
+      "support4_given_real": 1.0,
+      "base_given_real": 1.0,
+      "height_given_real": 1.0,
+      "upright_given_real": 1.0,
+      "touchdown_given_real": 0.30251256281407035,
+      "all_now_given_real": 0.30251256281407035
+    },
+    {
+      "strength": 1.0,
+      "episodes": 1024,
+      "clean_rate": 1.0,
+      "real_rate": 0.974609375,
+      "wrong_rate": 0.0,
+      "body_rate": 0.0,
+      "recovery_given_real": 0.04909819639278557,
+      "mean_peak_speed_mps": 0.20104879001155496,
+      "mean_disp_m": 0.1474085081135854,
+      "candidate_given_real": 1.0,
+      "return_given_real": 0.872745490981964,
+      "contact_given_real": 0.41282565130260523,
+      "support4_given_real": 1.0,
+      "base_given_real": 1.0,
+      "height_given_real": 1.0,
+      "upright_given_real": 1.0,
+      "touchdown_given_real": 0.41282565130260523,
+      "all_now_given_real": 0.41282565130260523
+    },
+    {
+      "strength": 1.25,
+      "episodes": 1024,
+      "clean_rate": 1.0,
+      "real_rate": 0.9921875,
+      "wrong_rate": 0.0,
+      "body_rate": 0.0,
+      "recovery_given_real": 0.17716535433070865,
+      "mean_peak_speed_mps": 0.22069569607265294,
+      "mean_disp_m": 0.16148982930462807,
+      "candidate_given_real": 1.0,
+      "return_given_real": 0.9872047244094488,
+      "contact_given_real": 0.9242125984251969,
+      "support4_given_real": 1.0,
+      "base_given_real": 1.0,
+      "height_given_real": 1.0,
+      "upright_given_real": 1.0,
+      "touchdown_given_real": 0.9163385826771654,
+      "all_now_given_real": 0.9163385826771654
+    }
+  ],
+  "strength_monotonic": true,
+  "checkpoint": "/scratch/lj2634/runs/go2_soccer_r8_54_strength_conditioned_recovery/r854_recovery64_15633618/output/recovery64_final.pt",
+  "accepted": false,
+  "verdict": "KEEP_R854_RECOVERY_NOT_READY"
+}

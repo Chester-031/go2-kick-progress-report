@@ -1,0 +1,14 @@
+job_id=15627683
+source=/scratch/lj2634/Isaac-Go2-Low-Level-RL/experiments/r8_49_recovery_finetune/train_r849_recovery.py
+source_sha256=8abfe17a5b6f348aa32e75227280e71af4681f99f7f7b9556bd3098e8a7d4844
+r850_parent=/scratch/lj2634/Isaac-Go2-Low-Level-RL/runs/r850_real_contact_15627265
+strike_parent=/scratch/lj2634/runs/go2_soccer_r8_48_postbridge_strike_ppo/r848_strike_20260811_001923/output/winner_strike_u32.pt
+recovery_parent=/scratch/lj2634/runs/go2_soccer_r8_49_recovery_finetune/r849_recovery_fixfuture_20260811_005551/output/recovery_vector_finetuned.pt
+freeze_parent=/scratch/lj2634/runs/go2_soccer_kick_freeze/ballfree_r841_grace6_20260810_185244
+num_envs=128
+updates=12
+rollout_steps=192
+eval_episodes=512
+obs_contract=64D_from_70D_columns_0_to_62_and_69
+actual_filtered_contact=true
+high_level_reward=unchanged_not_used

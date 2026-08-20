@@ -1,0 +1,31 @@
+R8.75 static source audit
+
+Compared inputs
+  R8.63 source SHA256:
+    1ac70798af0155ce62b732bd42c52c626c270975ebbdcd0b7f3ccc97a448c026
+  R8.74b source SHA256:
+    5565dcc09dcc0283525201bf4a42dbcf1f63a50d6e5cc516f2cc02a525d00d0c
+
+Observed R8.74b changes relative to R8.63
+  - Added headless visual-material stripping.
+  - Added R874B_FREEZE_LOW handling in stage 2.
+  - Corrected the low-parameter-update guard when low is frozen.
+  - Added fresh-high random initialization controlled by
+    R874B_FRESH_NO_CURRICULUM.
+
+Unchanged in the supplied sources
+  - 17D high observation construction.
+  - high 3D action to Delta Pose conversion.
+  - stand/locomotion/push router.
+  - 48D native observation scrubbing.
+  - 14D Delta Pose/soccer context layout and scaling.
+  - complete 62D low observation construction.
+  - 12D low action application.
+  - stationary full-support reset introduced in R8.63.
+
+Interpretation
+  The static diff does not support the hypothesis that R8.74b directly changed
+  the Delta Pose interface.  It strongly separates the fresh-high training
+  change from the low interface.  Runtime R8.75 measurements remain necessary
+  to rule out checkpoint loading, normalizer, simulator-state, and execution
+  problems.

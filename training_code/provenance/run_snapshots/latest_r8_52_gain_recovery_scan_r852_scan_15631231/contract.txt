@@ -1,0 +1,10 @@
+job_id=15631231
+source=/scratch/lj2634/runs/go2_soccer_r8_51_kick64_true_contact/r851_kick64_15627683/train_r851_kick64.py
+source_sha256=a94d40062bdef20198b2428377019a619548d879c12d63e0999c761c88317c96
+kick_parent=/scratch/lj2634/runs/go2_soccer_r8_51_kick64_true_contact/r851_kick64_15627683/output/kick64_final.pt
+r851_summary=/scratch/lj2634/runs/go2_soccer_r8_51_kick64_true_contact/r851_kick64_15627683/output/r851_summary.json
+recovery_parent=/scratch/lj2634/runs/go2_soccer_r8_49_recovery_finetune/r849_recovery_fixfuture_20260811_005551/output/recovery_vector_finetuned.pt
+gains=0.0,0.5,1.0,1.5,2.0
+delays=0,2,4,6
+episodes_per_case=128
+training=false

@@ -1,0 +1,14 @@
+job_id=15639991
+source=/scratch/lj2634/runs/go2_soccer_r8_55_touchdown_hold/r855_hold_15634178/train_r855_touchdown_hold.py
+source_sha256=e682f9d07600159961ddbbdcffa2d9b3cc0db25587bf69fd0a5b1455bb01c344
+r855_parent=/scratch/lj2634/runs/go2_soccer_r8_55_touchdown_hold/r855_hold_15634178
+recovery_parent=/scratch/lj2634/runs/go2_soccer_r8_55_touchdown_hold/r855_hold_15634178/output/recovery64_final.pt
+kick_parent=/scratch/lj2634/runs/go2_soccer_r8_51_kick64_true_contact/r851_kick64_15627683/output/kick64_final.pt
+training=false
+network_frozen=true
+grid=FL_thigh_x_FL_calf_-0.12_to_0.12_step_0.04
+hold_steps=5
+num_envs=128
+episodes_per_case=64
+confirm_episodes=1024
+actual_filtered_contact=true

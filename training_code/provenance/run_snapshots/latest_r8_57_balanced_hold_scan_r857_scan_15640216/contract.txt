@@ -1,0 +1,14 @@
+job_id=15640216
+source=/scratch/lj2634/runs/go2_soccer_r8_56_hold_bias/r856_scan_15639991/train_r856_hold_bias.py
+source_sha256=ea3932ff52eacf957407aa6c7bf0e03bbc51841ae6b15bf1e10dfbff102cf214
+r856_diagnostic_parent=/scratch/lj2634/runs/go2_soccer_r8_56_hold_bias/r856_scan_15639991
+r855_recovery=/scratch/lj2634/runs/go2_soccer_r8_55_touchdown_hold/r855_hold_15634178/output/recovery64_final.pt
+training=false
+network_frozen=true
+assignment=balanced_randomized_crossover
+candidate_modes=static_latch,dynamic_target
+candidate_count=98
+num_envs=128
+episodes_per_case=64
+confirm_episodes_per_seed=512
+confirm_seeds=2

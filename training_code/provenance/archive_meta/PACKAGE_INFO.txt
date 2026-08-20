@@ -1,0 +1,9 @@
+generated_utc=2026-08-20T22:43:09Z
+host=torch-login-b-3.hpc-infra.svc.cluster.local
+project_root=/scratch/lj2634/Isaac-Go2-Low-Level-RL
+runs_root=/scratch/lj2634/runs
+max_text_mib=12
+scope=source_and_training_code_only
+checkpoints_included=false
+videos_included=false
+large_logs_included=false

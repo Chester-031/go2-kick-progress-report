@@ -1,0 +1,86 @@
+{
+  "curriculum": {
+    "easy": {
+      "difficulty": 0.25,
+      "end": 75,
+      "start": 0
+    },
+    "full_support": {
+      "difficulty": 1.0,
+      "distribution": "independent_uniform_robot_ball_full_yaw",
+      "end": 600,
+      "start": 450
+    },
+    "hard_mix": {
+      "difficulty": 0.75,
+      "end": 450,
+      "start": 200
+    },
+    "intermediate": {
+      "difficulty": 0.5,
+      "end": 200,
+      "start": 75
+    },
+    "phase_reset_counts": {
+      "easy": 20694,
+      "full_support": 7432,
+      "hard_mix": 14990,
+      "intermediate": 12103
+    },
+    "training_history": "curriculum_assisted"
+  },
+  "high_level": {
+    "action": "3_dim_continuous_intent",
+    "input": "17_dim_soccer_state",
+    "reward": {
+      "goal": 1,
+      "other": 0,
+      "own_goal": -1
+    },
+    "trainable": true
+  },
+  "low_level": {
+    "action": "12_joint_position_residuals",
+    "input": "teacher_free_62_dim_direct_delta_pose_context",
+    "reward": "execution_quality_only",
+    "trainable": false
+  },
+  "reward_mixing": false,
+  "router": {
+    "implementation": "unchanged_from_v4bc_r1",
+    "kick": null,
+    "skills": [
+      "stand",
+      "locomotion",
+      "push"
+    ]
+  },
+  "stage_schedule": [
+    {
+      "end": 75,
+      "high_lr": 1e-05,
+      "low_lr": 0.0,
+      "low_trainable": false,
+      "name": "high_adapter",
+      "start": 0
+    },
+    {
+      "end": 450,
+      "high_lr": 7.5e-06,
+      "low_lr": 0.0,
+      "low_trainable": false,
+      "name": "joint_finetune",
+      "start": 75
+    },
+    {
+      "end": 600,
+      "high_lr": 3e-06,
+      "low_lr": 0.0,
+      "low_trainable": false,
+      "name": "stabilization",
+      "start": 450
+    }
+  ],
+  "teacher_free_actor_observation": true,
+  "version": "r8_76_v4d_curriculum_high_repair"
+}

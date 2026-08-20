@@ -1,0 +1,140 @@
+{
+  "dataset": "/scratch/lj2634/runs/go2_soccer_r8_50_strike_success_modes/r850_modes_20260810_122615/output/strike_success_modes.npz",
+  "distance_modes": [
+    {
+      "basis": "all_valid",
+      "cancellation_ratio": 0.2817273739640209,
+      "clusters": [
+        {
+          "centroid_norm": 0.7969073057174683,
+          "cluster": 0,
+          "fraction": 0.5287769784172662,
+          "mean_displacement": 0.03714997321367264,
+          "mean_event_phase": 0.5444760322570801,
+          "mean_peak_dir": 0.05192378908395767,
+          "size": 147
+        },
+        {
+          "centroid_norm": 0.7560055255889893,
+          "cluster": 1,
+          "fraction": 0.4712230215827338,
+          "mean_displacement": 0.03132893890142441,
+          "mean_event_phase": 0.5457531809806824,
+          "mean_peak_dir": 0.044275518506765366,
+          "size": 131
+        }
+      ],
+      "global_mean_norm": 0.6707094706684229,
+      "k2_centroid_cosine": 0.4841960709589157,
+      "mean_sample_norm": 2.3807039452051204,
+      "n": 278,
+      "pca_top1": 0.042875929725894386,
+      "pca_top10": 0.3567309333379379,
+      "pca_top3": 0.12176443373414712
+    },
+    {
+      "basis": "all_valid",
+      "cancellation_ratio": 0.38526598542951596,
+      "clusters": [
+        {
+          "centroid_norm": 1.3713135719299316,
+          "cluster": 0,
+          "fraction": 0.27586206896551724,
+          "mean_displacement": 0.038129471242427826,
+          "mean_event_phase": 0.5553797483444214,
+          "mean_peak_dir": 0.05444461107254028,
+          "size": 16
+        },
+        {
+          "centroid_norm": 0.9633389711380005,
+          "cluster": 1,
+          "fraction": 0.7241379310344828,
+          "mean_displacement": 0.030893011018633842,
+          "mean_event_phase": 0.5521398186683655,
+          "mean_peak_dir": 0.04351513087749481,
+          "size": 42
+        }
+      ],
+      "global_mean_norm": 0.9843707926223805,
+      "k2_centroid_cosine": 0.6427731432539365,
+      "mean_sample_norm": 2.555042048482295,
+      "n": 58,
+      "pca_top1": 0.07551950729648416,
+      "pca_top10": 0.5230901386999344,
+      "pca_top3": 0.20846003614167447
+    }
+  ],
+  "distances": [
+    {
+      "distance_m": 0.245,
+      "early_event_count": 398,
+      "episodes": 4096,
+      "mean_disp_given_saved_valid": 0.03440697118639946,
+      "mean_peak_dir_given_saved_valid": 0.0483197458088398,
+      "mean_phase_given_saved_valid": 0.5450778603553772,
+      "saved_valid": 278,
+      "spawn_bad_count": 0,
+      "strong_count": 1,
+      "strong_given_valid": 0.0035971223021582736,
+      "strong_rate": 0.000244140625,
+      "valid_count": 278,
+      "valid_rate": 0.06787109375
+    },
+    {
+      "distance_m": 0.25,
+      "early_event_count": 11,
+      "episodes": 4096,
+      "mean_disp_given_saved_valid": 0.03288927674293518,
+      "mean_peak_dir_given_saved_valid": 0.046530161052942276,
+      "mean_phase_given_saved_valid": 0.5530336499214172,
+      "saved_valid": 58,
+      "spawn_bad_count": 0,
+      "strong_count": 0,
+      "strong_given_valid": 0.0,
+      "strong_rate": 0.0,
+      "valid_count": 58,
+      "valid_rate": 0.01416015625
+    }
+  ],
+  "episodes_per_distance": 4096,
+  "frozen_controller": "R842",
+  "history_steps": 12,
+  "noise_hold_steps": 4,
+  "noise_std": 0.24,
+  "pooled_mode": {
+    "basis": "all_valid",
+    "cancellation_ratio": 0.29523359995947146,
+    "clusters": [
+      {
+        "centroid_norm": 0.8069015741348267,
+        "cluster": 0,
+        "fraction": 0.5505952380952381,
+        "mean_displacement": 0.035947732627391815,
+        "mean_event_phase": 0.544303834438324,
+        "mean_peak_dir": 0.05033997818827629,
+        "size": 185
+      },
+      {
+        "centroid_norm": 0.7974511981010437,
+        "cluster": 1,
+        "fraction": 0.4494047619047619,
+        "mean_displacement": 0.03193632513284683,
+        "mean_event_phase": 0.5490820407867432,
+        "mean_peak_dir": 0.045157235115766525,
+        "size": 151
+      }
+    ],
+    "global_mean_norm": 0.7117485789745416,
+    "k2_centroid_cosine": 0.5676764813633772,
+    "mean_sample_norm": 2.4107980225565373,
+    "n": 336,
+    "pca_top1": 0.041084874413095746,
+    "pca_top10": 0.34412538277273136,
+    "pca_top3": 0.11651528357389378
+  },
+  "strong_total": 1,
+  "training": false,
+  "valid_total": 336,
+  "verdict": "VALID_STRIKE_MODES_READY_IMPACT_FILTER_SPARSE",
+  "version": "r8_50_strike_success_modes"
+}

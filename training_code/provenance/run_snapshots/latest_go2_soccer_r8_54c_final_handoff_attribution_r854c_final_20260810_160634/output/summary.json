@@ -1,0 +1,1790 @@
+{
+  "attribution": "RECOVERY_CONTROLLER_POSTHANDOFF_BLOCKER",
+  "best2425_variant": "current",
+  "best245_variant": "delay2",
+  "broad": [
+    {
+      "ball_case": "far_control",
+      "body_rate": 0.0,
+      "bridge_rate": 1.0,
+      "context": "far",
+      "disable_recovery": false,
+      "disp_given_valid": 0.0,
+      "distance_m": null,
+      "early_rate": 0.0,
+      "episodes": 256,
+      "first_failure_all": {
+        "base": {
+          "count": 0,
+          "mean_phase": 0.0,
+          "pre_fraction": 0.0,
+          "rate": 0.0,
+          "recovery_fraction": 0.0
+        },
+        "height": {
+          "count": 208,
+          "mean_phase": 0.7893135455938486,
+          "pre_fraction": 0.0,
+          "rate": 0.8125,
+          "recovery_fraction": 1.0
+        },
+        "upright": {
+          "count": 114,
+          "mean_phase": 0.5589607222038403,
+          "pre_fraction": 0.8421052631578947,
+          "rate": 0.4453125,
+          "recovery_fraction": 0.15789473684210525
+        }
+      },
+      "first_failure_strong": {
+        "base": {
+          "count": 0,
+          "mean_phase": 0.0,
+          "pre_fraction": 0.0,
+          "rate": 0.0,
+          "recovery_fraction": 0.0
+        },
+        "height": {
+          "count": 0,
+          "mean_phase": 0.0,
+          "pre_fraction": 0.0,
+          "rate": 0.0,
+          "recovery_fraction": 0.0
+        },
+        "upright": {
+          "count": 0,
+          "mean_phase": 0.0,
+          "pre_fraction": 0.0,
+          "rate": 0.0,
+          "recovery_fraction": 0.0
+        }
+      },
+      "lift_given_valid": 0.0,
+      "max_base_given_strong": 0.0,
+      "max_height_given_strong": 0.0,
+      "max_upright_given_strong": 0.0,
+      "motion_rate": 0.0,
+      "peak_given_valid": 0.0,
+      "phase_given_valid": 0.0,
+      "profile": "top1",
+      "recovery_delay_steps": 0,
+      "recovery_given_strong": 0.0,
+      "recovery_given_valid": 0.0,
+      "recovery_rate": 0.2421875,
+      "score": -0.050781250000000014,
+      "spawn_clean_rate": 1.0,
+      "stage_given_strong": 0.0,
+      "stage_given_valid": 0.0,
+      "stage_rate": 0.0,
+      "strong_rate": 0.0,
+      "swing_rate": 0.9609375,
+      "toward_given_valid": 0.0,
+      "valid_rate": 0.0,
+      "variant": "current",
+      "wrong_rate": 0.0
+    },
+    {
+      "ball_case": "far_control",
+      "body_rate": 0.0,
+      "bridge_rate": 1.0,
+      "context": "far",
+      "disable_recovery": false,
+      "disp_given_valid": 0.0,
+      "distance_m": null,
+      "early_rate": 0.0,
+      "episodes": 256,
+      "first_failure_all": {
+        "base": {
+          "count": 0,
+          "mean_phase": 0.0,
+          "pre_fraction": 0.0,
+          "rate": 0.0,
+          "recovery_fraction": 0.0
+        },
+        "height": {
+          "count": 224,
+          "mean_phase": 0.8084313017981393,
+          "pre_fraction": 0.0,
+          "rate": 0.875,
+          "recovery_fraction": 1.0
+        },
+        "upright": {
+          "count": 108,
+          "mean_phase": 0.5590717439298276,
+          "pre_fraction": 0.8888888888888888,
+          "rate": 0.421875,
+          "recovery_fraction": 0.1111111111111111
+        }
+      },
+      "first_failure_strong": {
+        "base": {
+          "count": 0,
+          "mean_phase": 0.0,
+          "pre_fraction": 0.0,
+          "rate": 0.0,
+          "recovery_fraction": 0.0
+        },
+        "height": {
+          "count": 0,
+          "mean_phase": 0.0,
+          "pre_fraction": 0.0,
+          "rate": 0.0,
+          "recovery_fraction": 0.0
+        },
+        "upright": {
+          "count": 0,
+          "mean_phase": 0.0,
+          "pre_fraction": 0.0,
+          "rate": 0.0,
+          "recovery_fraction": 0.0
+        }
+      },
+      "lift_given_valid": 0.0,
+      "max_base_given_strong": 0.0,
+      "max_height_given_strong": 0.0,
+      "max_upright_given_strong": 0.0,
+      "motion_rate": 0.0,
+      "peak_given_valid": 0.0,
+      "phase_given_valid": 0.0,
+      "profile": "top1",
+      "recovery_delay_steps": 2,
+      "recovery_given_strong": 0.0,
+      "recovery_given_valid": 0.0,
+      "recovery_rate": 0.203125,
+      "score": -0.12968750000000004,
+      "spawn_clean_rate": 1.0,
+      "stage_given_strong": 0.0,
+      "stage_given_valid": 0.0,
+      "stage_rate": 0.0,
+      "strong_rate": 0.0,
+      "swing_rate": 1.0,
+      "toward_given_valid": 0.0,
+      "valid_rate": 0.0,
+      "variant": "delay2",
+      "wrong_rate": 0.0
+    },
+    {
+      "ball_case": "far_control",
+      "body_rate": 0.0,
+      "bridge_rate": 1.0,
+      "context": "far",
+      "disable_recovery": false,
+      "disp_given_valid": 0.0,
+      "distance_m": null,
+      "early_rate": 0.0,
+      "episodes": 256,
+      "first_failure_all": {
+        "base": {
+          "count": 0,
+          "mean_phase": 0.0,
+          "pre_fraction": 0.0,
+          "rate": 0.0,
+          "recovery_fraction": 0.0
+        },
+        "height": {
+          "count": 232,
+          "mean_phase": 0.8208206357627079,
+          "pre_fraction": 0.0,
+          "rate": 0.90625,
+          "recovery_fraction": 1.0
+        },
+        "upright": {
+          "count": 98,
+          "mean_phase": 0.5533454174898109,
+          "pre_fraction": 0.9795918367346939,
+          "rate": 0.3828125,
+          "recovery_fraction": 0.02040816326530612
+        }
+      },
+      "first_failure_strong": {
+        "base": {
+          "count": 0,
+          "mean_phase": 0.0,
+          "pre_fraction": 0.0,
+          "rate": 0.0,
+          "recovery_fraction": 0.0
+        },
+        "height": {
+          "count": 0,
+          "mean_phase": 0.0,
+          "pre_fraction": 0.0,
+          "rate": 0.0,
+          "recovery_fraction": 0.0
+        },
+        "upright": {
+          "count": 0,
+          "mean_phase": 0.0,
+          "pre_fraction": 0.0,
+          "rate": 0.0,
+          "recovery_fraction": 0.0
+        }
+      },
+      "lift_given_valid": 0.0,
+      "max_base_given_strong": 0.0,
+      "max_height_given_strong": 0.0,
+      "max_upright_given_strong": 0.0,
+      "motion_rate": 0.0,
+      "peak_given_valid": 0.0,
+      "phase_given_valid": 0.0,
+      "profile": "top1",
+      "recovery_delay_steps": 4,
+      "recovery_given_strong": 0.0,
+      "recovery_given_valid": 0.0,
+      "recovery_rate": 0.03125,
+      "score": -0.3921875,
+      "spawn_clean_rate": 1.0,
+      "stage_given_strong": 0.0,
+      "stage_given_valid": 0.0,
+      "stage_rate": 0.0,
+      "strong_rate": 0.0,
+      "swing_rate": 1.0,
+      "toward_given_valid": 0.0,
+      "valid_rate": 0.0,
+      "variant": "delay4",
+      "wrong_rate": 0.0
+    },
+    {
+      "ball_case": "far_control",
+      "body_rate": 0.0,
+      "bridge_rate": 1.0,
+      "context": "far",
+      "disable_recovery": false,
+      "disp_given_valid": 0.0,
+      "distance_m": null,
+      "early_rate": 0.0,
+      "episodes": 256,
+      "first_failure_all": {
+        "base": {
+          "count": 0,
+          "mean_phase": 0.0,
+          "pre_fraction": 0.0,
+          "rate": 0.0,
+          "recovery_fraction": 0.0
+        },
+        "height": {
+          "count": 232,
+          "mean_phase": 0.8288956921676109,
+          "pre_fraction": 0.0,
+          "rate": 0.90625,
+          "recovery_fraction": 1.0
+        },
+        "upright": {
+          "count": 136,
+          "mean_phase": 0.6068503295674044,
+          "pre_fraction": 0.7058823529411765,
+          "rate": 0.53125,
+          "recovery_fraction": 0.29411764705882354
+        }
+      },
+      "first_failure_strong": {
+        "base": {
+          "count": 0,
+          "mean_phase": 0.0,
+          "pre_fraction": 0.0,
+          "rate": 0.0,
+          "recovery_fraction": 0.0
+        },
+        "height": {
+          "count": 0,
+          "mean_phase": 0.0,
+          "pre_fraction": 0.0,
+          "rate": 0.0,
+          "recovery_fraction": 0.0
+        },
+        "upright": {
+          "count": 0,
+          "mean_phase": 0.0,
+          "pre_fraction": 0.0,
+          "rate": 0.0,
+          "recovery_fraction": 0.0
+        }
+      },
+      "lift_given_valid": 0.0,
+      "max_base_given_strong": 0.0,
+      "max_height_given_strong": 0.0,
+      "max_upright_given_strong": 0.0,
+      "motion_rate": 0.0,
+      "peak_given_valid": 0.0,
+      "phase_given_valid": 0.0,
+      "profile": "top1",
+      "recovery_delay_steps": 6,
+      "recovery_given_strong": 0.0,
+      "recovery_given_valid": 0.0,
+      "recovery_rate": 0.015625,
+      "score": -0.44531250000000006,
+      "spawn_clean_rate": 1.0,
+      "stage_given_strong": 0.0,
+      "stage_given_valid": 0.0,
+      "stage_rate": 0.0,
+      "strong_rate": 0.0,
+      "swing_rate": 1.0,
+      "toward_given_valid": 0.0,
+      "valid_rate": 0.0,
+      "variant": "delay6",
+      "wrong_rate": 0.0
+    },
+    {
+      "ball_case": "far_control",
+      "body_rate": 0.0,
+      "bridge_rate": 1.0,
+      "context": "far",
+      "disable_recovery": false,
+      "disp_given_valid": 0.0,
+      "distance_m": null,
+      "early_rate": 0.0,
+      "episodes": 256,
+      "first_failure_all": {
+        "base": {
+          "count": 0,
+          "mean_phase": 0.0,
+          "pre_fraction": 0.0,
+          "rate": 0.0,
+          "recovery_fraction": 0.0
+        },
+        "height": {
+          "count": 242,
+          "mean_phase": 0.8451721018010919,
+          "pre_fraction": 0.0,
+          "rate": 0.9453125,
+          "recovery_fraction": 1.0
+        },
+        "upright": {
+          "count": 176,
+          "mean_phase": 0.6452819325707175,
+          "pre_fraction": 0.5454545454545454,
+          "rate": 0.6875,
+          "recovery_fraction": 0.45454545454545453
+        }
+      },
+      "first_failure_strong": {
+        "base": {
+          "count": 0,
+          "mean_phase": 0.0,
+          "pre_fraction": 0.0,
+          "rate": 0.0,
+          "recovery_fraction": 0.0
+        },
+        "height": {
+          "count": 0,
+          "mean_phase": 0.0,
+          "pre_fraction": 0.0,
+          "rate": 0.0,
+          "recovery_fraction": 0.0
+        },
+        "upright": {
+          "count": 0,
+          "mean_phase": 0.0,
+          "pre_fraction": 0.0,
+          "rate": 0.0,
+          "recovery_fraction": 0.0
+        }
+      },
+      "lift_given_valid": 0.0,
+      "max_base_given_strong": 0.0,
+      "max_height_given_strong": 0.0,
+      "max_upright_given_strong": 0.0,
+      "motion_rate": 0.0,
+      "peak_given_valid": 0.0,
+      "phase_given_valid": 0.0,
+      "profile": "top1",
+      "recovery_delay_steps": 8,
+      "recovery_given_strong": 0.0,
+      "recovery_given_valid": 0.0,
+      "recovery_rate": 0.0,
+      "score": -0.515625,
+      "spawn_clean_rate": 1.0,
+      "stage_given_strong": 0.0,
+      "stage_given_valid": 0.0,
+      "stage_rate": 0.0,
+      "strong_rate": 0.0,
+      "swing_rate": 1.0,
+      "toward_given_valid": 0.0,
+      "valid_rate": 0.0,
+      "variant": "delay8",
+      "wrong_rate": 0.0
+    },
+    {
+      "ball_case": "far_control",
+      "body_rate": 0.0,
+      "bridge_rate": 1.0,
+      "context": "far",
+      "disable_recovery": true,
+      "disp_given_valid": 0.0,
+      "distance_m": null,
+      "early_rate": 0.0,
+      "episodes": 256,
+      "first_failure_all": {
+        "base": {
+          "count": 8,
+          "mean_phase": 0.939873456954956,
+          "pre_fraction": 1.0,
+          "rate": 0.03125,
+          "recovery_fraction": 0.0
+        },
+        "height": {
+          "count": 202,
+          "mean_phase": 0.9155282690973565,
+          "pre_fraction": 1.0,
+          "rate": 0.7890625,
+          "recovery_fraction": 0.0
+        },
+        "upright": {
+          "count": 112,
+          "mean_phase": 0.6044304115431649,
+          "pre_fraction": 1.0,
+          "rate": 0.4375,
+          "recovery_fraction": 0.0
+        }
+      },
+      "first_failure_strong": {
+        "base": {
+          "count": 0,
+          "mean_phase": 0.0,
+          "pre_fraction": 0.0,
+          "rate": 0.0,
+          "recovery_fraction": 0.0
+        },
+        "height": {
+          "count": 0,
+          "mean_phase": 0.0,
+          "pre_fraction": 0.0,
+          "rate": 0.0,
+          "recovery_fraction": 0.0
+        },
+        "upright": {
+          "count": 0,
+          "mean_phase": 0.0,
+          "pre_fraction": 0.0,
+          "rate": 0.0,
+          "recovery_fraction": 0.0
+        }
+      },
+      "lift_given_valid": 0.0,
+      "max_base_given_strong": 0.0,
+      "max_height_given_strong": 0.0,
+      "max_upright_given_strong": 0.0,
+      "motion_rate": 0.0,
+      "peak_given_valid": 0.0,
+      "phase_given_valid": 0.0,
+      "profile": "top1",
+      "recovery_delay_steps": 0,
+      "recovery_given_strong": 0.0,
+      "recovery_given_valid": 0.0,
+      "recovery_rate": 0.0,
+      "score": -0.40937500000000004,
+      "spawn_clean_rate": 1.0,
+      "stage_given_strong": 0.0,
+      "stage_given_valid": 0.0,
+      "stage_rate": 0.0,
+      "strong_rate": 0.0,
+      "swing_rate": 1.0,
+      "toward_given_valid": 0.0,
+      "valid_rate": 0.0,
+      "variant": "noRecovery",
+      "wrong_rate": 0.0
+    },
+    {
+      "ball_case": "nominal_fl",
+      "body_rate": 0.0,
+      "bridge_rate": 1.0,
+      "context": "d2425",
+      "disable_recovery": false,
+      "disp_given_valid": 0.09407613136000552,
+      "distance_m": 0.2425,
+      "early_rate": 0.078125,
+      "episodes": 256,
+      "first_failure_all": {
+        "base": {
+          "count": 0,
+          "mean_phase": 0.0,
+          "pre_fraction": 0.0,
+          "rate": 0.0,
+          "recovery_fraction": 0.0
+        },
+        "height": {
+          "count": 185,
+          "mean_phase": 0.7949367574743322,
+          "pre_fraction": 0.0,
+          "rate": 0.72265625,
+          "recovery_fraction": 1.0
+        },
+        "upright": {
+          "count": 101,
+          "mean_phase": 0.5891716126168128,
+          "pre_fraction": 0.297029702970297,
+          "rate": 0.39453125,
+          "recovery_fraction": 0.7029702970297029
+        }
+      },
+      "first_failure_strong": {
+        "base": {
+          "count": 0,
+          "mean_phase": 0.0,
+          "pre_fraction": 0.0,
+          "rate": 0.0,
+          "recovery_fraction": 0.0
+        },
+        "height": {
+          "count": 156,
+          "mean_phase": 0.7988478006460727,
+          "pre_fraction": 0.0,
+          "rate": 0.7722772277227723,
+          "recovery_fraction": 1.0
+        },
+        "upright": {
+          "count": 77,
+          "mean_phase": 0.5880322719549204,
+          "pre_fraction": 0.33766233766233766,
+          "rate": 0.3811881188118812,
+          "recovery_fraction": 0.6623376623376623
+        }
+      },
+      "lift_given_valid": 0.06328553466473595,
+      "max_base_given_strong": 0.0434618869630417,
+      "max_height_given_strong": 0.04712259208801949,
+      "max_upright_given_strong": 0.02418482052807761,
+      "motion_rate": 1.0,
+      "peak_given_valid": 0.12994031885922966,
+      "phase_given_valid": 0.5379747212943384,
+      "profile": "top1",
+      "recovery_delay_steps": 0,
+      "recovery_given_strong": 0.3217821782178218,
+      "recovery_given_valid": 0.2966101694915254,
+      "recovery_rate": 0.2734375,
+      "score": 0.7111154084158416,
+      "spawn_clean_rate": 1.0,
+      "stage_given_strong": 0.054455445544554455,
+      "stage_given_valid": 0.059322033898305086,
+      "stage_rate": 0.0546875,
+      "strong_rate": 0.7890625,
+      "swing_rate": 0.99609375,
+      "toward_given_valid": 0.26340939938011815,
+      "valid_rate": 0.921875,
+      "variant": "current",
+      "wrong_rate": 0.0
+    },
+    {
+      "ball_case": "nominal_fl",
+      "body_rate": 0.0,
+      "bridge_rate": 1.0,
+      "context": "d2425",
+      "disable_recovery": false,
+      "disp_given_valid": 0.09407613136000552,
+      "distance_m": 0.2425,
+      "early_rate": 0.078125,
+      "episodes": 256,
+      "first_failure_all": {
+        "base": {
+          "count": 0,
+          "mean_phase": 0.0,
+          "pre_fraction": 0.0,
+          "rate": 0.0,
+          "recovery_fraction": 0.0
+        },
+        "height": {
+          "count": 206,
+          "mean_phase": 0.8113555491549297,
+          "pre_fraction": 0.0,
+          "rate": 0.8046875,
+          "recovery_fraction": 1.0
+        },
+        "upright": {
+          "count": 95,
+          "mean_phase": 0.6021318962699489,
+          "pre_fraction": 0.3157894736842105,
+          "rate": 0.37109375,
+          "recovery_fraction": 0.6842105263157895
+        }
+      },
+      "first_failure_strong": {
+        "base": {
+          "count": 0,
+          "mean_phase": 0.0,
+          "pre_fraction": 0.0,
+          "rate": 0.0,
+          "recovery_fraction": 0.0
+        },
+        "height": {
+          "count": 173,
+          "mean_phase": 0.8157605904375198,
+          "pre_fraction": 0.0,
+          "rate": 0.8564356435643564,
+          "recovery_fraction": 1.0
+        },
+        "upright": {
+          "count": 71,
+          "mean_phase": 0.5985024235617946,
+          "pre_fraction": 0.36619718309859156,
+          "rate": 0.35148514851485146,
+          "recovery_fraction": 0.6338028169014085
+        }
+      },
+      "lift_given_valid": 0.06328553466473595,
+      "max_base_given_strong": 0.03939293133150233,
+      "max_height_given_strong": 0.05036375929813574,
+      "max_upright_given_strong": 0.024368338508181053,
+      "motion_rate": 1.0,
+      "peak_given_valid": 0.12994031885922966,
+      "phase_given_valid": 0.5379747212943384,
+      "profile": "top1",
+      "recovery_delay_steps": 2,
+      "recovery_given_strong": 0.27722772277227725,
+      "recovery_given_valid": 0.23728813559322035,
+      "recovery_rate": 0.21875,
+      "score": 0.5276415532178218,
+      "spawn_clean_rate": 1.0,
+      "stage_given_strong": 0.024752475247524754,
+      "stage_given_valid": 0.0211864406779661,
+      "stage_rate": 0.01953125,
+      "strong_rate": 0.7890625,
+      "swing_rate": 1.0,
+      "toward_given_valid": 0.26340939938011815,
+      "valid_rate": 0.921875,
+      "variant": "delay2",
+      "wrong_rate": 0.0
+    },
+    {
+      "ball_case": "nominal_fl",
+      "body_rate": 0.0,
+      "bridge_rate": 1.0,
+      "context": "d2425",
+      "disable_recovery": false,
+      "disp_given_valid": 0.09407613136000552,
+      "distance_m": 0.2425,
+      "early_rate": 0.078125,
+      "episodes": 256,
+      "first_failure_all": {
+        "base": {
+          "count": 0,
+          "mean_phase": 0.0,
+          "pre_fraction": 0.0,
+          "rate": 0.0,
+          "recovery_fraction": 0.0
+        },
+        "height": {
+          "count": 220,
+          "mean_phase": 0.8206559484655207,
+          "pre_fraction": 0.0,
+          "rate": 0.859375,
+          "recovery_fraction": 1.0
+        },
+        "upright": {
+          "count": 76,
+          "mean_phase": 0.6275816277453774,
+          "pre_fraction": 0.39473684210526316,
+          "rate": 0.296875,
+          "recovery_fraction": 0.6052631578947368
+        }
+      },
+      "first_failure_strong": {
+        "base": {
+          "count": 0,
+          "mean_phase": 0.0,
+          "pre_fraction": 0.0,
+          "rate": 0.0,
+          "recovery_fraction": 0.0
+        },
+        "height": {
+          "count": 188,
+          "mean_phase": 0.8244007699033047,
+          "pre_fraction": 0.0,
+          "rate": 0.9306930693069307,
+          "recovery_fraction": 1.0
+        },
+        "upright": {
+          "count": 52,
+          "mean_phase": 0.624634889455942,
+          "pre_fraction": 0.5,
+          "rate": 0.25742574257425743,
+          "recovery_fraction": 0.5
+        }
+      },
+      "lift_given_valid": 0.06328553466473595,
+      "max_base_given_strong": 0.039203610308099504,
+      "max_height_given_strong": 0.05537987611081341,
+      "max_upright_given_strong": 0.024285871646191816,
+      "motion_rate": 1.0,
+      "peak_given_valid": 0.12994031885922966,
+      "phase_given_valid": 0.5379747212943384,
+      "profile": "top1",
+      "recovery_delay_steps": 4,
+      "recovery_given_strong": 0.07425742574257425,
+      "recovery_given_valid": 0.0635593220338983,
+      "recovery_rate": 0.05859375,
+      "score": -0.05323909344059413,
+      "spawn_clean_rate": 1.0,
+      "stage_given_strong": 0.0,
+      "stage_given_valid": 0.0,
+      "stage_rate": 0.0,
+      "strong_rate": 0.7890625,
+      "swing_rate": 1.0,
+      "toward_given_valid": 0.26340939938011815,
+      "valid_rate": 0.921875,
+      "variant": "delay4",
+      "wrong_rate": 0.0
+    },
+    {
+      "ball_case": "nominal_fl",
+      "body_rate": 0.0,
+      "bridge_rate": 1.0,
+      "context": "d2425",
+      "disable_recovery": false,
+      "disp_given_valid": 0.09407613136000552,
+      "distance_m": 0.2425,
+      "early_rate": 0.078125,
+      "episodes": 256,
+      "first_failure_all": {
+        "base": {
+          "count": 0,
+          "mean_phase": 0.0,
+          "pre_fraction": 0.0,
+          "rate": 0.0,
+          "recovery_fraction": 0.0
+        },
+        "height": {
+          "count": 224,
+          "mean_phase": 0.8321654498577118,
+          "pre_fraction": 0.0,
+          "rate": 0.875,
+          "recovery_fraction": 1.0
+        },
+        "upright": {
+          "count": 152,
+          "mean_phase": 0.6933711265262804,
+          "pre_fraction": 0.19736842105263158,
+          "rate": 0.59375,
+          "recovery_fraction": 0.8026315789473685
+        }
+      },
+      "first_failure_strong": {
+        "base": {
+          "count": 0,
+          "mean_phase": 0.0,
+          "pre_fraction": 0.0,
+          "rate": 0.0,
+          "recovery_fraction": 0.0
+        },
+        "height": {
+          "count": 192,
+          "mean_phase": 0.8354430347681046,
+          "pre_fraction": 0.0,
+          "rate": 0.9504950495049505,
+          "recovery_fraction": 1.0
+        },
+        "upright": {
+          "count": 117,
+          "mean_phase": 0.6970680554707845,
+          "pre_fraction": 0.2222222222222222,
+          "rate": 0.5792079207920792,
+          "recovery_fraction": 0.7777777777777778
+        }
+      },
+      "lift_given_valid": 0.06328553466473595,
+      "max_base_given_strong": 0.04049582646624877,
+      "max_height_given_strong": 0.0574129580861271,
+      "max_upright_given_strong": 0.02520370129311439,
+      "motion_rate": 1.0,
+      "peak_given_valid": 0.12994031885922966,
+      "phase_given_valid": 0.5379747212943384,
+      "profile": "top1",
+      "recovery_delay_steps": 6,
+      "recovery_given_strong": 0.0,
+      "recovery_given_valid": 0.0,
+      "recovery_rate": 0.0,
+      "score": -0.3438776299504951,
+      "spawn_clean_rate": 1.0,
+      "stage_given_strong": 0.0,
+      "stage_given_valid": 0.0,
+      "stage_rate": 0.0,
+      "strong_rate": 0.7890625,
+      "swing_rate": 1.0,
+      "toward_given_valid": 0.26340939938011815,
+      "valid_rate": 0.921875,
+      "variant": "delay6",
+      "wrong_rate": 0.0
+    },
+    {
+      "ball_case": "nominal_fl",
+      "body_rate": 0.0,
+      "bridge_rate": 1.0,
+      "context": "d2425",
+      "disable_recovery": false,
+      "disp_given_valid": 0.09407613136000552,
+      "distance_m": 0.2425,
+      "early_rate": 0.078125,
+      "episodes": 256,
+      "first_failure_all": {
+        "base": {
+          "count": 0,
+          "mean_phase": 0.0,
+          "pre_fraction": 0.0,
+          "rate": 0.0,
+          "recovery_fraction": 0.0
+        },
+        "height": {
+          "count": 230,
+          "mean_phase": 0.8493671396504278,
+          "pre_fraction": 0.0,
+          "rate": 0.8984375,
+          "recovery_fraction": 1.0
+        },
+        "upright": {
+          "count": 227,
+          "mean_phase": 0.7223554917894272,
+          "pre_fraction": 0.13215859030837004,
+          "rate": 0.88671875,
+          "recovery_fraction": 0.8678414096916299
+        }
+      },
+      "first_failure_strong": {
+        "base": {
+          "count": 0,
+          "mean_phase": 0.0,
+          "pre_fraction": 0.0,
+          "rate": 0.0,
+          "recovery_fraction": 0.0
+        },
+        "height": {
+          "count": 198,
+          "mean_phase": 0.8528321246908168,
+          "pre_fraction": 0.0,
+          "rate": 0.9801980198019802,
+          "recovery_fraction": 1.0
+        },
+        "upright": {
+          "count": 180,
+          "mean_phase": 0.7246132267846002,
+          "pre_fraction": 0.14444444444444443,
+          "rate": 0.8910891089108911,
+          "recovery_fraction": 0.8555555555555555
+        }
+      },
+      "lift_given_valid": 0.06328553466473595,
+      "max_base_given_strong": 0.04187781046522726,
+      "max_height_given_strong": 0.05863511562347412,
+      "max_upright_given_strong": 0.02621637033944083,
+      "motion_rate": 1.0,
+      "peak_given_valid": 0.12994031885922966,
+      "phase_given_valid": 0.5379747212943384,
+      "profile": "top1",
+      "recovery_delay_steps": 8,
+      "recovery_given_strong": 0.0049504950495049506,
+      "recovery_given_valid": 0.00423728813559322,
+      "recovery_rate": 0.00390625,
+      "score": -0.4233466120049505,
+      "spawn_clean_rate": 1.0,
+      "stage_given_strong": 0.0,
+      "stage_given_valid": 0.0,
+      "stage_rate": 0.0,
+      "strong_rate": 0.7890625,
+      "swing_rate": 1.0,
+      "toward_given_valid": 0.26340939938011815,
+      "valid_rate": 0.921875,
+      "variant": "delay8",
+      "wrong_rate": 0.0
+    },
+    {
+      "ball_case": "nominal_fl",
+      "body_rate": 0.0,
+      "bridge_rate": 1.0,
+      "context": "d2425",
+      "disable_recovery": true,
+      "disp_given_valid": 0.09407613136000552,
+      "distance_m": 0.2425,
+      "early_rate": 0.078125,
+      "episodes": 256,
+      "first_failure_all": {
+        "base": {
+          "count": 16,
+          "mean_phase": 0.9897152632474899,
+          "pre_fraction": 1.0,
+          "rate": 0.0625,
+          "recovery_fraction": 0.0
+        },
+        "height": {
+          "count": 199,
+          "mean_phase": 0.9334012204079173,
+          "pre_fraction": 1.0,
+          "rate": 0.77734375,
+          "recovery_fraction": 0.0
+        },
+        "upright": {
+          "count": 107,
+          "mean_phase": 0.8108364087398922,
+          "pre_fraction": 1.0,
+          "rate": 0.41796875,
+          "recovery_fraction": 0.0
+        }
+      },
+      "first_failure_strong": {
+        "base": {
+          "count": 2,
+          "mean_phase": 1.0,
+          "pre_fraction": 1.0,
+          "rate": 0.009900990099009901,
+          "recovery_fraction": 0.0
+        },
+        "height": {
+          "count": 169,
+          "mean_phase": 0.9414276568847295,
+          "pre_fraction": 1.0,
+          "rate": 0.8366336633663366,
+          "recovery_fraction": 0.0
+        },
+        "upright": {
+          "count": 82,
+          "mean_phase": 0.8125964548529648,
+          "pre_fraction": 1.0,
+          "rate": 0.40594059405940597,
+          "recovery_fraction": 0.0
+        }
+      },
+      "lift_given_valid": 0.06328553466473595,
+      "max_base_given_strong": 0.05180057514422011,
+      "max_height_given_strong": 0.05159972844147446,
+      "max_upright_given_strong": 0.024296417389765824,
+      "motion_rate": 1.0,
+      "peak_given_valid": 0.12994031885922966,
+      "phase_given_valid": 0.5379747212943384,
+      "profile": "top1",
+      "recovery_delay_steps": 0,
+      "recovery_given_strong": 0.0,
+      "recovery_given_valid": 0.0,
+      "recovery_rate": 0.0,
+      "score": -0.24561030321782182,
+      "spawn_clean_rate": 1.0,
+      "stage_given_strong": 0.0,
+      "stage_given_valid": 0.0,
+      "stage_rate": 0.0,
+      "strong_rate": 0.7890625,
+      "swing_rate": 1.0,
+      "toward_given_valid": 0.26340939938011815,
+      "valid_rate": 0.921875,
+      "variant": "noRecovery",
+      "wrong_rate": 0.0
+    },
+    {
+      "ball_case": "nominal_fl",
+      "body_rate": 0.0,
+      "bridge_rate": 1.0,
+      "context": "d2450",
+      "disable_recovery": false,
+      "disp_given_valid": 0.09387974675036659,
+      "distance_m": 0.245,
+      "early_rate": 0.0546875,
+      "episodes": 256,
+      "first_failure_all": {
+        "base": {
+          "count": 0,
+          "mean_phase": 0.0,
+          "pre_fraction": 0.0,
+          "rate": 0.0,
+          "recovery_fraction": 0.0
+        },
+        "height": {
+          "count": 189,
+          "mean_phase": 0.7892305207630944,
+          "pre_fraction": 0.0,
+          "rate": 0.73828125,
+          "recovery_fraction": 1.0
+        },
+        "upright": {
+          "count": 104,
+          "mean_phase": 0.5883642137050629,
+          "pre_fraction": 0.38461538461538464,
+          "rate": 0.40625,
+          "recovery_fraction": 0.6153846153846154
+        }
+      },
+      "first_failure_strong": {
+        "base": {
+          "count": 0,
+          "mean_phase": 0.0,
+          "pre_fraction": 0.0,
+          "rate": 0.0,
+          "recovery_fraction": 0.0
+        },
+        "height": {
+          "count": 160,
+          "mean_phase": 0.781724700331688,
+          "pre_fraction": 0.0,
+          "rate": 0.9090909090909091,
+          "recovery_fraction": 1.0
+        },
+        "upright": {
+          "count": 24,
+          "mean_phase": 0.609177254140377,
+          "pre_fraction": 0.3333333333333333,
+          "rate": 0.13636363636363635,
+          "recovery_fraction": 0.6666666666666666
+        }
+      },
+      "lift_given_valid": 0.06725536742486245,
+      "max_base_given_strong": 0.041714189912785186,
+      "max_height_given_strong": 0.051208225840871986,
+      "max_upright_given_strong": 0.023069379639557817,
+      "motion_rate": 1.0,
+      "peak_given_valid": 0.1303298497988173,
+      "phase_given_valid": 0.5443038231085154,
+      "profile": "top1",
+      "recovery_delay_steps": 0,
+      "recovery_given_strong": 0.1590909090909091,
+      "recovery_given_valid": 0.2892561983471074,
+      "recovery_rate": 0.2734375,
+      "score": 0.24989346590909092,
+      "spawn_clean_rate": 1.0,
+      "stage_given_strong": 0.03977272727272727,
+      "stage_given_valid": 0.028925619834710745,
+      "stage_rate": 0.02734375,
+      "strong_rate": 0.6875,
+      "swing_rate": 0.98828125,
+      "toward_given_valid": 0.22601201711607374,
+      "valid_rate": 0.9453125,
+      "variant": "current",
+      "wrong_rate": 0.0
+    },
+    {
+      "ball_case": "nominal_fl",
+      "body_rate": 0.0,
+      "bridge_rate": 1.0,
+      "context": "d2450",
+      "disable_recovery": false,
+      "disp_given_valid": 0.09387974675036659,
+      "distance_m": 0.245,
+      "early_rate": 0.0546875,
+      "episodes": 256,
+      "first_failure_all": {
+        "base": {
+          "count": 0,
+          "mean_phase": 0.0,
+          "pre_fraction": 0.0,
+          "rate": 0.0,
+          "recovery_fraction": 0.0
+        },
+        "height": {
+          "count": 205,
+          "mean_phase": 0.8110528271372726,
+          "pre_fraction": 0.0,
+          "rate": 0.80078125,
+          "recovery_fraction": 1.0
+        },
+        "upright": {
+          "count": 94,
+          "mean_phase": 0.5933208009029957,
+          "pre_fraction": 0.425531914893617,
+          "rate": 0.3671875,
+          "recovery_fraction": 0.574468085106383
+        }
+      },
+      "first_failure_strong": {
+        "base": {
+          "count": 0,
+          "mean_phase": 0.0,
+          "pre_fraction": 0.0,
+          "rate": 0.0,
+          "recovery_fraction": 0.0
+        },
+        "height": {
+          "count": 165,
+          "mean_phase": 0.7993863206921201,
+          "pre_fraction": 0.0,
+          "rate": 0.9375,
+          "recovery_fraction": 1.0
+        },
+        "upright": {
+          "count": 18,
+          "mean_phase": 0.5935302310519748,
+          "pre_fraction": 0.4444444444444444,
+          "rate": 0.10227272727272728,
+          "recovery_fraction": 0.5555555555555556
+        }
+      },
+      "lift_given_valid": 0.06725536742486245,
+      "max_base_given_strong": 0.037286258387294685,
+      "max_height_given_strong": 0.05345193686133081,
+      "max_upright_given_strong": 0.022695023693482985,
+      "motion_rate": 1.0,
+      "peak_given_valid": 0.1303298497988173,
+      "phase_given_valid": 0.5443038231085154,
+      "profile": "top1",
+      "recovery_delay_steps": 2,
+      "recovery_given_strong": 0.17045454545454544,
+      "recovery_given_valid": 0.2809917355371901,
+      "recovery_rate": 0.265625,
+      "score": 0.25248579545454536,
+      "spawn_clean_rate": 1.0,
+      "stage_given_strong": 0.017045454545454544,
+      "stage_given_valid": 0.012396694214876033,
+      "stage_rate": 0.01171875,
+      "strong_rate": 0.6875,
+      "swing_rate": 1.0,
+      "toward_given_valid": 0.22601201711607374,
+      "valid_rate": 0.9453125,
+      "variant": "delay2",
+      "wrong_rate": 0.0
+    },
+    {
+      "ball_case": "nominal_fl",
+      "body_rate": 0.0,
+      "bridge_rate": 1.0,
+      "context": "d2450",
+      "disable_recovery": false,
+      "disp_given_valid": 0.09387974675036659,
+      "distance_m": 0.245,
+      "early_rate": 0.0546875,
+      "episodes": 256,
+      "first_failure_all": {
+        "base": {
+          "count": 0,
+          "mean_phase": 0.0,
+          "pre_fraction": 0.0,
+          "rate": 0.0,
+          "recovery_fraction": 0.0
+        },
+        "height": {
+          "count": 217,
+          "mean_phase": 0.8145599101545624,
+          "pre_fraction": 0.0,
+          "rate": 0.84765625,
+          "recovery_fraction": 1.0
+        },
+        "upright": {
+          "count": 79,
+          "mean_phase": 0.6189713357370111,
+          "pre_fraction": 0.5063291139240507,
+          "rate": 0.30859375,
+          "recovery_fraction": 0.4936708860759494
+        }
+      },
+      "first_failure_strong": {
+        "base": {
+          "count": 0,
+          "mean_phase": 0.0,
+          "pre_fraction": 0.0,
+          "rate": 0.0,
+          "recovery_fraction": 0.0
+        },
+        "height": {
+          "count": 168,
+          "mean_phase": 0.8020645209721157,
+          "pre_fraction": 0.0,
+          "rate": 0.9545454545454546,
+          "recovery_fraction": 1.0
+        },
+        "upright": {
+          "count": 20,
+          "mean_phase": 0.6506329298019409,
+          "pre_fraction": 0.4,
+          "rate": 0.11363636363636363,
+          "recovery_fraction": 0.6
+        }
+      },
+      "lift_given_valid": 0.06725536742486245,
+      "max_base_given_strong": 0.0362515551969409,
+      "max_height_given_strong": 0.05810783617198467,
+      "max_upright_given_strong": 0.023849787613884968,
+      "motion_rate": 1.0,
+      "peak_given_valid": 0.1303298497988173,
+      "phase_given_valid": 0.5443038231085154,
+      "profile": "top1",
+      "recovery_delay_steps": 4,
+      "recovery_given_strong": 0.0,
+      "recovery_given_valid": 0.05785123966942149,
+      "recovery_rate": 0.0546875,
+      "score": -0.2513849431818182,
+      "spawn_clean_rate": 1.0,
+      "stage_given_strong": 0.0,
+      "stage_given_valid": 0.0,
+      "stage_rate": 0.0,
+      "strong_rate": 0.6875,
+      "swing_rate": 1.0,
+      "toward_given_valid": 0.22601201711607374,
+      "valid_rate": 0.9453125,
+      "variant": "delay4",
+      "wrong_rate": 0.0
+    },
+    {
+      "ball_case": "nominal_fl",
+      "body_rate": 0.0,
+      "bridge_rate": 1.0,
+      "context": "d2450",
+      "disable_recovery": false,
+      "disp_given_valid": 0.09387974675036659,
+      "distance_m": 0.245,
+      "early_rate": 0.0546875,
+      "episodes": 256,
+      "first_failure_all": {
+        "base": {
+          "count": 0,
+          "mean_phase": 0.0,
+          "pre_fraction": 0.0,
+          "rate": 0.0,
+          "recovery_fraction": 0.0
+        },
+        "height": {
+          "count": 222,
+          "mean_phase": 0.8286578290097348,
+          "pre_fraction": 0.0,
+          "rate": 0.8671875,
+          "recovery_fraction": 1.0
+        },
+        "upright": {
+          "count": 155,
+          "mean_phase": 0.6847693104897776,
+          "pre_fraction": 0.25806451612903225,
+          "rate": 0.60546875,
+          "recovery_fraction": 0.7419354838709677
+        }
+      },
+      "first_failure_strong": {
+        "base": {
+          "count": 0,
+          "mean_phase": 0.0,
+          "pre_fraction": 0.0,
+          "rate": 0.0,
+          "recovery_fraction": 0.0
+        },
+        "height": {
+          "count": 169,
+          "mean_phase": 0.8164182583961261,
+          "pre_fraction": 0.0,
+          "rate": 0.9602272727272727,
+          "recovery_fraction": 1.0
+        },
+        "upright": {
+          "count": 76,
+          "mean_phase": 0.7203531328000521,
+          "pre_fraction": 0.10526315789473684,
+          "rate": 0.4318181818181818,
+          "recovery_fraction": 0.8947368421052632
+        }
+      },
+      "lift_given_valid": 0.06725536742486245,
+      "max_base_given_strong": 0.037282129749655724,
+      "max_height_given_strong": 0.059698730537837204,
+      "max_upright_given_strong": 0.025144526142288338,
+      "motion_rate": 1.0,
+      "peak_given_valid": 0.1303298497988173,
+      "phase_given_valid": 0.5443038231085154,
+      "profile": "top1",
+      "recovery_delay_steps": 6,
+      "recovery_given_strong": 0.0,
+      "recovery_given_valid": 0.01652892561983471,
+      "recovery_rate": 0.015625,
+      "score": -0.34353693181818185,
+      "spawn_clean_rate": 1.0,
+      "stage_given_strong": 0.0,
+      "stage_given_valid": 0.0,
+      "stage_rate": 0.0,
+      "strong_rate": 0.6875,
+      "swing_rate": 1.0,
+      "toward_given_valid": 0.22601201711607374,
+      "valid_rate": 0.9453125,
+      "variant": "delay6",
+      "wrong_rate": 0.0
+    },
+    {
+      "ball_case": "nominal_fl",
+      "body_rate": 0.0,
+      "bridge_rate": 1.0,
+      "context": "d2450",
+      "disable_recovery": false,
+      "disp_given_valid": 0.09387974675036659,
+      "distance_m": 0.245,
+      "early_rate": 0.0546875,
+      "episodes": 256,
+      "first_failure_all": {
+        "base": {
+          "count": 0,
+          "mean_phase": 0.0,
+          "pre_fraction": 0.0,
+          "rate": 0.0,
+          "recovery_fraction": 0.0
+        },
+        "height": {
+          "count": 229,
+          "mean_phase": 0.846608815755386,
+          "pre_fraction": 0.0,
+          "rate": 0.89453125,
+          "recovery_fraction": 1.0
+        },
+        "upright": {
+          "count": 222,
+          "mean_phase": 0.713707414833275,
+          "pre_fraction": 0.18018018018018017,
+          "rate": 0.8671875,
+          "recovery_fraction": 0.8198198198198198
+        }
+      },
+      "first_failure_strong": {
+        "base": {
+          "count": 0,
+          "mean_phase": 0.0,
+          "pre_fraction": 0.0,
+          "rate": 0.0,
+          "recovery_fraction": 0.0
+        },
+        "height": {
+          "count": 171,
+          "mean_phase": 0.8315197515208819,
+          "pre_fraction": 0.0,
+          "rate": 0.9715909090909091,
+          "recovery_fraction": 1.0
+        },
+        "upright": {
+          "count": 142,
+          "mean_phase": 0.7453200447727257,
+          "pre_fraction": 0.056338028169014086,
+          "rate": 0.8068181818181818,
+          "recovery_fraction": 0.9436619718309859
+        }
+      },
+      "lift_given_valid": 0.06725536742486245,
+      "max_base_given_strong": 0.038701869547367096,
+      "max_height_given_strong": 0.060660487548871475,
+      "max_upright_given_strong": 0.026096794923598118,
+      "motion_rate": 1.0,
+      "peak_given_valid": 0.1303298497988173,
+      "phase_given_valid": 0.5443038231085154,
+      "profile": "top1",
+      "recovery_delay_steps": 8,
+      "recovery_given_strong": 0.0,
+      "recovery_given_valid": 0.012396694214876033,
+      "recovery_rate": 0.01171875,
+      "score": -0.4439453125,
+      "spawn_clean_rate": 1.0,
+      "stage_given_strong": 0.0,
+      "stage_given_valid": 0.0,
+      "stage_rate": 0.0,
+      "strong_rate": 0.6875,
+      "swing_rate": 1.0,
+      "toward_given_valid": 0.22601201711607374,
+      "valid_rate": 0.9453125,
+      "variant": "delay8",
+      "wrong_rate": 0.0
+    },
+    {
+      "ball_case": "nominal_fl",
+      "body_rate": 0.0,
+      "bridge_rate": 1.0,
+      "context": "d2450",
+      "disable_recovery": true,
+      "disp_given_valid": 0.09387974675036659,
+      "distance_m": 0.245,
+      "early_rate": 0.0546875,
+      "episodes": 256,
+      "first_failure_all": {
+        "base": {
+          "count": 16,
+          "mean_phase": 0.9794304296374321,
+          "pre_fraction": 1.0,
+          "rate": 0.0625,
+          "recovery_fraction": 0.0
+        },
+        "height": {
+          "count": 198,
+          "mean_phase": 0.925329246906319,
+          "pre_fraction": 1.0,
+          "rate": 0.7734375,
+          "recovery_fraction": 0.0
+        },
+        "upright": {
+          "count": 106,
+          "mean_phase": 0.7830189061614702,
+          "pre_fraction": 1.0,
+          "rate": 0.4140625,
+          "recovery_fraction": 0.0
+        }
+      },
+      "first_failure_strong": {
+        "base": {
+          "count": 6,
+          "mean_phase": 0.9704641501108805,
+          "pre_fraction": 1.0,
+          "rate": 0.03409090909090909,
+          "recovery_fraction": 0.0
+        },
+        "height": {
+          "count": 168,
+          "mean_phase": 0.9149337041945684,
+          "pre_fraction": 1.0,
+          "rate": 0.9545454545454546,
+          "recovery_fraction": 0.0
+        },
+        "upright": {
+          "count": 30,
+          "mean_phase": 0.8430379867553711,
+          "pre_fraction": 1.0,
+          "rate": 0.17045454545454544,
+          "recovery_fraction": 0.0
+        }
+      },
+      "lift_given_valid": 0.06725536742486245,
+      "max_base_given_strong": 0.0492495462637056,
+      "max_height_given_strong": 0.06060338257388635,
+      "max_upright_given_strong": 0.023305993146178396,
+      "motion_rate": 1.0,
+      "peak_given_valid": 0.1303298497988173,
+      "phase_given_valid": 0.5443038231085154,
+      "profile": "top1",
+      "recovery_delay_steps": 0,
+      "recovery_given_strong": 0.0,
+      "recovery_given_valid": 0.0,
+      "recovery_rate": 0.0,
+      "score": -0.2860795454545455,
+      "spawn_clean_rate": 1.0,
+      "stage_given_strong": 0.0,
+      "stage_given_valid": 0.0,
+      "stage_rate": 0.0,
+      "strong_rate": 0.6875,
+      "swing_rate": 1.0,
+      "toward_given_valid": 0.22601201711607374,
+      "valid_rate": 0.9453125,
+      "variant": "noRecovery",
+      "wrong_rate": 0.0
+    }
+  ],
+  "broad_episodes": 256,
+  "confirm_episodes": 2048,
+  "confirms": [
+    {
+      "ball_case": "nominal_fl",
+      "body_rate": 0.0,
+      "bridge_rate": 1.0,
+      "confirm_label": "current245",
+      "context": "d2450",
+      "disable_recovery": false,
+      "disp_given_valid": 0.09387492862614719,
+      "distance_m": 0.245,
+      "early_rate": 0.0546875,
+      "episodes": 2048,
+      "first_failure_all": {
+        "base": {
+          "count": 0,
+          "mean_phase": 0.0,
+          "pre_fraction": 0.0,
+          "rate": 0.0,
+          "recovery_fraction": 0.0
+        },
+        "height": {
+          "count": 1466,
+          "mean_phase": 0.7886007180155381,
+          "pre_fraction": 0.0,
+          "rate": 0.7158203125,
+          "recovery_fraction": 1.0
+        },
+        "upright": {
+          "count": 818,
+          "mean_phase": 0.5878648591799375,
+          "pre_fraction": 0.39119804400978,
+          "rate": 0.3994140625,
+          "recovery_fraction": 0.60880195599022
+        }
+      },
+      "first_failure_strong": {
+        "base": {
+          "count": 0,
+          "mean_phase": 0.0,
+          "pre_fraction": 0.0,
+          "rate": 0.0,
+          "recovery_fraction": 0.0
+        },
+        "height": {
+          "count": 1235,
+          "mean_phase": 0.7808230660704949,
+          "pre_fraction": 0.0,
+          "rate": 0.8771306818181818,
+          "recovery_fraction": 1.0
+        },
+        "upright": {
+          "count": 180,
+          "mean_phase": 0.6087201539013121,
+          "pre_fraction": 0.35555555555555557,
+          "rate": 0.1278409090909091,
+          "recovery_fraction": 0.6444444444444445
+        }
+      },
+      "lift_given_valid": 0.06725288921397579,
+      "max_base_given_strong": 0.042348846242847765,
+      "max_height_given_strong": 0.05063658815131269,
+      "max_upright_given_strong": 0.023094544647557832,
+      "motion_rate": 1.0,
+      "peak_given_valid": 0.13032228290295797,
+      "phase_given_valid": 0.5443038231085154,
+      "profile": "top1",
+      "recovery_delay_steps": 0,
+      "recovery_given_strong": 0.18039772727272727,
+      "recovery_given_valid": 0.30165289256198347,
+      "recovery_rate": 0.28515625,
+      "score": 0.3429509943181818,
+      "spawn_clean_rate": 1.0,
+      "stage_given_strong": 0.06321022727272728,
+      "stage_given_valid": 0.04597107438016529,
+      "stage_rate": 0.04345703125,
+      "strong_rate": 0.6875,
+      "swing_rate": 0.990234375,
+      "toward_given_valid": 0.22599954410525394,
+      "valid_rate": 0.9453125,
+      "variant": "current",
+      "wrong_rate": 0.0
+    },
+    {
+      "ball_case": "nominal_fl",
+      "body_rate": 0.0,
+      "bridge_rate": 1.0,
+      "confirm_label": "best245",
+      "context": "d2450",
+      "disable_recovery": false,
+      "disp_given_valid": 0.09387492862614719,
+      "distance_m": 0.245,
+      "early_rate": 0.0546875,
+      "episodes": 2048,
+      "first_failure_all": {
+        "base": {
+          "count": 0,
+          "mean_phase": 0.0,
+          "pre_fraction": 0.0,
+          "rate": 0.0,
+          "recovery_fraction": 0.0
+        },
+        "height": {
+          "count": 1667,
+          "mean_phase": 0.8126476244362943,
+          "pre_fraction": 0.0,
+          "rate": 0.81396484375,
+          "recovery_fraction": 1.0
+        },
+        "upright": {
+          "count": 759,
+          "mean_phase": 0.593919416347197,
+          "pre_fraction": 0.42160737812911725,
+          "rate": 0.37060546875,
+          "recovery_fraction": 0.5783926218708827
+        }
+      },
+      "first_failure_strong": {
+        "base": {
+          "count": 0,
+          "mean_phase": 0.0,
+          "pre_fraction": 0.0,
+          "rate": 0.0,
+          "recovery_fraction": 0.0
+        },
+        "height": {
+          "count": 1324,
+          "mean_phase": 0.8002505071933896,
+          "pre_fraction": 0.0,
+          "rate": 0.9403409090909091,
+          "recovery_fraction": 1.0
+        },
+        "upright": {
+          "count": 144,
+          "mean_phase": 0.5935302310519748,
+          "pre_fraction": 0.4444444444444444,
+          "rate": 0.10227272727272728,
+          "recovery_fraction": 0.5555555555555556
+        }
+      },
+      "lift_given_valid": 0.06725288921397579,
+      "max_base_given_strong": 0.03733125771395862,
+      "max_height_given_strong": 0.05346376567401669,
+      "max_upright_given_strong": 0.022708649710032412,
+      "motion_rate": 1.0,
+      "peak_given_valid": 0.13032228290295797,
+      "phase_given_valid": 0.5443038231085154,
+      "profile": "top1",
+      "recovery_delay_steps": 2,
+      "recovery_given_strong": 0.17542613636363635,
+      "recovery_given_valid": 0.27892561983471076,
+      "recovery_rate": 0.263671875,
+      "score": 0.26130149147727266,
+      "spawn_clean_rate": 1.0,
+      "stage_given_strong": 0.014914772727272728,
+      "stage_given_valid": 0.01084710743801653,
+      "stage_rate": 0.01025390625,
+      "strong_rate": 0.6875,
+      "swing_rate": 1.0,
+      "toward_given_valid": 0.22599954410525394,
+      "valid_rate": 0.9453125,
+      "variant": "delay2",
+      "wrong_rate": 0.0
+    },
+    {
+      "ball_case": "nominal_fl",
+      "body_rate": 0.0,
+      "bridge_rate": 1.0,
+      "confirm_label": "norec245",
+      "context": "d2450",
+      "disable_recovery": true,
+      "disp_given_valid": 0.09387492862614719,
+      "distance_m": 0.245,
+      "early_rate": 0.0546875,
+      "episodes": 2048,
+      "first_failure_all": {
+        "base": {
+          "count": 119,
+          "mean_phase": 0.9783002303428009,
+          "pre_fraction": 1.0,
+          "rate": 0.05810546875,
+          "recovery_fraction": 0.0
+        },
+        "height": {
+          "count": 1585,
+          "mean_phase": 0.9254961579379976,
+          "pre_fraction": 1.0,
+          "rate": 0.77392578125,
+          "recovery_fraction": 0.0
+        },
+        "upright": {
+          "count": 859,
+          "mean_phase": 0.7844712287361048,
+          "pre_fraction": 1.0,
+          "rate": 0.41943359375,
+          "recovery_fraction": 0.0
+        }
+      },
+      "first_failure_strong": {
+        "base": {
+          "count": 48,
+          "mean_phase": 0.9704641501108805,
+          "pre_fraction": 1.0,
+          "rate": 0.03409090909090909,
+          "recovery_fraction": 0.0
+        },
+        "height": {
+          "count": 1344,
+          "mean_phase": 0.9151314965316227,
+          "pre_fraction": 1.0,
+          "rate": 0.9545454545454546,
+          "recovery_fraction": 0.0
+        },
+        "upright": {
+          "count": 253,
+          "mean_phase": 0.845599662645061,
+          "pre_fraction": 1.0,
+          "rate": 0.1796875,
+          "recovery_fraction": 0.0
+        }
+      },
+      "lift_given_valid": 0.06725288921397579,
+      "max_base_given_strong": 0.04924408694602211,
+      "max_height_given_strong": 0.0606214603705501,
+      "max_upright_given_strong": 0.023334620689803905,
+      "motion_rate": 1.0,
+      "peak_given_valid": 0.13032228290295797,
+      "phase_given_valid": 0.5443038231085154,
+      "profile": "top1",
+      "recovery_delay_steps": 0,
+      "recovery_given_strong": 0.0,
+      "recovery_given_valid": 0.0,
+      "recovery_rate": 0.0,
+      "score": -0.28838778409090915,
+      "spawn_clean_rate": 1.0,
+      "stage_given_strong": 0.0,
+      "stage_given_valid": 0.0,
+      "stage_rate": 0.0,
+      "strong_rate": 0.6875,
+      "swing_rate": 1.0,
+      "toward_given_valid": 0.22599954410525394,
+      "valid_rate": 0.9453125,
+      "variant": "noRecovery",
+      "wrong_rate": 0.0
+    },
+    {
+      "ball_case": "nominal_fl",
+      "body_rate": 0.0,
+      "bridge_rate": 1.0,
+      "confirm_label": "best2425",
+      "context": "d2425",
+      "disable_recovery": false,
+      "disp_given_valid": 0.09407783135519189,
+      "distance_m": 0.2425,
+      "early_rate": 0.078125,
+      "episodes": 2048,
+      "first_failure_all": {
+        "base": {
+          "count": 0,
+          "mean_phase": 0.0,
+          "pre_fraction": 0.0,
+          "rate": 0.0,
+          "recovery_fraction": 0.0
+        },
+        "height": {
+          "count": 1435,
+          "mean_phase": 0.7926961902126618,
+          "pre_fraction": 0.0,
+          "rate": 0.70068359375,
+          "recovery_fraction": 1.0
+        },
+        "upright": {
+          "count": 805,
+          "mean_phase": 0.5886783916757714,
+          "pre_fraction": 0.2981366459627329,
+          "rate": 0.39306640625,
+          "recovery_fraction": 0.7018633540372671
+        }
+      },
+      "first_failure_strong": {
+        "base": {
+          "count": 0,
+          "mean_phase": 0.0,
+          "pre_fraction": 0.0,
+          "rate": 0.0,
+          "recovery_fraction": 0.0
+        },
+        "height": {
+          "count": 1209,
+          "mean_phase": 0.7973636863052204,
+          "pre_fraction": 0.0,
+          "rate": 0.7458359037631092,
+          "recovery_fraction": 1.0
+        },
+        "upright": {
+          "count": 618,
+          "mean_phase": 0.5870304871531367,
+          "pre_fraction": 0.3446601941747573,
+          "rate": 0.3812461443553362,
+          "recovery_fraction": 0.6553398058252428
+        }
+      },
+      "lift_given_valid": 0.0632803558482457,
+      "max_base_given_strong": 0.0437750893195127,
+      "max_height_given_strong": 0.04689493433404013,
+      "max_upright_given_strong": 0.024207082034113377,
+      "motion_rate": 1.0,
+      "peak_given_valid": 0.12993669566714158,
+      "phase_given_valid": 0.5379747212943384,
+      "profile": "top1",
+      "recovery_delay_steps": 0,
+      "recovery_given_strong": 0.35595311536088836,
+      "recovery_given_valid": 0.3268008474576271,
+      "recovery_rate": 0.30126953125,
+      "score": 0.8208816895434917,
+      "spawn_clean_rate": 1.0,
+      "stage_given_strong": 0.05860579888957434,
+      "stage_given_valid": 0.06038135593220339,
+      "stage_rate": 0.0556640625,
+      "strong_rate": 0.79150390625,
+      "swing_rate": 0.99609375,
+      "toward_given_valid": 0.26334087607466566,
+      "valid_rate": 0.921875,
+      "variant": "current",
+      "wrong_rate": 0.0
+    }
+  ],
+  "diagnostic_chain_stops_here": true,
+  "dominant_strong_failure": {
+    "count": 1235,
+    "mean_phase": 0.7808230660704949,
+    "pre_fraction": 0.0,
+    "rate": 0.8771306818181818,
+    "recovery_fraction": 1.0
+  },
+  "dominant_strong_first_failure": "height",
+  "next_stage": "BALL_CONDITIONED_KICK_RL",
+  "rstrong_gain_best_vs_current245": -0.004971590909090912,
+  "rstrong_gain_norecovery_vs_current245": -0.18039772727272727,
+  "training": false,
+  "verdict": "TRAIN_RECOVERY_DURING_BALL_CONDITIONED_RL",
+  "version": "r8_54c_final_handoff_attribution"
+}

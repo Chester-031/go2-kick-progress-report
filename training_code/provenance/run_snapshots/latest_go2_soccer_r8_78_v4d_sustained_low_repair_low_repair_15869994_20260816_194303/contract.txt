@@ -1,0 +1,15 @@
+version=r8_78_v4d_sustained_low_repair_v1
+training=true
+training_target=low_only
+high_trainable=false
+low_trainable=true
+parent_high=/scratch/lj2634/runs/go2_soccer_v4d_joint/v4d_staged_joint_20260803_223518/full/logs/high_model_final.pt
+parent_high_sha256=1a05964f6330b532fe944d24028c67b880664eee3218a984cf17db6bf8010397
+parent_low=/scratch/lj2634/runs/go2_soccer_v4d_joint/v4d_staged_joint_20260803_223518/full/logs/low_model_final.pt
+parent_low_sha256=52acb55160f4d4db0ac5c3da41aadbc5383a90555c64ab41851ba7383989996a
+legacy_trace=/scratch/lj2634/runs/go2_soccer_r8_77_v4d_checkpoint_gate/gate_15867528_20260816_185634/results/hard_mix_449/r875_trace.csv.gz
+pre_gate=existing_r877_trace_late_window
+post_gate=fresh_early_late_signed_velocity_8_primitives
+iterations=300
+num_envs=512
+video=false

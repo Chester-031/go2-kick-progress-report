@@ -1,0 +1,4 @@
+version=r8_65_v4d_behavior_scan
+training=false
+checkpoint_frozen=true
+seeds=86501,86502,86503,86504,86505,86506,86507,86508

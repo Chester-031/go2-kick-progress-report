@@ -1,0 +1,74 @@
+{
+  "base_checkpoint": "/scratch/lj2634/runs/go2_soccer_r8_21_independent_lift_skill/r821_lift_20260809_190559/train/logs/support_model_final.pt",
+  "core_fraction": 0.5,
+  "dataset": "/scratch/lj2634/runs/go2_soccer_r8_22_success_trajectory_modes/r822_modes_20260809_191409/bridge_trajectories.npz",
+  "evaluation_episodes": 512,
+  "ppo_update": false,
+  "results": {
+    "base": {
+      "bridge_rate": 0.0,
+      "episodes": 512,
+      "lift4_rate": 0.0,
+      "mean_abs_residual": 0.0,
+      "mean_max_forward_m": 0.04476187005639076,
+      "mean_max_lift_m": 0.020643632509745657,
+      "swing_rate": 0.0
+    },
+    "mode0": {
+      "evaluation": {
+        "bridge_rate": 0.087890625,
+        "episodes": 512,
+        "lift4_rate": 0.0,
+        "mean_abs_residual": 0.04104559778782784,
+        "mean_max_forward_m": 0.037841390585526824,
+        "mean_max_lift_m": 0.021390132140368223,
+        "swing_rate": 0.0
+      },
+      "training": {
+        "all_mode_trajectories": 154,
+        "core_cosine_max": 0.4106364840553788,
+        "core_cosine_mean": 0.21131586408518524,
+        "core_cosine_min": 0.1489279824559556,
+        "core_fraction": 0.5,
+        "core_trajectories": 77,
+        "final_loss": 0.03737666457891464,
+        "initial_loss": 0.038435470312833786,
+        "mode": 0,
+        "pred_abs_mean": 0.02749280445277691,
+        "target_abs_mean": 0.15821000933647156,
+        "training_samples": 616
+      }
+    },
+    "mode1": {
+      "evaluation": {
+        "bridge_rate": 1.0,
+        "episodes": 512,
+        "lift4_rate": 1.0,
+        "mean_abs_residual": 0.05662291470826382,
+        "mean_max_forward_m": 0.1424390897154808,
+        "mean_max_lift_m": 0.06854401808232069,
+        "swing_rate": 0.0
+      },
+      "training": {
+        "all_mode_trajectories": 166,
+        "core_cosine_max": 0.3927366940700585,
+        "core_cosine_mean": 0.22278908353214177,
+        "core_cosine_min": 0.15339012783122233,
+        "core_fraction": 0.5,
+        "core_trajectories": 83,
+        "final_loss": 0.039748989045619965,
+        "initial_loss": 0.039732981473207474,
+        "mode": 1,
+        "pred_abs_mean": 0.030750228092074394,
+        "target_abs_mean": 0.1595667451620102,
+        "training_samples": 664
+      }
+    }
+  },
+  "reward_change": false,
+  "training": "offline_mode_specific_residual_only",
+  "verdict": "MODE_CORE_DET_BRIDGE_ESTABLISHED",
+  "version": "r8_23_mode_core_residual_ab",
+  "winner_lift_gain_m": 0.04790038557257503,
+  "winner_mode": 1
+}

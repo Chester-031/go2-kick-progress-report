@@ -1,0 +1,99 @@
+#!/usr/bin/env bash
+#SBATCH --account=torch_pr_1066_general
+#SBATCH --partition=l40s_public
+#SBATCH --job-name=r882-low
+#SBATCH --gres=gpu:1
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=48G
+#SBATCH --time=01:30:00
+#SBATCH --output=slurm-r882-%j.out
+
+set -Eeuo pipefail
+PROJECT="/scratch/lj2634/Isaac-Go2-Low-Level-RL"
+EXP="$PROJECT/experiments/r8_82_v4d_turn_target_repair"
+R881_PARENT_RUN="/scratch/lj2634/runs/go2_soccer_r8_81_v4d_axis_persistence_repair/axis_15876323_20260816_211259"
+SOURCE="$R881_PARENT_RUN/source/train_r881.py"
+LOW="$R881_PARENT_RUN/logs/low_model_final.pt"
+PARENT_SUMMARY="$R881_PARENT_RUN/logs/r881_low_repair_summary.json"
+ROOT="/scratch/lj2634/runs/go2_soccer_r8_82_v4d_turn_target_repair"
+PY="${ISAAC_PYTHON:-/scratch/lj2634/envs/isaaclab232_v2/bin/python}"
+HIGH="/scratch/lj2634/runs/go2_soccer_v4d_joint/v4d_staged_joint_20260803_223518/full/logs/high_model_final.pt"
+EXPECTED_HIGH="1a05964f6330b532fe944d24028c67b880664eee3218a984cf17db6bf8010397"
+MAX_ITERS="${R882_MAX_ITERATIONS:-150}"
+NUM_ENVS="${R882_NUM_ENVS:-512}"
+
+cd "$PROJECT"
+for FILE in "$EXP/patch_r882_turn_target.py" "$SOURCE" "$LOW" "$PARENT_SUMMARY" "$HIGH"; do
+  [[ -s "$FILE" ]] || { echo "R882_FATAL=missing:$FILE" >&2; exit 21; }
+done
+[[ "$(sha256sum "$HIGH" | awk '{print $1}')" == "$EXPECTED_HIGH" ]] || exit 22
+[[ "$MAX_ITERS" == "150" ]] || { echo "R882_FATAL=iterations_must_be_250"; exit 23; }
+"$PY" - "$PARENT_SUMMARY" <<'PY'
+import json, sys
+from pathlib import Path
+d=json.loads(Path(sys.argv[1]).read_text())
+assert d["accepted"] is False
+assert d["post_sustained"]["pass_count"] == 6
+print("R882_PARENT_6_OF_8_CONFIRMED")
+PY
+
+STAMP="$(date +%Y%m%d_%H%M%S)"
+RUN="$ROOT/axis_${SLURM_JOB_ID:-manual}_${STAMP}"
+mkdir -p "$RUN"/{source,logs,checkpoints,runtime/home,runtime/cache,runtime/config,runtime/data,runtime/tmp,runtime/mpl}
+printf '%s\n' "$RUN" > "$ROOT/latest_r882.txt"
+"$PY" "$EXP/patch_r882_turn_target.py" --source "$SOURCE" --output "$RUN/source/train_r882.py"
+"$PY" -m py_compile "$RUN/source/train_r882.py"
+
+export PYTHONPATH="$PROJECT/source/isaac_go2_low_level_rl:$PROJECT/source:${PYTHONPATH:-}"
+export HOME="$RUN/runtime/home" XDG_CACHE_HOME="$RUN/runtime/cache" XDG_CONFIG_HOME="$RUN/runtime/config"
+export XDG_DATA_HOME="$RUN/runtime/data" TMPDIR="$RUN/runtime/tmp" MPLCONFIGDIR="$RUN/runtime/mpl"
+export PYTHONUNBUFFERED=1 QT_QPA_PLATFORM=offscreen R873_HEADLESS_STRIP=1
+export R876_CURRICULUM_HIGH_REPAIR=1
+export R882_SUSTAINED_LOW_REPAIR=1
+export R882_FORCE_LOCOMOTION_PRIMITIVES=1
+export R882_LOW_LR=0.00001
+export V4D_HIGH_CHECKPOINT="$HIGH"
+unset R879_SUSTAINED_LOW_REPAIR R878_SUSTAINED_LOW_REPAIR R874B_FREEZE_LOW R876_FREEZE_LOW
+
+set +e
+setsid timeout --foreground --kill-after=30s 75m \
+  "$PY" "$RUN/source/train_r882.py" --headless --num_envs "$NUM_ENVS" \
+    --max_iterations "$MAX_ITERS" --seed 88201 --low_level_checkpoint "$LOW" \
+    --log_dir "$RUN/logs" --run_name r882_turn_target \
+  > "$RUN/worker.log" 2>&1
+RC=$?
+set -e
+printf 'PROCESS_RC=%s\n' "$RC" >> "$RUN/worker.log"
+
+VALIDATION_RC=0
+SUMMARY="$RUN/logs/r882_low_repair_summary.json"
+if [[ "$RC" -eq 0 && -s "$SUMMARY" ]]; then
+  "$PY" - "$SUMMARY" <<'PY' > "$RUN/validation.txt" 2>&1 || VALIDATION_RC=$?
+import json, sys
+from pathlib import Path
+d=json.loads(Path(sys.argv[1]).read_text())
+assert len(d["records"]) == 150
+assert d["pre_sustained"]["pass_count"] < 8
+assert d["post_sustained"]["pass_count"] == 8
+assert d["post_sustained"]["accepted"] is True
+assert float(d["high_parameter_delta"]["max_abs"]) == 0.0
+assert float(d["low_parameter_delta"]["max_abs"]) > 0.0
+assert d["accepted"] is True
+print("R882_VALIDATION_OK")
+print("PRE_PASS_COUNT=",d["pre_sustained"]["pass_count"])
+print("POST_PASS_COUNT=",d["post_sustained"]["pass_count"])
+PY
+else VALIDATION_RC=1
+fi
+for FILE in "$RUN/logs/low_model_final.pt" "$RUN/logs/high_model_unchanged.pt" "$SUMMARY"; do
+  [[ -s "$FILE" ]] && cp -a "$FILE" "$RUN/checkpoints/"
+done
+if [[ "$RC" -eq 0 && "$VALIDATION_RC" -eq 0 && -f "$RUN/logs/R882_LOW_REPAIR_ACCEPTED" ]]; then
+  touch "$RUN/R882_READY_FOR_PAIRED_FULL_SUPPORT_GATE"
+fi
+(cd "$RUN" && find . -type f ! -name SHA256SUMS -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS)
+cat "$RUN/validation.txt" 2>/dev/null || true
+echo "R882_RUN=$RUN"
+[[ -f "$RUN/R882_READY_FOR_PAIRED_FULL_SUPPORT_GATE" ]] && \
+  echo "VERDICT=R882_AXIS_LOW_READY_FOR_PAIRED_GATE" || echo "VERDICT=R882_AXIS_LOW_REJECTED"
+exit "$(( RC != 0 ? RC : VALIDATION_RC ))"

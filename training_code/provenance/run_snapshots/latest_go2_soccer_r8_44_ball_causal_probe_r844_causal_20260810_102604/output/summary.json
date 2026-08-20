@@ -1,0 +1,147 @@
+{
+  "ball_observation_enabled": false,
+  "ball_observation_reason": "counterfactual isolation: robot policy input remains identical while only physical ball pose changes",
+  "cases": [
+    {
+      "case": "nominal_fl",
+      "episodes": 2048,
+      "means": {
+        "active_start_ball_drift": 0.0,
+        "active_start_ball_speed": 7.220387310269416e-06,
+        "first_impact_step": 9.9765625,
+        "first_response_step": null,
+        "max_directional_displacement": 0.4456247272901237,
+        "peak_ball_speed": 0.4266015022294596,
+        "peak_direction_speed": 0.3836601512739435,
+        "response_body_distance": null,
+        "response_foot_toward_speed": null,
+        "response_selected_distance": null,
+        "response_wrong_min_distance": null
+      },
+      "rates": {
+        "active_started": 1.0,
+        "arming_unstable": 0.0,
+        "ball_response": 0.0,
+        "body_response": 0.0,
+        "bridge": 1.0,
+        "clean_fl_causal": 0.0,
+        "fl_shell": 1.0,
+        "impact": 1.0,
+        "passive_response": 0.0,
+        "stage": 0.0009765625,
+        "swing": 1.0,
+        "wrong_response": 0.0
+      }
+    },
+    {
+      "case": "lateral_miss",
+      "episodes": 2048,
+      "means": {
+        "active_start_ball_drift": 0.0,
+        "active_start_ball_speed": 7.2221155278384686e-06,
+        "first_impact_step": null,
+        "first_response_step": null,
+        "max_directional_displacement": 0.0,
+        "peak_ball_speed": 7.167589103573846e-06,
+        "peak_direction_speed": 5.744503027926839e-06,
+        "response_body_distance": null,
+        "response_foot_toward_speed": null,
+        "response_selected_distance": null,
+        "response_wrong_min_distance": null
+      },
+      "rates": {
+        "active_started": 1.0,
+        "arming_unstable": 0.0,
+        "ball_response": 0.0,
+        "body_response": 0.0,
+        "bridge": 1.0,
+        "clean_fl_causal": 0.0,
+        "fl_shell": 0.0,
+        "impact": 0.0,
+        "passive_response": 0.0,
+        "stage": 0.3203125,
+        "swing": 1.0,
+        "wrong_response": 0.0
+      }
+    },
+    {
+      "case": "fr_control",
+      "episodes": 2048,
+      "means": {
+        "active_start_ball_drift": 0.0,
+        "active_start_ball_speed": 7.220103123373178e-06,
+        "first_impact_step": 4.274127310061601,
+        "first_response_step": null,
+        "max_directional_displacement": 0.08990988760342589,
+        "peak_ball_speed": 0.1506886381393997,
+        "peak_direction_speed": 0.1366581838374259,
+        "response_body_distance": null,
+        "response_foot_toward_speed": null,
+        "response_selected_distance": null,
+        "response_wrong_min_distance": null
+      },
+      "rates": {
+        "active_started": 1.0,
+        "arming_unstable": 0.0,
+        "ball_response": 0.0,
+        "body_response": 0.0,
+        "bridge": 1.0,
+        "clean_fl_causal": 0.0,
+        "fl_shell": 0.0,
+        "impact": 0.4755859375,
+        "passive_response": 0.0,
+        "stage": 0.4404296875,
+        "swing": 1.0,
+        "wrong_response": 0.0
+      }
+    },
+    {
+      "case": "far_control",
+      "episodes": 2048,
+      "means": {
+        "active_start_ball_drift": 0.0,
+        "active_start_ball_speed": 7.11579377821181e-06,
+        "first_impact_step": null,
+        "first_response_step": null,
+        "max_directional_displacement": 0.0,
+        "peak_ball_speed": 7.062070608299109e-06,
+        "peak_direction_speed": 0.0,
+        "response_body_distance": null,
+        "response_foot_toward_speed": null,
+        "response_selected_distance": null,
+        "response_wrong_min_distance": null
+      },
+      "rates": {
+        "active_started": 1.0,
+        "arming_unstable": 0.0,
+        "ball_response": 0.0,
+        "body_response": 0.0,
+        "bridge": 1.0,
+        "clean_fl_causal": 0.0,
+        "fl_shell": 0.0,
+        "impact": 0.0,
+        "passive_response": 0.0,
+        "stage": 0.3203125,
+        "swing": 1.0,
+        "wrong_response": 0.0
+      }
+    }
+  ],
+  "contrasts": {
+    "clean_nominal_minus_max_control": 0.0,
+    "far_response": 0.0,
+    "fr_wrong_response": 0.0,
+    "impact_nominal_minus_max_control": 0.5244140625,
+    "max_control_impact": 0.4755859375,
+    "max_control_response": 0.0,
+    "response_nominal_minus_max_control": 0.0
+  },
+  "episodes_per_case": 2048,
+  "grace_steps": 6,
+  "kick_direction": "robot_forward",
+  "kick_strength": 1.0,
+  "total_episodes": 8192,
+  "training": false,
+  "verdict": "BALL_IMPACT_FOUND_CAUSALITY_NOT_CLEAN_ENOUGH",
+  "version": "r8_44_ball_causal_probe"
+}

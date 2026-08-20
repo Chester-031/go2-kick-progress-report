@@ -1,0 +1,152 @@
+{
+  "backward": false,
+  "high_observation_shape": [
+    47,
+    17
+  ],
+  "legacy_command_abs": 0.0,
+  "low_observation_shape": [
+    47,
+    62
+  ],
+  "low_steps_per_high_action": 5,
+  "mode_summary": {
+    "accepted_high": {
+      "action_rate_mean": 0.045516237790582816,
+      "case_count": 13,
+      "contact_ball_rate": 0.5384615384615384,
+      "find_ball_rate": 0.7692307692307693,
+      "goal_case_rate": 0.15384615384615385,
+      "low_reward_mean": 1.4966955056131848,
+      "stationary_rate": 0.0,
+      "upright_error_mean": 0.004883175974971162,
+      "wall_stall_rate": 0.3076923076923077
+    },
+    "r874b_high": {
+      "action_rate_mean": 0.043198762184161806,
+      "case_count": 13,
+      "contact_ball_rate": 0.5384615384615384,
+      "find_ball_rate": 0.7692307692307693,
+      "goal_case_rate": 0.15384615384615385,
+      "low_reward_mean": 1.5222669774537703,
+      "stationary_rate": 0.0,
+      "upright_error_mean": 0.004280745924472345,
+      "wall_stall_rate": 0.23076923076923078
+    },
+    "scripted": {
+      "action_rate_mean": 0.02634005158368234,
+      "case_count": 13,
+      "contact_ball_rate": 0.38461538461538464,
+      "find_ball_rate": 0.5384615384615384,
+      "goal_case_rate": 0.15384615384615385,
+      "low_reward_mean": 1.7876594493791855,
+      "stationary_rate": 0.6923076923076923,
+      "upright_error_mean": 0.0020153335623666227,
+      "wall_stall_rate": 0.0
+    }
+  },
+  "normalized_probe_max_abs": 1.8000001907348633,
+  "normalizer": "ActorCritic.actor_obs_normalizer",
+  "num_envs": 47,
+  "optimizer_step": false,
+  "parameter_deltas": {
+    "accepted_high": {
+      "changed_tensors": 0.0,
+      "l2": 0.0,
+      "max_abs": 0.0
+    },
+    "accepted_low": {
+      "changed_tensors": 0.0,
+      "l2": 0.0,
+      "max_abs": 0.0
+    },
+    "candidate_high": {
+      "changed_tensors": 0.0,
+      "l2": 0.0,
+      "max_abs": 0.0
+    }
+  },
+  "per_environment": "/scratch/lj2634/runs/go2_soccer_r8_77_v4d_checkpoint_gate/gate_15867528_20260816_185634/results/full_support_final/r875_per_environment.csv",
+  "policy_case_count": 13,
+  "primitive_case_count": 8,
+  "primitive_pass_count": 7,
+  "primitive_results": [
+    {
+      "base_done_count": 0,
+      "case": "stand",
+      "rule": "max_displacement<0.20",
+      "status": "PASS",
+      "upright_error_max": 0.009139690548181534
+    },
+    {
+      "base_done_count": 0,
+      "case": "forward",
+      "rule": "relative_x_max>0.06",
+      "status": "PASS",
+      "upright_error_max": 0.007645660080015659
+    },
+    {
+      "base_done_count": 0,
+      "case": "backward",
+      "rule": "relative_x_min<-0.03",
+      "status": "PASS",
+      "upright_error_max": 0.0037241140380501747
+    },
+    {
+      "base_done_count": 0,
+      "case": "left",
+      "rule": "relative_y_max>0.04",
+      "status": "PASS",
+      "upright_error_max": 0.008014894090592861
+    },
+    {
+      "base_done_count": 0,
+      "case": "right",
+      "rule": "relative_y_min<-0.04",
+      "status": "PASS",
+      "upright_error_max": 0.007076893467456102
+    },
+    {
+      "base_done_count": 0,
+      "case": "turn_left",
+      "rule": "relative_yaw_max>0.10",
+      "status": "WARN",
+      "upright_error_max": 0.009775360114872456
+    },
+    {
+      "base_done_count": 0,
+      "case": "turn_right",
+      "rule": "relative_yaw_min<-0.10",
+      "status": "PASS",
+      "upright_error_max": 0.004102751147001982
+    },
+    {
+      "base_done_count": 0,
+      "case": "wall_safe",
+      "rule": "approach_detected_and_local_y<1.98",
+      "status": "PASS",
+      "upright_error_max": 0.004768084269016981
+    }
+  ],
+  "primitive_total": 8,
+  "rationale": "automatic_separation_threshold_not_crossed",
+  "steps": 240,
+  "teacher_flag_abs": 0.0,
+  "teacher_scale": 0.0,
+  "trace": "/scratch/lj2634/runs/go2_soccer_r8_77_v4d_checkpoint_gate/gate_15867528_20260816_185634/results/full_support_final/r875_trace.csv.gz",
+  "training": false,
+  "triplicate_initial_state_check": {
+    "ball_max_abs": 9.5367431640625e-07,
+    "joint_max_abs": 0.0,
+    "root_max_abs": 9.5367431640625e-07,
+    "velocity_max_abs": 0.0,
+    "yaw_max_abs": 0.0
+  },
+  "verdict": "INCONCLUSIVE_REVIEW_PER_ENV_METRICS",
+  "version": "r8_75_v4d_owner_attribution_v1",
+  "video": false,
+  "wall_distance_proxy_bounds": {
+    "x_abs": 4.02,
+    "y_abs": 2.0
+  }
+}

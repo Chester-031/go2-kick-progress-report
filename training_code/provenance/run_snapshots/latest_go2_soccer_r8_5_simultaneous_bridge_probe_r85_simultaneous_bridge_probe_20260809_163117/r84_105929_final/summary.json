@@ -1,0 +1,25 @@
+{
+  "checkpoint": "/scratch/lj2634/runs/go2_soccer_r8_4_load_preserving_progressive_lift/r8_4_load_preserving_progressive_lift_20260807_105929/pilot/logs/support_model_final.pt",
+  "completed_episodes": 512,
+  "means": {
+    "base_displacement": 0.05235888083629358,
+    "max_simultaneous_unload_lift_hold_steps": 4.395624508647798,
+    "prelift_unload_seen": 0.39622641509433965,
+    "selected_foot_height": 0.016952251029876648,
+    "selected_fz": 24.34155029280451,
+    "selected_load_ratio": 0.15184094719166272,
+    "simultaneous_unload_lift_seen": 0.34591194968553457,
+    "support3_fz": 121.7306896185725,
+    "upright_error": 0.009401511226528282
+  },
+  "requested_episodes": 512,
+  "simultaneous_hold_steps_required": 3,
+  "stage": "lift_5mm",
+  "stage_success_rate": 0.0,
+  "stage_successes": 0,
+  "strict_success_rate": 0.0,
+  "strict_successes": 0,
+  "version": "r8_5_simultaneous_unload_lift_probe",
+  "violation_episodes": 0,
+  "violation_rate": 0.0
+}

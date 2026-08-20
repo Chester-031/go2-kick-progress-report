@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+ROOT="/scratch/lj2634/runs/go2_soccer_r8_66_v4d_metric_smoke"; P="$ROOT/latest_r866.txt"; [[ -s "$P" ]] || { echo VERDICT=R866_NOT_READY; exit 2; }; RUN="$(tr -d '\r\n' < "$P")"; echo "RUN=$RUN"; cat "$RUN/contract.txt"; grep -Ein 'Traceback|RuntimeError|ModuleNotFoundError|R866_METRIC_ONLY|V4D_EVAL' "$RUN/worker.log" || true; test -s "$RUN/summaries/metric.json"; test -s "$RUN/trajectories/metric.csv"; grep -q 'V4D_EVAL_METRIC_ONLY=true' "$RUN/worker.log"; (cd "$RUN" && sha256sum -c SHA256SUMS); echo TRAINING=FALSE; echo VIDEO_GENERATION=FALSE; echo STATE=METRIC_SMOKE_READY; echo VERDICT=R866_READY_FOR_MULTI_SEED

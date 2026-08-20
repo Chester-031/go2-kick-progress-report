@@ -1,0 +1,48 @@
+R8.77 selected V4D checkpoint: expected local-video phenomena
+
+Reset contract
+  The video must log R876_EVAL_DISTRIBUTION phase=full_support. Robot and ball
+  are sampled independently across the playable interior and robot yaw spans
+  the full [-pi, pi] range. This is not an easy curriculum render.
+
+Expected successful behavior
+  1. Find/turn: when initially facing away, Go2 should make a deliberate turn
+     and bring the gray ball into its forward working direction. A short stand
+     decision is acceptable; remaining stationary for an entire episode is not.
+  2. Approach: distance to the ball should generally decrease without large,
+     repeated left-right corrections. Backward or lateral motion is acceptable
+     when it is clearly part of reorientation.
+  3. Push selection: push should become dominant only near the ball. From far
+     away, locomotion/turning should dominate rather than blind pushing.
+  4. Ball progress: after contact, the ball should move toward the opponent goal
+     often enough to produce positive progress and occasional goals. Contact
+     alone is not success if the ball is driven sideways into a wall.
+  5. Wall behavior: near either side wall or a corner, Go2 should turn away,
+     reposition, or leave the wall. Repeated collision, edge pinning and rapid
+     twitching are failures.
+  6. Low-level quality: the torso should remain upright, feet should execute a
+     recognizable gait, and joint motion should remain smooth. The expected
+     metric range is upright error well below 0.03 and no persistent action-rate
+     oscillation.
+  7. Symmetry: left- and right-side situations should not show a clear one-sided
+     collapse. The deterministic metric gate, not one attractive clip, decides
+     this property.
+
+Expected reset transitions
+  A new state may appear immediately after a goal, own goal, base termination,
+  or episode timeout. Teleportation at such a reset boundary is normal. Sudden
+  teleportation mid-episode without a termination is abnormal.
+
+Reject on sight
+  - ignores the gray ball or walks consistently away from it;
+  - stays still for a full episode despite a reachable ball;
+  - pins itself to a wall and twitches repeatedly;
+  - repeatedly circles the ball without closing distance;
+  - pushes primarily toward its own goal;
+  - visibly unstable or malformed Delta Pose gait;
+  - video log does not contain the full-support distribution marker.
+
+Interpretation limit
+  This video is qualitative evidence for the checkpoint already selected by
+  the 13-case R8.75 metric gate. It must not replace the metric comparison and
+  must not be described as a statistical full-support success rate.

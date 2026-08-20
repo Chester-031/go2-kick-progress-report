@@ -1,0 +1,6 @@
+version=r8_69_v4d_headless_fix
+training=false
+video=false
+timeout_seconds=120
+checkpoint_frozen=true
+visual_materials_removed=true

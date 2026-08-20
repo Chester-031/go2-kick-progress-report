@@ -1,0 +1,11 @@
+version=r8_77_v4d_checkpoint_gate_v1
+training=false
+optimizer_step=false
+backward=false
+video=false
+cases=13
+candidate_count=3
+accepted_high=/scratch/lj2634/runs/go2_soccer_v4d_joint/v4d_staged_joint_20260803_223518/full/logs/high_model_final.pt
+accepted_low=/scratch/lj2634/runs/go2_soccer_v4d_joint/v4d_staged_joint_20260803_223518/full/logs/low_model_final.pt
+r876_run=/scratch/lj2634/runs/go2_soccer_r8_76_v4d_curriculum_high_repair/curriculum_15864427_20260816_180705
+selection_before_video=true

@@ -1,0 +1,21 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/scratch/lj2634/envs/isaaclab232_v2/lib/python3.11/site-packages/pip/__main__.py", line 24, in <module>
+    sys.exit(_main())
+             ^^^^^^^
+  File "/scratch/lj2634/envs/isaaclab232_v2/lib/python3.11/site-packages/pip/_internal/cli/main.py", line 47, in main
+    from pip._internal.cli.autocompletion import autocomplete
+  File "/scratch/lj2634/envs/isaaclab232_v2/lib/python3.11/site-packages/pip/_internal/cli/autocompletion.py", line 12, in <module>
+    from pip._internal.cli.main_parser import create_main_parser
+  File "/scratch/lj2634/envs/isaaclab232_v2/lib/python3.11/site-packages/pip/_internal/cli/main_parser.py", line 11, in <module>
+    from pip._internal.build_env import get_runnable_pip
+  File "/scratch/lj2634/envs/isaaclab232_v2/lib/python3.11/site-packages/pip/_internal/build_env.py", line 30, in <module>
+    from pip._internal.metadata import get_default_environment, get_environment
+  File "/scratch/lj2634/envs/isaaclab232_v2/lib/python3.11/site-packages/pip/_internal/metadata/__init__.py", line 12, in <module>
+    from .base import BaseDistribution, BaseEnvironment, FilesystemWheel, MemoryWheel, Wheel
+  File "/scratch/lj2634/envs/isaaclab232_v2/lib/python3.11/site-packages/pip/_internal/metadata/base.py", line 27, in <module>
+    from pip._internal.models.direct_url import (
+  File "/scratch/lj2634/envs/isaaclab232_v2/lib/python3.11/site-packages/pip/_internal/models/direct_url.py", line 8, in <module>
+    from pip._vendor.packaging.direct_url import (
+ModuleNotFoundError: No module named 'pip._vendor.packaging.direct_url'

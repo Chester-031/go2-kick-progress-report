@@ -1,0 +1,25 @@
+{
+  "checkpoint": "/scratch/lj2634/runs/go2_soccer_r8_3_real_load_transfer_skill/r8_3_real_load_transfer_skill_20260807_100811/pilot/logs/support_model_final.pt",
+  "completed_episodes": 512,
+  "means": {
+    "base_displacement": 0.06257054847788913,
+    "max_simultaneous_unload_lift_hold_steps": 0.0,
+    "prelift_unload_seen": 0.39622641509433965,
+    "selected_foot_height": 0.013939369044214656,
+    "selected_fz": 26.302053065630812,
+    "selected_load_ratio": 0.1643320256429113,
+    "simultaneous_unload_lift_seen": 0.0,
+    "support3_fz": 120.39878844615049,
+    "upright_error": 0.014266126481052868
+  },
+  "requested_episodes": 512,
+  "simultaneous_hold_steps_required": 3,
+  "stage": "lift_5mm",
+  "stage_success_rate": 0.0,
+  "stage_successes": 0,
+  "strict_success_rate": 0.0,
+  "strict_successes": 0,
+  "version": "r8_5_simultaneous_unload_lift_probe",
+  "violation_episodes": 0,
+  "violation_rate": 0.0
+}

@@ -1,0 +1,5 @@
+version=r8_68_v4d_hard_diag
+training=false
+video=false
+timeout_seconds=120
+checkpoint_frozen=true

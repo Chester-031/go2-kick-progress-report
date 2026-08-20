@@ -1,0 +1,904 @@
+{
+  "version": "r8_55_touchdown_hold",
+  "training": true,
+  "actual_contact": true,
+  "kick_frozen": true,
+  "r854_warm_start": "/scratch/lj2634/runs/go2_soccer_r8_54_strength_conditioned_recovery/r854_recovery64_15633618/output/recovery64_final.pt",
+  "touchdown_latch": "replay first all_now joint-position target for next 3 control steps",
+  "curriculum": "u1-8 low,u9-16 mid,u17-24 low+mid,u25+ weighted all",
+  "dense_reward": "pose+selected_fz+support4+touchdown+all_now+hold1/2/3",
+  "baseline_latched": [
+    {
+      "strength": 0.75,
+      "episodes": 256,
+      "latch_enabled": true,
+      "clean_rate": 1.0,
+      "real_rate": 0.96875,
+      "wrong_rate": 0.0,
+      "body_rate": 0.0,
+      "latch_given_real": 0.32661290322580644,
+      "recovery_given_real": 0.15725806451612903,
+      "mean_peak_speed_mps": 0.18232716340571642,
+      "mean_disp_m": 0.13422127719968557,
+      "candidate_given_real": 1.0,
+      "return_given_real": 0.9153225806451613,
+      "contact_given_real": 0.32661290322580644,
+      "support4_given_real": 1.0,
+      "touchdown_given_real": 0.32661290322580644,
+      "all_now_given_real": 0.32661290322580644
+    },
+    {
+      "strength": 1.0,
+      "episodes": 256,
+      "latch_enabled": true,
+      "clean_rate": 1.0,
+      "real_rate": 0.9765625,
+      "wrong_rate": 0.0,
+      "body_rate": 0.0,
+      "latch_given_real": 0.416,
+      "recovery_given_real": 0.216,
+      "mean_peak_speed_mps": 0.2010526116937399,
+      "mean_disp_m": 0.14741019811481237,
+      "candidate_given_real": 1.0,
+      "return_given_real": 0.86,
+      "contact_given_real": 0.416,
+      "support4_given_real": 1.0,
+      "touchdown_given_real": 0.416,
+      "all_now_given_real": 0.416
+    },
+    {
+      "strength": 1.25,
+      "episodes": 256,
+      "latch_enabled": true,
+      "clean_rate": 1.0,
+      "real_rate": 0.9921875,
+      "wrong_rate": 0.0,
+      "body_rate": 0.0,
+      "latch_given_real": 0.8976377952755905,
+      "recovery_given_real": 0.5118110236220472,
+      "mean_peak_speed_mps": 0.22065753675997257,
+      "mean_disp_m": 0.16146822087466717,
+      "candidate_given_real": 1.0,
+      "return_given_real": 0.9881889763779528,
+      "contact_given_real": 0.9133858267716536,
+      "support4_given_real": 1.0,
+      "touchdown_given_real": 0.8976377952755905,
+      "all_now_given_real": 0.8976377952755905
+    }
+  ],
+  "updates": 32,
+  "rollout_steps": 256,
+  "history": [
+    {
+      "update": 1,
+      "stage": "low_contact",
+      "by_strength": {
+        "0.75": {
+          "real": 124,
+          "latch": 36,
+          "recovery": 18
+        },
+        "1.0": {
+          "real": 0,
+          "latch": 0,
+          "recovery": 0
+        },
+        "1.25": {
+          "real": 0,
+          "latch": 0,
+          "recovery": 0
+        }
+      },
+      "actor_loss": -0.004373220005072653,
+      "value_loss": 7.999641394615173,
+      "anchor": 1.0630589507343301e-06
+    },
+    {
+      "update": 2,
+      "stage": "low_contact",
+      "by_strength": {
+        "0.75": {
+          "real": 124,
+          "latch": 40,
+          "recovery": 31
+        },
+        "1.0": {
+          "real": 0,
+          "latch": 0,
+          "recovery": 0
+        },
+        "1.25": {
+          "real": 0,
+          "latch": 0,
+          "recovery": 0
+        }
+      },
+      "actor_loss": -0.0030740975285880267,
+      "value_loss": 11.103601551055908,
+      "anchor": 2.854816193575971e-06
+    },
+    {
+      "update": 3,
+      "stage": "low_contact",
+      "by_strength": {
+        "0.75": {
+          "real": 124,
+          "latch": 42,
+          "recovery": 35
+        },
+        "1.0": {
+          "real": 0,
+          "latch": 0,
+          "recovery": 0
+        },
+        "1.25": {
+          "real": 0,
+          "latch": 0,
+          "recovery": 0
+        }
+      },
+      "actor_loss": -0.003933996497653425,
+      "value_loss": 11.62380838394165,
+      "anchor": 5.575567433879769e-06
+    },
+    {
+      "update": 4,
+      "stage": "low_contact",
+      "by_strength": {
+        "0.75": {
+          "real": 124,
+          "latch": 48,
+          "recovery": 43
+        },
+        "1.0": {
+          "real": 0,
+          "latch": 0,
+          "recovery": 0
+        },
+        "1.25": {
+          "real": 0,
+          "latch": 0,
+          "recovery": 0
+        }
+      },
+      "actor_loss": -0.00270880272728391,
+      "value_loss": 14.022508668899537,
+      "anchor": 8.897860539036628e-06
+    },
+    {
+      "update": 5,
+      "stage": "low_contact",
+      "by_strength": {
+        "0.75": {
+          "real": 124,
+          "latch": 43,
+          "recovery": 32
+        },
+        "1.0": {
+          "real": 0,
+          "latch": 0,
+          "recovery": 0
+        },
+        "1.25": {
+          "real": 0,
+          "latch": 0,
+          "recovery": 0
+        }
+      },
+      "actor_loss": -0.005847115127835423,
+      "value_loss": 12.178803062438964,
+      "anchor": 1.3746464446739992e-05
+    },
+    {
+      "update": 6,
+      "stage": "low_contact",
+      "by_strength": {
+        "0.75": {
+          "real": 124,
+          "latch": 46,
+          "recovery": 43
+        },
+        "1.0": {
+          "real": 0,
+          "latch": 0,
+          "recovery": 0
+        },
+        "1.25": {
+          "real": 0,
+          "latch": 0,
+          "recovery": 0
+        }
+      },
+      "actor_loss": -0.004810312992776744,
+      "value_loss": 14.032504653930664,
+      "anchor": 2.0108983153477312e-05
+    },
+    {
+      "update": 7,
+      "stage": "low_contact",
+      "by_strength": {
+        "0.75": {
+          "real": 124,
+          "latch": 46,
+          "recovery": 42
+        },
+        "1.0": {
+          "real": 0,
+          "latch": 0,
+          "recovery": 0
+        },
+        "1.25": {
+          "real": 0,
+          "latch": 0,
+          "recovery": 0
+        }
+      },
+      "actor_loss": -0.004378605403690017,
+      "value_loss": 14.988119983673096,
+      "anchor": 3.053383952646982e-05
+    },
+    {
+      "update": 8,
+      "stage": "low_contact",
+      "by_strength": {
+        "0.75": {
+          "real": 124,
+          "latch": 59,
+          "recovery": 72
+        },
+        "1.0": {
+          "real": 0,
+          "latch": 0,
+          "recovery": 0
+        },
+        "1.25": {
+          "real": 0,
+          "latch": 0,
+          "recovery": 0
+        }
+      },
+      "actor_loss": -0.0017150886822491884,
+      "value_loss": 20.218982791900636,
+      "anchor": 4.195924830128206e-05
+    },
+    {
+      "update": 9,
+      "stage": "mid_contact",
+      "by_strength": {
+        "0.75": {
+          "real": 0,
+          "latch": 0,
+          "recovery": 0
+        },
+        "1.0": {
+          "real": 125,
+          "latch": 57,
+          "recovery": 70
+        },
+        "1.25": {
+          "real": 0,
+          "latch": 0,
+          "recovery": 0
+        }
+      },
+      "actor_loss": -0.004387604200746864,
+      "value_loss": 19.210239982604982,
+      "anchor": 5.2442960077314636e-05
+    },
+    {
+      "update": 10,
+      "stage": "mid_contact",
+      "by_strength": {
+        "0.75": {
+          "real": 0,
+          "latch": 0,
+          "recovery": 0
+        },
+        "1.0": {
+          "real": 125,
+          "latch": 61,
+          "recovery": 55
+        },
+        "1.25": {
+          "real": 0,
+          "latch": 0,
+          "recovery": 0
+        }
+      },
+      "actor_loss": -0.0034824979840777813,
+      "value_loss": 16.099595689773558,
+      "anchor": 5.8283771977585275e-05
+    },
+    {
+      "update": 11,
+      "stage": "mid_contact",
+      "by_strength": {
+        "0.75": {
+          "real": 0,
+          "latch": 0,
+          "recovery": 0
+        },
+        "1.0": {
+          "real": 125,
+          "latch": 64,
+          "recovery": 54
+        },
+        "1.25": {
+          "real": 0,
+          "latch": 0,
+          "recovery": 0
+        }
+      },
+      "actor_loss": -0.005269859940744937,
+      "value_loss": 16.279700803756715,
+      "anchor": 6.829007361375261e-05
+    },
+    {
+      "update": 12,
+      "stage": "mid_contact",
+      "by_strength": {
+        "0.75": {
+          "real": 0,
+          "latch": 0,
+          "recovery": 0
+        },
+        "1.0": {
+          "real": 125,
+          "latch": 63,
+          "recovery": 83
+        },
+        "1.25": {
+          "real": 0,
+          "latch": 0,
+          "recovery": 0
+        }
+      },
+      "actor_loss": -0.0019237690372392534,
+      "value_loss": 20.73727912902832,
+      "anchor": 8.322823632624931e-05
+    },
+    {
+      "update": 13,
+      "stage": "mid_contact",
+      "by_strength": {
+        "0.75": {
+          "real": 0,
+          "latch": 0,
+          "recovery": 0
+        },
+        "1.0": {
+          "real": 125,
+          "latch": 68,
+          "recovery": 72
+        },
+        "1.25": {
+          "real": 0,
+          "latch": 0,
+          "recovery": 0
+        }
+      },
+      "actor_loss": -0.0045361403375864025,
+      "value_loss": 19.29120054244995,
+      "anchor": 9.544853019178845e-05
+    },
+    {
+      "update": 14,
+      "stage": "mid_contact",
+      "by_strength": {
+        "0.75": {
+          "real": 0,
+          "latch": 0,
+          "recovery": 0
+        },
+        "1.0": {
+          "real": 125,
+          "latch": 67,
+          "recovery": 93
+        },
+        "1.25": {
+          "real": 0,
+          "latch": 0,
+          "recovery": 0
+        }
+      },
+      "actor_loss": -0.0045721075963228944,
+      "value_loss": 23.658252716064453,
+      "anchor": 0.0001160268690000521
+    },
+    {
+      "update": 15,
+      "stage": "mid_contact",
+      "by_strength": {
+        "0.75": {
+          "real": 0,
+          "latch": 0,
+          "recovery": 0
+        },
+        "1.0": {
+          "real": 125,
+          "latch": 79,
+          "recovery": 78
+        },
+        "1.25": {
+          "real": 0,
+          "latch": 0,
+          "recovery": 0
+        }
+      },
+      "actor_loss": -0.0031605909229256214,
+      "value_loss": 19.43020133972168,
+      "anchor": 0.00012901599111501128
+    },
+    {
+      "update": 16,
+      "stage": "mid_contact",
+      "by_strength": {
+        "0.75": {
+          "real": 0,
+          "latch": 0,
+          "recovery": 0
+        },
+        "1.0": {
+          "real": 125,
+          "latch": 74,
+          "recovery": 67
+        },
+        "1.25": {
+          "real": 0,
+          "latch": 0,
+          "recovery": 0
+        }
+      },
+      "actor_loss": -0.0026472087600268425,
+      "value_loss": 19.46628532409668,
+      "anchor": 0.0001480956700106617
+    },
+    {
+      "update": 17,
+      "stage": "low_mid_hold",
+      "by_strength": {
+        "0.75": {
+          "real": 62,
+          "latch": 43,
+          "recovery": 26
+        },
+        "1.0": {
+          "real": 63,
+          "latch": 30,
+          "recovery": 44
+        },
+        "1.25": {
+          "real": 0,
+          "latch": 0,
+          "recovery": 0
+        }
+      },
+      "actor_loss": -0.004268626758130267,
+      "value_loss": 18.74965372085571,
+      "anchor": 0.00016668332391418518
+    },
+    {
+      "update": 18,
+      "stage": "low_mid_hold",
+      "by_strength": {
+        "0.75": {
+          "real": 56,
+          "latch": 38,
+          "recovery": 39
+        },
+        "1.0": {
+          "real": 68,
+          "latch": 40,
+          "recovery": 55
+        },
+        "1.25": {
+          "real": 0,
+          "latch": 0,
+          "recovery": 0
+        }
+      },
+      "actor_loss": -0.004364780517062172,
+      "value_loss": 23.581584167480468,
+      "anchor": 0.0001810659719922114
+    },
+    {
+      "update": 19,
+      "stage": "low_mid_hold",
+      "by_strength": {
+        "0.75": {
+          "real": 60,
+          "latch": 31,
+          "recovery": 35
+        },
+        "1.0": {
+          "real": 65,
+          "latch": 36,
+          "recovery": 33
+        },
+        "1.25": {
+          "real": 0,
+          "latch": 0,
+          "recovery": 0
+        }
+      },
+      "actor_loss": -0.0043112757033668455,
+      "value_loss": 19.180714416503907,
+      "anchor": 0.0002070451679173857
+    },
+    {
+      "update": 20,
+      "stage": "low_mid_hold",
+      "by_strength": {
+        "0.75": {
+          "real": 57,
+          "latch": 39,
+          "recovery": 49
+        },
+        "1.0": {
+          "real": 68,
+          "latch": 46,
+          "recovery": 62
+        },
+        "1.25": {
+          "real": 0,
+          "latch": 0,
+          "recovery": 0
+        }
+      },
+      "actor_loss": -0.0014723947908350965,
+      "value_loss": 25.335877990722658,
+      "anchor": 0.00021348892696551047
+    },
+    {
+      "update": 21,
+      "stage": "low_mid_hold",
+      "by_strength": {
+        "0.75": {
+          "real": 57,
+          "latch": 34,
+          "recovery": 34
+        },
+        "1.0": {
+          "real": 68,
+          "latch": 43,
+          "recovery": 57
+        },
+        "1.25": {
+          "real": 0,
+          "latch": 0,
+          "recovery": 0
+        }
+      },
+      "actor_loss": -0.004320173850283026,
+      "value_loss": 22.542026615142824,
+      "anchor": 0.00023823583396733738
+    },
+    {
+      "update": 22,
+      "stage": "low_mid_hold",
+      "by_strength": {
+        "0.75": {
+          "real": 63,
+          "latch": 45,
+          "recovery": 50
+        },
+        "1.0": {
+          "real": 62,
+          "latch": 39,
+          "recovery": 40
+        },
+        "1.25": {
+          "real": 0,
+          "latch": 0,
+          "recovery": 0
+        }
+      },
+      "actor_loss": -0.0032097133924253287,
+      "value_loss": 20.485951614379882,
+      "anchor": 0.00024929234059527515
+    },
+    {
+      "update": 23,
+      "stage": "low_mid_hold",
+      "by_strength": {
+        "0.75": {
+          "real": 75,
+          "latch": 54,
+          "recovery": 66
+        },
+        "1.0": {
+          "real": 50,
+          "latch": 35,
+          "recovery": 31
+        },
+        "1.25": {
+          "real": 0,
+          "latch": 0,
+          "recovery": 0
+        }
+      },
+      "actor_loss": -0.0022434060520026833,
+      "value_loss": 23.038968086242676,
+      "anchor": 0.000262917582585942
+    },
+    {
+      "update": 24,
+      "stage": "low_mid_hold",
+      "by_strength": {
+        "0.75": {
+          "real": 64,
+          "latch": 45,
+          "recovery": 65
+        },
+        "1.0": {
+          "real": 61,
+          "latch": 34,
+          "recovery": 27
+        },
+        "1.25": {
+          "real": 0,
+          "latch": 0,
+          "recovery": 0
+        }
+      },
+      "actor_loss": -0.003037107567070052,
+      "value_loss": 23.468710041046144,
+      "anchor": 0.0002714783578994684
+    },
+    {
+      "update": 25,
+      "stage": "all_regression",
+      "by_strength": {
+        "0.75": {
+          "real": 40,
+          "latch": 25,
+          "recovery": 31
+        },
+        "1.0": {
+          "real": 52,
+          "latch": 35,
+          "recovery": 29
+        },
+        "1.25": {
+          "real": 33,
+          "latch": 33,
+          "recovery": 46
+        }
+      },
+      "actor_loss": -0.002431515807984397,
+      "value_loss": 24.02279977798462,
+      "anchor": 0.00027118600701214746
+    },
+    {
+      "update": 26,
+      "stage": "all_regression",
+      "by_strength": {
+        "0.75": {
+          "real": 59,
+          "latch": 41,
+          "recovery": 38
+        },
+        "1.0": {
+          "real": 44,
+          "latch": 30,
+          "recovery": 45
+        },
+        "1.25": {
+          "real": 23,
+          "latch": 23,
+          "recovery": 33
+        }
+      },
+      "actor_loss": 0.00012075843624188564,
+      "value_loss": 24.020662212371825,
+      "anchor": 0.00027374751516617835
+    },
+    {
+      "update": 27,
+      "stage": "all_regression",
+      "by_strength": {
+        "0.75": {
+          "real": 43,
+          "latch": 23,
+          "recovery": 23
+        },
+        "1.0": {
+          "real": 56,
+          "latch": 30,
+          "recovery": 35
+        },
+        "1.25": {
+          "real": 27,
+          "latch": 27,
+          "recovery": 37
+        }
+      },
+      "actor_loss": -0.004617478814907372,
+      "value_loss": 23.260715103149415,
+      "anchor": 0.00028221590764587745
+    },
+    {
+      "update": 28,
+      "stage": "all_regression",
+      "by_strength": {
+        "0.75": {
+          "real": 45,
+          "latch": 34,
+          "recovery": 24
+        },
+        "1.0": {
+          "real": 60,
+          "latch": 35,
+          "recovery": 55
+        },
+        "1.25": {
+          "real": 22,
+          "latch": 21,
+          "recovery": 39
+        }
+      },
+      "actor_loss": -0.003645944781601429,
+      "value_loss": 24.305678272247313,
+      "anchor": 0.00028824111213907597
+    },
+    {
+      "update": 29,
+      "stage": "all_regression",
+      "by_strength": {
+        "0.75": {
+          "real": 46,
+          "latch": 30,
+          "recovery": 28
+        },
+        "1.0": {
+          "real": 46,
+          "latch": 29,
+          "recovery": 22
+        },
+        "1.25": {
+          "real": 32,
+          "latch": 31,
+          "recovery": 62
+        }
+      },
+      "actor_loss": -0.0037986089126206936,
+      "value_loss": 24.29059820175171,
+      "anchor": 0.00029723246552748606
+    },
+    {
+      "update": 30,
+      "stage": "all_regression",
+      "by_strength": {
+        "0.75": {
+          "real": 47,
+          "latch": 31,
+          "recovery": 27
+        },
+        "1.0": {
+          "real": 48,
+          "latch": 32,
+          "recovery": 39
+        },
+        "1.25": {
+          "real": 29,
+          "latch": 28,
+          "recovery": 59
+        }
+      },
+      "actor_loss": -0.003784457594156265,
+      "value_loss": 25.893143081665038,
+      "anchor": 0.0003190840099705383
+    },
+    {
+      "update": 31,
+      "stage": "all_regression",
+      "by_strength": {
+        "0.75": {
+          "real": 52,
+          "latch": 41,
+          "recovery": 50
+        },
+        "1.0": {
+          "real": 44,
+          "latch": 29,
+          "recovery": 42
+        },
+        "1.25": {
+          "real": 30,
+          "latch": 27,
+          "recovery": 31
+        }
+      },
+      "actor_loss": -0.0032514872422325426,
+      "value_loss": 24.077382278442382,
+      "anchor": 0.00032823522196849807
+    },
+    {
+      "update": 32,
+      "stage": "all_regression",
+      "by_strength": {
+        "0.75": {
+          "real": 46,
+          "latch": 34,
+          "recovery": 44
+        },
+        "1.0": {
+          "real": 54,
+          "latch": 39,
+          "recovery": 70
+        },
+        "1.25": {
+          "real": 24,
+          "latch": 25,
+          "recovery": 31
+        }
+      },
+      "actor_loss": -0.0024414999410510064,
+      "value_loss": 26.389454555511474,
+      "anchor": 0.0003425116781727411
+    }
+  ],
+  "strength_confirm": [
+    {
+      "strength": 0.75,
+      "episodes": 1024,
+      "latch_enabled": true,
+      "clean_rate": 1.0,
+      "real_rate": 0.9716796875,
+      "wrong_rate": 0.0,
+      "body_rate": 0.0,
+      "latch_given_real": 0.8180904522613065,
+      "recovery_given_real": 0.2804020100502513,
+      "mean_peak_speed_mps": 0.18232292437460274,
+      "mean_disp_m": 0.1342128759715706,
+      "candidate_given_real": 1.0,
+      "return_given_real": 0.9979899497487437,
+      "contact_given_real": 0.821105527638191,
+      "support4_given_real": 1.0,
+      "touchdown_given_real": 0.821105527638191,
+      "all_now_given_real": 0.8180904522613065
+    },
+    {
+      "strength": 1.0,
+      "episodes": 1024,
+      "latch_enabled": true,
+      "clean_rate": 1.0,
+      "real_rate": 0.974609375,
+      "wrong_rate": 0.0,
+      "body_rate": 0.0,
+      "latch_given_real": 0.8286573146292585,
+      "recovery_given_real": 0.46893787575150303,
+      "mean_peak_speed_mps": 0.20104879001155496,
+      "mean_disp_m": 0.1474085081135854,
+      "candidate_given_real": 1.0,
+      "return_given_real": 0.996993987975952,
+      "contact_given_real": 0.8296593186372746,
+      "support4_given_real": 1.0,
+      "touchdown_given_real": 0.8296593186372746,
+      "all_now_given_real": 0.8286573146292585
+    },
+    {
+      "strength": 1.25,
+      "episodes": 1024,
+      "latch_enabled": true,
+      "clean_rate": 1.0,
+      "real_rate": 0.9921875,
+      "wrong_rate": 0.0,
+      "body_rate": 0.0,
+      "latch_given_real": 0.968503937007874,
+      "recovery_given_real": 0.8405511811023622,
+      "mean_peak_speed_mps": 0.22069569607265294,
+      "mean_disp_m": 0.16148982930462807,
+      "candidate_given_real": 1.0,
+      "return_given_real": 1.0,
+      "contact_given_real": 0.969488188976378,
+      "support4_given_real": 1.0,
+      "touchdown_given_real": 0.968503937007874,
+      "all_now_given_real": 0.968503937007874
+    }
+  ],
+  "strength_monotonic": true,
+  "checkpoint": "/scratch/lj2634/runs/go2_soccer_r8_55_touchdown_hold/r855_hold_15634178/output/recovery64_final.pt",
+  "accepted": false,
+  "verdict": "KEEP_R855_CONTACT_HOLD_NOT_READY"
+}

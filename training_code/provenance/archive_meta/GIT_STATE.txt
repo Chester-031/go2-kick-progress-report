@@ -1,0 +1,25 @@
+04d50b5556ed3d608c72e93c490ea29739280dea
+ M source/isaac_go2_low_level_rl/isaac_go2_low_level_rl/tasks/manager_based/soccer/__init__.py
+?? cluster/monitor_slurm_test.sh
+?? cluster/preflight_go2_soccer_high_level_phaseA.sbatch
+?? cluster/probe_official_isaacsim51.sbatch
+?? cluster/render_phaseA_container_probe.sbatch
+?? cluster/render_phaseA_model_final_v2.sbatch
+?? cluster/render_phaseA_model_final_v2.sbatch.before_required_args_20260727_155014
+?? cluster/train_go2_soccer_high_level_phaseA.sbatch
+?? cluster/validate_go2_combined_commands.sbatch
+?? cluster/visualize_go2_soccer_milestone2.sbatch
+?? cluster/visualize_phaseA_model_final.sbatch
+?? experiments/
+?? high_level_phaseA_preparation_20260724_002331/
+?? phaseA_interface_audit_20260724_072722/
+?? phaseA_interface_audit_20260724_072734/
+?? phaseA_interface_audit_20260724_072907/
+?? phaseA_interface_audit_20260724_073403/
+?? r899_apply_fix_and_submit_canary.sh
+?? r899_check_canary.sh
+?? r899_check_latest.sh
+?? scripts/rsl_rl/play_go2_combined_commands.py
+?? scripts/soccer/play_go2_soccer_milestone2.py
+?? scripts/soccer/train_go2_soccer_high_level_phaseA.py
+?? source/isaac_go2_low_level_rl/isaac_go2_low_level_rl/tasks/manager_based/soccer/soccer_milestone2_env_cfg.py

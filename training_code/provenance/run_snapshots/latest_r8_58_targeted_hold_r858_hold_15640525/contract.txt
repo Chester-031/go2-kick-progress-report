@@ -1,0 +1,16 @@
+job_id=15640525
+source=/scratch/lj2634/runs/go2_soccer_r8_57_balanced_hold/r857_scan_15640216/train_r857_balanced.py
+source_sha256=8dc186be5cea92c71ad98bcb9a6dfab1ffb937d95106d8566f020815115d6ed8
+r857_parent=/scratch/lj2634/runs/go2_soccer_r8_57_balanced_hold/r857_scan_15640216
+r855_recovery=/scratch/lj2634/runs/go2_soccer_r8_55_touchdown_hold/r855_hold_15634178/output/recovery64_final.pt
+training=false
+network_frozen=true
+search_strengths=0.75,1.0
+high_strength=frozen_r857
+controller=static_latch_plus_age_ramp
+candidate_count=144
+screen_episodes_per_case=24
+semifinal_topk=8
+semifinal_episodes=256
+final_episodes_per_condition=512
+final_conditions=exact,uniform_4mm_geometry_jitter

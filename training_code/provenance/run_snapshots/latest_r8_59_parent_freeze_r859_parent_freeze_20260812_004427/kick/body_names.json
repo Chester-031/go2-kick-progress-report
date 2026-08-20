@@ -1,0 +1,36 @@
+{
+  "task": "Isaac-Go2-Soccer-Milestone2-v0",
+  "robot_prim": "{ENV_REGEX_NS}/Robot",
+  "ball_prim": "{ENV_REGEX_NS}/SoccerBall",
+  "body_names": [
+    "base",
+    "FL_hip",
+    "FR_hip",
+    "Head_upper",
+    "RL_hip",
+    "RR_hip",
+    "FL_thigh",
+    "FR_thigh",
+    "Head_lower",
+    "RL_thigh",
+    "RR_thigh",
+    "FL_calf",
+    "FR_calf",
+    "RL_calf",
+    "RR_calf",
+    "FL_foot",
+    "FR_foot",
+    "RL_foot",
+    "RR_foot"
+  ],
+  "front_feet": [
+    "FL_foot",
+    "FR_foot"
+  ],
+  "all_feet": [
+    "FL_foot",
+    "FR_foot",
+    "RL_foot",
+    "RR_foot"
+  ]
+}

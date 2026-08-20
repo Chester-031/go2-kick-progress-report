@@ -1,0 +1,178 @@
+{
+  "ancestry_only": {
+    "v3_strict_zero_sum": "ancestry/v3_model_final.pt"
+  },
+  "checkpoint_inspection": {
+    "r851_kick64": {
+      "actor_input": {
+        "key": "actor.0.weight",
+        "shape": [
+          128,
+          64
+        ]
+      },
+      "actor_output": {
+        "key": "actor.4.weight",
+        "shape": [
+          12,
+          64
+        ]
+      },
+      "bytes": 143067,
+      "file": "/scratch/lj2634/runs/go2_soccer_r8_59_parent_freeze/r859_parent_freeze_20260812_004427/kick/kick64_final.pt",
+      "payload_keys": [
+        "action_dim",
+        "action_std",
+        "history",
+        "migration",
+        "obs_dim",
+        "residual_scale",
+        "state_dict",
+        "strength_confirm",
+        "top_geometry",
+        "version"
+      ],
+      "tensor_count": 13
+    },
+    "r855_recovery64": {
+      "actor_input": {
+        "key": "actor.0.weight",
+        "shape": [
+          64,
+          64
+        ]
+      },
+      "actor_output": {
+        "key": "actor.4.weight",
+        "shape": [
+          12,
+          64
+        ]
+      },
+      "bytes": 114983,
+      "file": "/scratch/lj2634/runs/go2_soccer_r8_59_parent_freeze/r859_parent_freeze_20260812_004427/kick/recovery64_final.pt",
+      "payload_keys": [
+        "action_std",
+        "history",
+        "hold_steps",
+        "obs_dim",
+        "parent",
+        "scale",
+        "state_dict",
+        "strength_confirm",
+        "version"
+      ],
+      "tensor_count": 13
+    },
+    "v4d_high": {
+      "actor_input": {
+        "key": "actor.0.weight",
+        "shape": [
+          256,
+          17
+        ]
+      },
+      "actor_output": {
+        "key": "actor.6.weight",
+        "shape": [
+          3,
+          128
+        ]
+      },
+      "bytes": 2506737,
+      "file": "/scratch/lj2634/runs/go2_soccer_r8_59_parent_freeze/r859_parent_freeze_20260812_004427/v4d/high_model_final.pt",
+      "payload_keys": [
+        "infos",
+        "iter",
+        "model_state_dict",
+        "optimizer_state_dict"
+      ],
+      "tensor_count": 17
+    },
+    "v4d_low": {
+      "actor_input": {
+        "key": "actor.0.weight",
+        "shape": [
+          512,
+          62
+        ]
+      },
+      "actor_output": {
+        "key": "actor.6.weight",
+        "shape": [
+          12,
+          128
+        ]
+      },
+      "bytes": 4756903,
+      "file": "/scratch/lj2634/runs/go2_soccer_r8_59_parent_freeze/r859_parent_freeze_20260812_004427/v4d/low_model_final.pt",
+      "payload_keys": [
+        "infos",
+        "iter",
+        "model_state_dict",
+        "optimizer_state_dict"
+      ],
+      "tensor_count": 17
+    }
+  },
+  "execution_parents": {
+    "ballfree_components": "kick/ballfree_artifacts/",
+    "delta_pose_low": "v4d/low_model_final.pt",
+    "high": "v4d/high_model_final.pt",
+    "kick_controller": "kick/r858_hold_winner.json",
+    "kick_residual": "kick/kick64_final.pt",
+    "post_contact_recovery": "kick/recovery64_final.pt"
+  },
+  "interfaces": {
+    "delta_pose_low": {
+      "action": 12,
+      "legacy_command_slots_zero": true,
+      "obs": 62,
+      "teacher_free": true
+    },
+    "forbidden": [
+      "adding V4D and R8.58 actions",
+      "loading kick64 into V4D 62D actor",
+      "modifying parent source or checkpoints"
+    ],
+    "high": {
+      "action": 3,
+      "obs": 17,
+      "reward": {
+        "goal": 1,
+        "other": 0,
+        "own_goal": -1
+      }
+    },
+    "kick_internal": {
+      "action": 12,
+      "isolated_obs": 70,
+      "kick_obs": 64,
+      "recovery_obs": 64
+    },
+    "router_boundary": "exclusive 12D action ownership immediately before low_env.step"
+  },
+  "mutation": "none_to_parent_runs",
+  "strength_anchors": {
+    "0.75": {
+      "calf": 0.12,
+      "mode": "static_ramp",
+      "ramp": 0.35,
+      "thigh": 0.32
+    },
+    "1.0": {
+      "calf": 0.16,
+      "mode": "static_ramp",
+      "ramp": 0.7,
+      "thigh": 0.32
+    },
+    "1.25": {
+      "calf": 0.04,
+      "mode": "static_ramp",
+      "ramp": 0.0,
+      "thigh": -0.04
+    }
+  },
+  "training": false,
+  "version": "r8_59_parent_freeze_before_integration"
+}

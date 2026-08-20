@@ -1,0 +1,4593 @@
+{
+  "version": "r8_57_balanced_randomized_hold_scan",
+  "training": false,
+  "network_frozen": true,
+  "diagnosis": "R856 fixed env-to-case confounding removed",
+  "assignment": "per-repeat shuffled complete case permutation; exact equal episode counts",
+  "candidate_modes": [
+    "static_latch",
+    "dynamic_target"
+  ],
+  "candidate_count": 98,
+  "episodes_per_case": 64,
+  "confirm_episodes_per_seed": 512,
+  "confirm_seeds": 2,
+  "scans": {
+    "0.75": [
+      {
+        "case": 0,
+        "episodes": 64,
+        "real_rate": 0.96875,
+        "touchdown_given_real": 0.8548387096774194,
+        "recovery_given_real": 0.0967741935483871,
+        "retention_given_touchdown": 0.11320754716981132,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.12,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 1,
+        "episodes": 64,
+        "real_rate": 0.96875,
+        "touchdown_given_real": 0.7580645161290323,
+        "recovery_given_real": 0.12903225806451613,
+        "retention_given_touchdown": 0.1702127659574468,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.12,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 2,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.7777777777777778,
+        "recovery_given_real": 0.14285714285714285,
+        "retention_given_touchdown": 0.1836734693877551,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.12,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 3,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.8888888888888888,
+        "recovery_given_real": 0.23809523809523808,
+        "retention_given_touchdown": 0.26785714285714285,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.12,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 4,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.8888888888888888,
+        "recovery_given_real": 0.31746031746031744,
+        "retention_given_touchdown": 0.35714285714285715,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.12,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 5,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.828125,
+        "recovery_given_real": 0.1875,
+        "retention_given_touchdown": 0.22641509433962265,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.12,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 6,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.796875,
+        "recovery_given_real": 0.25,
+        "retention_given_touchdown": 0.3137254901960784,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.12,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 7,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.7777777777777778,
+        "recovery_given_real": 0.14285714285714285,
+        "retention_given_touchdown": 0.1836734693877551,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.08,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 8,
+        "episodes": 64,
+        "real_rate": 0.953125,
+        "touchdown_given_real": 0.9180327868852459,
+        "recovery_given_real": 0.21311475409836064,
+        "retention_given_touchdown": 0.23214285714285715,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.08,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 9,
+        "episodes": 64,
+        "real_rate": 0.953125,
+        "touchdown_given_real": 0.7704918032786885,
+        "recovery_given_real": 0.19672131147540983,
+        "retention_given_touchdown": 0.2553191489361702,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.08,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 10,
+        "episodes": 64,
+        "real_rate": 0.9375,
+        "touchdown_given_real": 0.8333333333333334,
+        "recovery_given_real": 0.31666666666666665,
+        "retention_given_touchdown": 0.38,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.08,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 11,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.765625,
+        "recovery_given_real": 0.21875,
+        "retention_given_touchdown": 0.2857142857142857,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.08,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 12,
+        "episodes": 64,
+        "real_rate": 0.96875,
+        "touchdown_given_real": 0.8387096774193549,
+        "recovery_given_real": 0.22580645161290322,
+        "retention_given_touchdown": 0.2692307692307692,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.08,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 13,
+        "episodes": 64,
+        "real_rate": 0.96875,
+        "touchdown_given_real": 0.8709677419354839,
+        "recovery_given_real": 0.3870967741935484,
+        "retention_given_touchdown": 0.4444444444444444,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.08,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 14,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.84375,
+        "recovery_given_real": 0.140625,
+        "retention_given_touchdown": 0.16666666666666666,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.04,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 15,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.78125,
+        "recovery_given_real": 0.15625,
+        "retention_given_touchdown": 0.2,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.04,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 16,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.8412698412698413,
+        "recovery_given_real": 0.30158730158730157,
+        "retention_given_touchdown": 0.3584905660377358,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.04,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 17,
+        "episodes": 64,
+        "real_rate": 0.953125,
+        "touchdown_given_real": 0.7868852459016393,
+        "recovery_given_real": 0.2786885245901639,
+        "retention_given_touchdown": 0.3541666666666667,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.04,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 18,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.9365079365079365,
+        "recovery_given_real": 0.31746031746031744,
+        "retention_given_touchdown": 0.3389830508474576,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.04,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 19,
+        "episodes": 64,
+        "real_rate": 0.96875,
+        "touchdown_given_real": 0.8548387096774194,
+        "recovery_given_real": 0.20967741935483872,
+        "retention_given_touchdown": 0.24528301886792453,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.04,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 20,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.873015873015873,
+        "recovery_given_real": 0.2857142857142857,
+        "retention_given_touchdown": 0.32727272727272727,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.04,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 21,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.9365079365079365,
+        "recovery_given_real": 0.1746031746031746,
+        "retention_given_touchdown": 0.1864406779661017,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.0,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 22,
+        "episodes": 64,
+        "real_rate": 0.96875,
+        "touchdown_given_real": 0.8870967741935484,
+        "recovery_given_real": 0.27419354838709675,
+        "retention_given_touchdown": 0.3090909090909091,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.0,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 23,
+        "episodes": 64,
+        "real_rate": 0.953125,
+        "touchdown_given_real": 0.8688524590163934,
+        "recovery_given_real": 0.29508196721311475,
+        "retention_given_touchdown": 0.33962264150943394,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.0,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 24,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.859375,
+        "recovery_given_real": 0.1875,
+        "retention_given_touchdown": 0.21818181818181817,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.0,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 25,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.7301587301587301,
+        "recovery_given_real": 0.2857142857142857,
+        "retention_given_touchdown": 0.391304347826087,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.0,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 26,
+        "episodes": 64,
+        "real_rate": 0.953125,
+        "touchdown_given_real": 0.8032786885245902,
+        "recovery_given_real": 0.29508196721311475,
+        "retention_given_touchdown": 0.3673469387755102,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.0,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 27,
+        "episodes": 64,
+        "real_rate": 0.96875,
+        "touchdown_given_real": 0.8225806451612904,
+        "recovery_given_real": 0.3870967741935484,
+        "retention_given_touchdown": 0.47058823529411764,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.0,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 28,
+        "episodes": 64,
+        "real_rate": 0.9375,
+        "touchdown_given_real": 0.8166666666666667,
+        "recovery_given_real": 0.21666666666666667,
+        "retention_given_touchdown": 0.2653061224489796,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.04,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 29,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.84375,
+        "recovery_given_real": 0.1875,
+        "retention_given_touchdown": 0.2222222222222222,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.04,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 30,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.8125,
+        "recovery_given_real": 0.265625,
+        "retention_given_touchdown": 0.3269230769230769,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.04,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 31,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.746031746031746,
+        "recovery_given_real": 0.2222222222222222,
+        "retention_given_touchdown": 0.2978723404255319,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.04,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 32,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.875,
+        "recovery_given_real": 0.390625,
+        "retention_given_touchdown": 0.44642857142857145,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.04,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 33,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.859375,
+        "recovery_given_real": 0.34375,
+        "retention_given_touchdown": 0.4,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.04,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 34,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.84375,
+        "recovery_given_real": 0.40625,
+        "retention_given_touchdown": 0.48148148148148145,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.04,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 35,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.873015873015873,
+        "recovery_given_real": 0.31746031746031744,
+        "retention_given_touchdown": 0.36363636363636365,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.08,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 36,
+        "episodes": 64,
+        "real_rate": 0.9375,
+        "touchdown_given_real": 0.8166666666666667,
+        "recovery_given_real": 0.31666666666666665,
+        "retention_given_touchdown": 0.3877551020408163,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.08,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 37,
+        "episodes": 64,
+        "real_rate": 0.9375,
+        "touchdown_given_real": 0.8,
+        "recovery_given_real": 0.2833333333333333,
+        "retention_given_touchdown": 0.3541666666666667,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.08,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 38,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.9047619047619048,
+        "recovery_given_real": 0.4126984126984127,
+        "retention_given_touchdown": 0.45614035087719296,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.08,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 39,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.8888888888888888,
+        "recovery_given_real": 0.4603174603174603,
+        "retention_given_touchdown": 0.5178571428571429,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.08,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 40,
+        "episodes": 64,
+        "real_rate": 0.96875,
+        "touchdown_given_real": 0.8709677419354839,
+        "recovery_given_real": 0.3387096774193548,
+        "retention_given_touchdown": 0.3888888888888889,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.08,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 41,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.796875,
+        "recovery_given_real": 0.390625,
+        "retention_given_touchdown": 0.49019607843137253,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.08,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 42,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.8095238095238095,
+        "recovery_given_real": 0.36507936507936506,
+        "retention_given_touchdown": 0.45098039215686275,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.12,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 43,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.8571428571428571,
+        "recovery_given_real": 0.36507936507936506,
+        "retention_given_touchdown": 0.42592592592592593,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.12,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 44,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.828125,
+        "recovery_given_real": 0.421875,
+        "retention_given_touchdown": 0.5094339622641509,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.12,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 45,
+        "episodes": 64,
+        "real_rate": 0.953125,
+        "touchdown_given_real": 0.8032786885245902,
+        "recovery_given_real": 0.29508196721311475,
+        "retention_given_touchdown": 0.3673469387755102,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.12,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 46,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.8571428571428571,
+        "recovery_given_real": 0.49206349206349204,
+        "retention_given_touchdown": 0.5740740740740741,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.12,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 47,
+        "episodes": 64,
+        "real_rate": 0.96875,
+        "touchdown_given_real": 0.8548387096774194,
+        "recovery_given_real": 0.43548387096774194,
+        "retention_given_touchdown": 0.5094339622641509,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.12,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 48,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.8412698412698413,
+        "recovery_given_real": 0.4444444444444444,
+        "retention_given_touchdown": 0.5283018867924528,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.12,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 49,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.8888888888888888,
+        "recovery_given_real": 0.015873015873015872,
+        "retention_given_touchdown": 0.017857142857142856,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.12,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 50,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.8125,
+        "recovery_given_real": 0.03125,
+        "retention_given_touchdown": 0.038461538461538464,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.12,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 51,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.875,
+        "recovery_given_real": 0.0,
+        "retention_given_touchdown": 0.0,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.12,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 52,
+        "episodes": 64,
+        "real_rate": 0.96875,
+        "touchdown_given_real": 0.8709677419354839,
+        "recovery_given_real": 0.06451612903225806,
+        "retention_given_touchdown": 0.07407407407407407,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.12,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 53,
+        "episodes": 64,
+        "real_rate": 0.96875,
+        "touchdown_given_real": 0.8870967741935484,
+        "recovery_given_real": 0.11290322580645161,
+        "retention_given_touchdown": 0.12727272727272726,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.12,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 54,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.890625,
+        "recovery_given_real": 0.046875,
+        "retention_given_touchdown": 0.05263157894736842,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.12,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 55,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.8571428571428571,
+        "recovery_given_real": 0.047619047619047616,
+        "retention_given_touchdown": 0.05555555555555555,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.12,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 56,
+        "episodes": 64,
+        "real_rate": 0.96875,
+        "touchdown_given_real": 0.8225806451612904,
+        "recovery_given_real": 0.04838709677419355,
+        "retention_given_touchdown": 0.058823529411764705,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.08,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 57,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.9365079365079365,
+        "recovery_given_real": 0.0,
+        "retention_given_touchdown": 0.0,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.08,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 58,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.90625,
+        "recovery_given_real": 0.03125,
+        "retention_given_touchdown": 0.034482758620689655,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.08,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 59,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.859375,
+        "recovery_given_real": 0.046875,
+        "retention_given_touchdown": 0.05454545454545454,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.08,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 60,
+        "episodes": 64,
+        "real_rate": 0.953125,
+        "touchdown_given_real": 0.819672131147541,
+        "recovery_given_real": 0.11475409836065574,
+        "retention_given_touchdown": 0.14,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.08,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 61,
+        "episodes": 64,
+        "real_rate": 0.96875,
+        "touchdown_given_real": 0.8870967741935484,
+        "recovery_given_real": 0.11290322580645161,
+        "retention_given_touchdown": 0.12727272727272726,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.08,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 62,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.890625,
+        "recovery_given_real": 0.0625,
+        "retention_given_touchdown": 0.07017543859649122,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.08,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 63,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.859375,
+        "recovery_given_real": 0.046875,
+        "retention_given_touchdown": 0.05454545454545454,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.04,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 64,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.873015873015873,
+        "recovery_given_real": 0.0,
+        "retention_given_touchdown": 0.0,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.04,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 65,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.875,
+        "recovery_given_real": 0.078125,
+        "retention_given_touchdown": 0.08928571428571429,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.04,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 66,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.8095238095238095,
+        "recovery_given_real": 0.047619047619047616,
+        "retention_given_touchdown": 0.058823529411764705,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.04,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 67,
+        "episodes": 64,
+        "real_rate": 0.953125,
+        "touchdown_given_real": 0.8524590163934426,
+        "recovery_given_real": 0.0,
+        "retention_given_touchdown": 0.0,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.04,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 68,
+        "episodes": 64,
+        "real_rate": 0.953125,
+        "touchdown_given_real": 0.8032786885245902,
+        "recovery_given_real": 0.04918032786885246,
+        "retention_given_touchdown": 0.061224489795918366,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.04,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 69,
+        "episodes": 64,
+        "real_rate": 0.96875,
+        "touchdown_given_real": 0.7903225806451613,
+        "recovery_given_real": 0.016129032258064516,
+        "retention_given_touchdown": 0.02040816326530612,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.04,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 70,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.9206349206349206,
+        "recovery_given_real": 0.0,
+        "retention_given_touchdown": 0.0,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.0,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 71,
+        "episodes": 64,
+        "real_rate": 0.953125,
+        "touchdown_given_real": 0.8524590163934426,
+        "recovery_given_real": 0.01639344262295082,
+        "retention_given_touchdown": 0.019230769230769232,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.0,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 72,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.8095238095238095,
+        "recovery_given_real": 0.031746031746031744,
+        "retention_given_touchdown": 0.0392156862745098,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.0,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 73,
+        "episodes": 64,
+        "real_rate": 0.9375,
+        "touchdown_given_real": 0.9,
+        "recovery_given_real": 0.016666666666666666,
+        "retention_given_touchdown": 0.018518518518518517,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.0,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 74,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.84375,
+        "recovery_given_real": 0.046875,
+        "retention_given_touchdown": 0.05555555555555555,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.0,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 75,
+        "episodes": 64,
+        "real_rate": 0.96875,
+        "touchdown_given_real": 0.8064516129032258,
+        "recovery_given_real": 0.03225806451612903,
+        "retention_given_touchdown": 0.04,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.0,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 76,
+        "episodes": 64,
+        "real_rate": 0.96875,
+        "touchdown_given_real": 0.8870967741935484,
+        "recovery_given_real": 0.04838709677419355,
+        "retention_given_touchdown": 0.05454545454545454,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.0,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 77,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.921875,
+        "recovery_given_real": 0.0625,
+        "retention_given_touchdown": 0.06779661016949153,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.04,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 78,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.873015873015873,
+        "recovery_given_real": 0.031746031746031744,
+        "retention_given_touchdown": 0.03636363636363636,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.04,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 79,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.8125,
+        "recovery_given_real": 0.0625,
+        "retention_given_touchdown": 0.07692307692307693,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.04,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 80,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.828125,
+        "recovery_given_real": 0.078125,
+        "retention_given_touchdown": 0.09433962264150944,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.04,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 81,
+        "episodes": 64,
+        "real_rate": 0.953125,
+        "touchdown_given_real": 0.8688524590163934,
+        "recovery_given_real": 0.03278688524590164,
+        "retention_given_touchdown": 0.03773584905660377,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.04,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 82,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.873015873015873,
+        "recovery_given_real": 0.031746031746031744,
+        "retention_given_touchdown": 0.03636363636363636,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.04,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 83,
+        "episodes": 64,
+        "real_rate": 0.9375,
+        "touchdown_given_real": 0.9,
+        "recovery_given_real": 0.08333333333333333,
+        "retention_given_touchdown": 0.09259259259259259,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.04,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 84,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.8253968253968254,
+        "recovery_given_real": 0.015873015873015872,
+        "retention_given_touchdown": 0.019230769230769232,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.08,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 85,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.8412698412698413,
+        "recovery_given_real": 0.031746031746031744,
+        "retention_given_touchdown": 0.03773584905660377,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.08,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 86,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.828125,
+        "recovery_given_real": 0.015625,
+        "retention_given_touchdown": 0.018867924528301886,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.08,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 87,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.78125,
+        "recovery_given_real": 0.015625,
+        "retention_given_touchdown": 0.02,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.08,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 88,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.7936507936507936,
+        "recovery_given_real": 0.031746031746031744,
+        "retention_given_touchdown": 0.04,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.08,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 89,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.873015873015873,
+        "recovery_given_real": 0.015873015873015872,
+        "retention_given_touchdown": 0.01818181818181818,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.08,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 90,
+        "episodes": 64,
+        "real_rate": 0.9375,
+        "touchdown_given_real": 0.9166666666666666,
+        "recovery_given_real": 0.06666666666666667,
+        "retention_given_touchdown": 0.07272727272727272,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.08,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 91,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.78125,
+        "recovery_given_real": 0.0,
+        "retention_given_touchdown": 0.0,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.12,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 92,
+        "episodes": 64,
+        "real_rate": 0.96875,
+        "touchdown_given_real": 0.8548387096774194,
+        "recovery_given_real": 0.016129032258064516,
+        "retention_given_touchdown": 0.018867924528301886,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.12,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 93,
+        "episodes": 64,
+        "real_rate": 0.96875,
+        "touchdown_given_real": 0.7258064516129032,
+        "recovery_given_real": 0.0,
+        "retention_given_touchdown": 0.0,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.12,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 94,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.7936507936507936,
+        "recovery_given_real": 0.015873015873015872,
+        "retention_given_touchdown": 0.02,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.12,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 95,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.8125,
+        "recovery_given_real": 0.046875,
+        "retention_given_touchdown": 0.057692307692307696,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.12,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 96,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.8412698412698413,
+        "recovery_given_real": 0.09523809523809523,
+        "retention_given_touchdown": 0.11320754716981132,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.12,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 97,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.8412698412698413,
+        "recovery_given_real": 0.06349206349206349,
+        "retention_given_touchdown": 0.07547169811320754,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.12,
+          "calf": 0.12
+        }
+      }
+    ],
+    "1.0": [
+      {
+        "case": 0,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.8412698412698413,
+        "recovery_given_real": 0.2698412698412698,
+        "retention_given_touchdown": 0.32075471698113206,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.12,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 1,
+        "episodes": 64,
+        "real_rate": 0.96875,
+        "touchdown_given_real": 0.8387096774193549,
+        "recovery_given_real": 0.24193548387096775,
+        "retention_given_touchdown": 0.28846153846153844,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.12,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 2,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.875,
+        "recovery_given_real": 0.21875,
+        "retention_given_touchdown": 0.25,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.12,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 3,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.8095238095238095,
+        "recovery_given_real": 0.2857142857142857,
+        "retention_given_touchdown": 0.35294117647058826,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.12,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 4,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.8412698412698413,
+        "recovery_given_real": 0.36507936507936506,
+        "retention_given_touchdown": 0.4339622641509434,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.12,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 5,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.8571428571428571,
+        "recovery_given_real": 0.38095238095238093,
+        "retention_given_touchdown": 0.4444444444444444,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.12,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 6,
+        "episodes": 64,
+        "real_rate": 0.96875,
+        "touchdown_given_real": 0.7903225806451613,
+        "recovery_given_real": 0.2903225806451613,
+        "retention_given_touchdown": 0.3673469387755102,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.12,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 7,
+        "episodes": 64,
+        "real_rate": 0.96875,
+        "touchdown_given_real": 0.8870967741935484,
+        "recovery_given_real": 0.24193548387096775,
+        "retention_given_touchdown": 0.2727272727272727,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.08,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 8,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.875,
+        "recovery_given_real": 0.390625,
+        "retention_given_touchdown": 0.44642857142857145,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.08,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 9,
+        "episodes": 64,
+        "real_rate": 0.96875,
+        "touchdown_given_real": 0.8709677419354839,
+        "recovery_given_real": 0.3225806451612903,
+        "retention_given_touchdown": 0.37037037037037035,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.08,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 10,
+        "episodes": 64,
+        "real_rate": 0.96875,
+        "touchdown_given_real": 0.8387096774193549,
+        "recovery_given_real": 0.4032258064516129,
+        "retention_given_touchdown": 0.4807692307692308,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.08,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 11,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.875,
+        "recovery_given_real": 0.453125,
+        "retention_given_touchdown": 0.5178571428571429,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.08,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 12,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.873015873015873,
+        "recovery_given_real": 0.5079365079365079,
+        "retention_given_touchdown": 0.5818181818181818,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.08,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 13,
+        "episodes": 64,
+        "real_rate": 0.96875,
+        "touchdown_given_real": 0.7903225806451613,
+        "recovery_given_real": 0.4032258064516129,
+        "retention_given_touchdown": 0.5102040816326531,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.08,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 14,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.873015873015873,
+        "recovery_given_real": 0.3492063492063492,
+        "retention_given_touchdown": 0.4,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.04,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 15,
+        "episodes": 64,
+        "real_rate": 0.96875,
+        "touchdown_given_real": 0.7741935483870968,
+        "recovery_given_real": 0.2903225806451613,
+        "retention_given_touchdown": 0.375,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.04,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 16,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.890625,
+        "recovery_given_real": 0.4375,
+        "retention_given_touchdown": 0.49122807017543857,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.04,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 17,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.828125,
+        "recovery_given_real": 0.4375,
+        "retention_given_touchdown": 0.5283018867924528,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.04,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 18,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.8253968253968254,
+        "recovery_given_real": 0.47619047619047616,
+        "retention_given_touchdown": 0.5769230769230769,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.04,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 19,
+        "episodes": 64,
+        "real_rate": 0.953125,
+        "touchdown_given_real": 0.819672131147541,
+        "recovery_given_real": 0.4918032786885246,
+        "retention_given_touchdown": 0.6,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.04,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 20,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.8571428571428571,
+        "recovery_given_real": 0.4126984126984127,
+        "retention_given_touchdown": 0.48148148148148145,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.04,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 21,
+        "episodes": 64,
+        "real_rate": 0.953125,
+        "touchdown_given_real": 0.8360655737704918,
+        "recovery_given_real": 0.3442622950819672,
+        "retention_given_touchdown": 0.4117647058823529,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.0,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 22,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.873015873015873,
+        "recovery_given_real": 0.36507936507936506,
+        "retention_given_touchdown": 0.41818181818181815,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.0,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 23,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.873015873015873,
+        "recovery_given_real": 0.42857142857142855,
+        "retention_given_touchdown": 0.4909090909090909,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.0,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 24,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.8888888888888888,
+        "recovery_given_real": 0.47619047619047616,
+        "retention_given_touchdown": 0.5357142857142857,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.0,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 25,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.859375,
+        "recovery_given_real": 0.53125,
+        "retention_given_touchdown": 0.6181818181818182,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.0,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 26,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.8253968253968254,
+        "recovery_given_real": 0.5555555555555556,
+        "retention_given_touchdown": 0.6730769230769231,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.0,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 27,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.8888888888888888,
+        "recovery_given_real": 0.5238095238095238,
+        "retention_given_touchdown": 0.5892857142857143,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.0,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 28,
+        "episodes": 64,
+        "real_rate": 0.96875,
+        "touchdown_given_real": 0.8225806451612904,
+        "recovery_given_real": 0.43548387096774194,
+        "retention_given_touchdown": 0.5294117647058824,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.04,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 29,
+        "episodes": 64,
+        "real_rate": 0.96875,
+        "touchdown_given_real": 0.9032258064516129,
+        "recovery_given_real": 0.5,
+        "retention_given_touchdown": 0.5535714285714286,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.04,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 30,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.8888888888888888,
+        "recovery_given_real": 0.47619047619047616,
+        "retention_given_touchdown": 0.5357142857142857,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.04,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 31,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.8412698412698413,
+        "recovery_given_real": 0.31746031746031744,
+        "retention_given_touchdown": 0.37735849056603776,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.04,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 32,
+        "episodes": 64,
+        "real_rate": 0.96875,
+        "touchdown_given_real": 0.8709677419354839,
+        "recovery_given_real": 0.532258064516129,
+        "retention_given_touchdown": 0.6111111111111112,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.04,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 33,
+        "episodes": 64,
+        "real_rate": 0.953125,
+        "touchdown_given_real": 0.819672131147541,
+        "recovery_given_real": 0.4918032786885246,
+        "retention_given_touchdown": 0.6,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.04,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 34,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.8253968253968254,
+        "recovery_given_real": 0.38095238095238093,
+        "retention_given_touchdown": 0.46153846153846156,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.04,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 35,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.8253968253968254,
+        "recovery_given_real": 0.31746031746031744,
+        "retention_given_touchdown": 0.38461538461538464,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.08,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 36,
+        "episodes": 64,
+        "real_rate": 0.953125,
+        "touchdown_given_real": 0.7540983606557377,
+        "recovery_given_real": 0.3114754098360656,
+        "retention_given_touchdown": 0.41304347826086957,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.08,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 37,
+        "episodes": 64,
+        "real_rate": 0.96875,
+        "touchdown_given_real": 0.8709677419354839,
+        "recovery_given_real": 0.4032258064516129,
+        "retention_given_touchdown": 0.46296296296296297,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.08,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 38,
+        "episodes": 64,
+        "real_rate": 0.96875,
+        "touchdown_given_real": 0.8064516129032258,
+        "recovery_given_real": 0.43548387096774194,
+        "retention_given_touchdown": 0.54,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.08,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 39,
+        "episodes": 64,
+        "real_rate": 0.953125,
+        "touchdown_given_real": 0.7868852459016393,
+        "recovery_given_real": 0.39344262295081966,
+        "retention_given_touchdown": 0.5,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.08,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 40,
+        "episodes": 64,
+        "real_rate": 0.953125,
+        "touchdown_given_real": 0.8688524590163934,
+        "recovery_given_real": 0.45901639344262296,
+        "retention_given_touchdown": 0.5283018867924528,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.08,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 41,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.828125,
+        "recovery_given_real": 0.578125,
+        "retention_given_touchdown": 0.6981132075471698,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.08,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 42,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.9047619047619048,
+        "recovery_given_real": 0.4444444444444444,
+        "retention_given_touchdown": 0.49122807017543857,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.12,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 43,
+        "episodes": 64,
+        "real_rate": 0.953125,
+        "touchdown_given_real": 0.8032786885245902,
+        "recovery_given_real": 0.32786885245901637,
+        "retention_given_touchdown": 0.40816326530612246,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.12,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 44,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.90625,
+        "recovery_given_real": 0.578125,
+        "retention_given_touchdown": 0.6379310344827587,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.12,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 45,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.8571428571428571,
+        "recovery_given_real": 0.5079365079365079,
+        "retention_given_touchdown": 0.5925925925925926,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.12,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 46,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.8571428571428571,
+        "recovery_given_real": 0.5238095238095238,
+        "retention_given_touchdown": 0.6111111111111112,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.12,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 47,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.8412698412698413,
+        "recovery_given_real": 0.5555555555555556,
+        "retention_given_touchdown": 0.660377358490566,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.12,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 48,
+        "episodes": 64,
+        "real_rate": 0.96875,
+        "touchdown_given_real": 0.8387096774193549,
+        "recovery_given_real": 0.6129032258064516,
+        "retention_given_touchdown": 0.7307692307692307,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.12,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 49,
+        "episodes": 64,
+        "real_rate": 0.921875,
+        "touchdown_given_real": 0.8135593220338984,
+        "recovery_given_real": 0.05084745762711865,
+        "retention_given_touchdown": 0.0625,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.12,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 50,
+        "episodes": 64,
+        "real_rate": 0.96875,
+        "touchdown_given_real": 0.8548387096774194,
+        "recovery_given_real": 0.04838709677419355,
+        "retention_given_touchdown": 0.05660377358490566,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.12,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 51,
+        "episodes": 64,
+        "real_rate": 0.953125,
+        "touchdown_given_real": 0.8360655737704918,
+        "recovery_given_real": 0.06557377049180328,
+        "retention_given_touchdown": 0.0784313725490196,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.12,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 52,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.828125,
+        "recovery_given_real": 0.046875,
+        "retention_given_touchdown": 0.05660377358490566,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.12,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 53,
+        "episodes": 64,
+        "real_rate": 0.953125,
+        "touchdown_given_real": 0.7868852459016393,
+        "recovery_given_real": 0.08196721311475409,
+        "retention_given_touchdown": 0.10416666666666667,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.12,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 54,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.8888888888888888,
+        "recovery_given_real": 0.06349206349206349,
+        "retention_given_touchdown": 0.07142857142857142,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.12,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 55,
+        "episodes": 64,
+        "real_rate": 0.96875,
+        "touchdown_given_real": 0.8387096774193549,
+        "recovery_given_real": 0.12903225806451613,
+        "retention_given_touchdown": 0.15384615384615385,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.12,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 56,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.828125,
+        "recovery_given_real": 0.0625,
+        "retention_given_touchdown": 0.07547169811320754,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.08,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 57,
+        "episodes": 64,
+        "real_rate": 0.96875,
+        "touchdown_given_real": 0.9032258064516129,
+        "recovery_given_real": 0.06451612903225806,
+        "retention_given_touchdown": 0.07142857142857142,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.08,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 58,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.873015873015873,
+        "recovery_given_real": 0.12698412698412698,
+        "retention_given_touchdown": 0.14545454545454545,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.08,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 59,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.8412698412698413,
+        "recovery_given_real": 0.031746031746031744,
+        "retention_given_touchdown": 0.03773584905660377,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.08,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 60,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.765625,
+        "recovery_given_real": 0.078125,
+        "retention_given_touchdown": 0.10204081632653061,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.08,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 61,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.873015873015873,
+        "recovery_given_real": 0.20634920634920634,
+        "retention_given_touchdown": 0.23636363636363636,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.08,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 62,
+        "episodes": 64,
+        "real_rate": 0.953125,
+        "touchdown_given_real": 0.7540983606557377,
+        "recovery_given_real": 0.14754098360655737,
+        "retention_given_touchdown": 0.1956521739130435,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.08,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 63,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.7936507936507936,
+        "recovery_given_real": 0.047619047619047616,
+        "retention_given_touchdown": 0.06,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.04,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 64,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.796875,
+        "recovery_given_real": 0.015625,
+        "retention_given_touchdown": 0.0196078431372549,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.04,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 65,
+        "episodes": 64,
+        "real_rate": 0.96875,
+        "touchdown_given_real": 0.9354838709677419,
+        "recovery_given_real": 0.0967741935483871,
+        "retention_given_touchdown": 0.10344827586206896,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.04,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 66,
+        "episodes": 64,
+        "real_rate": 0.96875,
+        "touchdown_given_real": 0.8387096774193549,
+        "recovery_given_real": 0.0967741935483871,
+        "retention_given_touchdown": 0.11538461538461539,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.04,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 67,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.8095238095238095,
+        "recovery_given_real": 0.09523809523809523,
+        "retention_given_touchdown": 0.11764705882352941,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.04,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 68,
+        "episodes": 64,
+        "real_rate": 0.96875,
+        "touchdown_given_real": 0.8709677419354839,
+        "recovery_given_real": 0.04838709677419355,
+        "retention_given_touchdown": 0.05555555555555555,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.04,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 69,
+        "episodes": 64,
+        "real_rate": 0.96875,
+        "touchdown_given_real": 0.8709677419354839,
+        "recovery_given_real": 0.16129032258064516,
+        "retention_given_touchdown": 0.18518518518518517,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.04,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 70,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.873015873015873,
+        "recovery_given_real": 0.031746031746031744,
+        "retention_given_touchdown": 0.03636363636363636,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.0,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 71,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.734375,
+        "recovery_given_real": 0.046875,
+        "retention_given_touchdown": 0.06382978723404255,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.0,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 72,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.8095238095238095,
+        "recovery_given_real": 0.07936507936507936,
+        "retention_given_touchdown": 0.09803921568627451,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.0,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 73,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.75,
+        "recovery_given_real": 0.15625,
+        "retention_given_touchdown": 0.20833333333333334,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.0,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 74,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.9365079365079365,
+        "recovery_given_real": 0.19047619047619047,
+        "retention_given_touchdown": 0.2033898305084746,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.0,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 75,
+        "episodes": 64,
+        "real_rate": 0.953125,
+        "touchdown_given_real": 0.8360655737704918,
+        "recovery_given_real": 0.11475409836065574,
+        "retention_given_touchdown": 0.13725490196078433,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.0,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 76,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.8571428571428571,
+        "recovery_given_real": 0.09523809523809523,
+        "retention_given_touchdown": 0.1111111111111111,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.0,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 77,
+        "episodes": 64,
+        "real_rate": 0.921875,
+        "touchdown_given_real": 0.847457627118644,
+        "recovery_given_real": 0.1016949152542373,
+        "retention_given_touchdown": 0.12,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.04,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 78,
+        "episodes": 64,
+        "real_rate": 0.96875,
+        "touchdown_given_real": 0.9193548387096774,
+        "recovery_given_real": 0.11290322580645161,
+        "retention_given_touchdown": 0.12280701754385964,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.04,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 79,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.873015873015873,
+        "recovery_given_real": 0.07936507936507936,
+        "retention_given_touchdown": 0.09090909090909091,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.04,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 80,
+        "episodes": 64,
+        "real_rate": 0.96875,
+        "touchdown_given_real": 0.9193548387096774,
+        "recovery_given_real": 0.11290322580645161,
+        "retention_given_touchdown": 0.12280701754385964,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.04,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 81,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.8125,
+        "recovery_given_real": 0.15625,
+        "retention_given_touchdown": 0.19230769230769232,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.04,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 82,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.75,
+        "recovery_given_real": 0.109375,
+        "retention_given_touchdown": 0.14583333333333334,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.04,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 83,
+        "episodes": 64,
+        "real_rate": 0.96875,
+        "touchdown_given_real": 0.8387096774193549,
+        "recovery_given_real": 0.04838709677419355,
+        "retention_given_touchdown": 0.057692307692307696,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.04,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 84,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.8095238095238095,
+        "recovery_given_real": 0.09523809523809523,
+        "retention_given_touchdown": 0.11764705882352941,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.08,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 85,
+        "episodes": 64,
+        "real_rate": 0.953125,
+        "touchdown_given_real": 0.8688524590163934,
+        "recovery_given_real": 0.14754098360655737,
+        "retention_given_touchdown": 0.16981132075471697,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.08,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 86,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.78125,
+        "recovery_given_real": 0.078125,
+        "retention_given_touchdown": 0.1,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.08,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 87,
+        "episodes": 64,
+        "real_rate": 0.96875,
+        "touchdown_given_real": 0.8548387096774194,
+        "recovery_given_real": 0.06451612903225806,
+        "retention_given_touchdown": 0.07547169811320754,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.08,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 88,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.8125,
+        "recovery_given_real": 0.09375,
+        "retention_given_touchdown": 0.11538461538461539,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.08,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 89,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.8125,
+        "recovery_given_real": 0.125,
+        "retention_given_touchdown": 0.15384615384615385,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.08,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 90,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.7301587301587301,
+        "recovery_given_real": 0.12698412698412698,
+        "retention_given_touchdown": 0.17391304347826086,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.08,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 91,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.8253968253968254,
+        "recovery_given_real": 0.06349206349206349,
+        "retention_given_touchdown": 0.07692307692307693,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.12,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 92,
+        "episodes": 64,
+        "real_rate": 0.96875,
+        "touchdown_given_real": 0.8709677419354839,
+        "recovery_given_real": 0.12903225806451613,
+        "retention_given_touchdown": 0.14814814814814814,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.12,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 93,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.8095238095238095,
+        "recovery_given_real": 0.12698412698412698,
+        "retention_given_touchdown": 0.1568627450980392,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.12,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 94,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.8253968253968254,
+        "recovery_given_real": 0.09523809523809523,
+        "retention_given_touchdown": 0.11538461538461539,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.12,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 95,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.7936507936507936,
+        "recovery_given_real": 0.047619047619047616,
+        "retention_given_touchdown": 0.06,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.12,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 96,
+        "episodes": 64,
+        "real_rate": 0.953125,
+        "touchdown_given_real": 0.8524590163934426,
+        "recovery_given_real": 0.09836065573770492,
+        "retention_given_touchdown": 0.11538461538461539,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.12,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 97,
+        "episodes": 64,
+        "real_rate": 0.96875,
+        "touchdown_given_real": 0.8870967741935484,
+        "recovery_given_real": 0.1935483870967742,
+        "retention_given_touchdown": 0.21818181818181817,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.12,
+          "calf": 0.12
+        }
+      }
+    ],
+    "1.25": [
+      {
+        "case": 0,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.984375,
+        "recovery_given_real": 0.453125,
+        "retention_given_touchdown": 0.4603174603174603,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.12,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 1,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.9682539682539683,
+        "recovery_given_real": 0.6190476190476191,
+        "retention_given_touchdown": 0.639344262295082,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.12,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 2,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.7619047619047619,
+        "retention_given_touchdown": 0.7619047619047619,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.12,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 3,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.890625,
+        "retention_given_touchdown": 0.890625,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.12,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 4,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.984375,
+        "recovery_given_real": 0.78125,
+        "retention_given_touchdown": 0.7936507936507936,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.12,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 5,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.8253968253968254,
+        "retention_given_touchdown": 0.8253968253968254,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.12,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 6,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.9375,
+        "recovery_given_real": 0.828125,
+        "retention_given_touchdown": 0.8833333333333333,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.12,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 7,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.53125,
+        "retention_given_touchdown": 0.53125,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.08,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 8,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.703125,
+        "retention_given_touchdown": 0.703125,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.08,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 9,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.984375,
+        "recovery_given_real": 0.859375,
+        "retention_given_touchdown": 0.873015873015873,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.08,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 10,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.828125,
+        "retention_given_touchdown": 0.828125,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.08,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 11,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.8571428571428571,
+        "retention_given_touchdown": 0.8571428571428571,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.08,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 12,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.9841269841269841,
+        "recovery_given_real": 0.8253968253968254,
+        "retention_given_touchdown": 0.8387096774193549,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.08,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 13,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.9375,
+        "recovery_given_real": 0.859375,
+        "retention_given_touchdown": 0.9166666666666666,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.08,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 14,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.9841269841269841,
+        "recovery_given_real": 0.5714285714285714,
+        "retention_given_touchdown": 0.5806451612903226,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.04,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 15,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.96875,
+        "recovery_given_real": 0.75,
+        "retention_given_touchdown": 0.7741935483870968,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.04,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 16,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.9682539682539683,
+        "recovery_given_real": 0.8253968253968254,
+        "retention_given_touchdown": 0.8524590163934426,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.04,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 17,
+        "episodes": 64,
+        "real_rate": 0.96875,
+        "touchdown_given_real": 0.967741935483871,
+        "recovery_given_real": 0.8548387096774194,
+        "retention_given_touchdown": 0.8833333333333333,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.04,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 18,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.984375,
+        "recovery_given_real": 0.9375,
+        "retention_given_touchdown": 0.9523809523809523,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.04,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 19,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.9365079365079365,
+        "recovery_given_real": 0.8095238095238095,
+        "retention_given_touchdown": 0.864406779661017,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.04,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 20,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.873015873015873,
+        "retention_given_touchdown": 0.873015873015873,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.04,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 21,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.703125,
+        "retention_given_touchdown": 0.703125,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.0,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 22,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.9682539682539683,
+        "recovery_given_real": 0.7777777777777778,
+        "retention_given_touchdown": 0.8032786885245902,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.0,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 23,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.796875,
+        "retention_given_touchdown": 0.796875,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.0,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 24,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.9841269841269841,
+        "recovery_given_real": 0.9206349206349206,
+        "retention_given_touchdown": 0.9354838709677419,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.0,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 25,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.9841269841269841,
+        "recovery_given_real": 0.873015873015873,
+        "retention_given_touchdown": 0.8870967741935484,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.0,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 26,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.9682539682539683,
+        "recovery_given_real": 0.873015873015873,
+        "retention_given_touchdown": 0.9016393442622951,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.0,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 27,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.96875,
+        "recovery_given_real": 0.828125,
+        "retention_given_touchdown": 0.8548387096774194,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.0,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 28,
+        "episodes": 64,
+        "real_rate": 0.96875,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.532258064516129,
+        "retention_given_touchdown": 0.532258064516129,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.04,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 29,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.984375,
+        "recovery_given_real": 0.734375,
+        "retention_given_touchdown": 0.746031746031746,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.04,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 30,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.84375,
+        "retention_given_touchdown": 0.84375,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.04,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 31,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.984375,
+        "recovery_given_real": 0.8125,
+        "retention_given_touchdown": 0.8253968253968254,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.04,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 32,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.9841269841269841,
+        "recovery_given_real": 0.8253968253968254,
+        "retention_given_touchdown": 0.8387096774193549,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.04,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 33,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.859375,
+        "retention_given_touchdown": 0.859375,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.04,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 34,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.8412698412698413,
+        "retention_given_touchdown": 0.8412698412698413,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.04,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 35,
+        "episodes": 64,
+        "real_rate": 0.96875,
+        "touchdown_given_real": 0.967741935483871,
+        "recovery_given_real": 0.6290322580645161,
+        "retention_given_touchdown": 0.65,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.08,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 36,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.984375,
+        "recovery_given_real": 0.6875,
+        "retention_given_touchdown": 0.6984126984126984,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.08,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 37,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.9841269841269841,
+        "recovery_given_real": 0.7619047619047619,
+        "retention_given_touchdown": 0.7741935483870968,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.08,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 38,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.9841269841269841,
+        "recovery_given_real": 0.8095238095238095,
+        "retention_given_touchdown": 0.8225806451612904,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.08,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 39,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.984375,
+        "recovery_given_real": 0.875,
+        "retention_given_touchdown": 0.8888888888888888,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.08,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 40,
+        "episodes": 64,
+        "real_rate": 0.96875,
+        "touchdown_given_real": 0.9838709677419355,
+        "recovery_given_real": 0.7741935483870968,
+        "retention_given_touchdown": 0.7868852459016393,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.08,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 41,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.9841269841269841,
+        "recovery_given_real": 0.8571428571428571,
+        "retention_given_touchdown": 0.8709677419354839,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.08,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 42,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.984375,
+        "recovery_given_real": 0.609375,
+        "retention_given_touchdown": 0.6190476190476191,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.12,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 43,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.984375,
+        "recovery_given_real": 0.71875,
+        "retention_given_touchdown": 0.7301587301587301,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.12,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 44,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.8412698412698413,
+        "retention_given_touchdown": 0.8412698412698413,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.12,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 45,
+        "episodes": 64,
+        "real_rate": 0.9375,
+        "touchdown_given_real": 0.9833333333333333,
+        "recovery_given_real": 0.75,
+        "retention_given_touchdown": 0.7627118644067796,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.12,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 46,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.96875,
+        "recovery_given_real": 0.8125,
+        "retention_given_touchdown": 0.8387096774193549,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.12,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 47,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.984375,
+        "recovery_given_real": 0.84375,
+        "retention_given_touchdown": 0.8571428571428571,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.12,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 48,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.859375,
+        "retention_given_touchdown": 0.859375,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.12,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 49,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.953125,
+        "recovery_given_real": 0.265625,
+        "retention_given_touchdown": 0.2786885245901639,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.12,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 50,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.96875,
+        "recovery_given_real": 0.375,
+        "retention_given_touchdown": 0.3870967741935484,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.12,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 51,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.484375,
+        "retention_given_touchdown": 0.484375,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.12,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 52,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.9841269841269841,
+        "recovery_given_real": 0.6349206349206349,
+        "retention_given_touchdown": 0.6451612903225806,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.12,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 53,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.953125,
+        "recovery_given_real": 0.75,
+        "retention_given_touchdown": 0.7868852459016393,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.12,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 54,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.96875,
+        "recovery_given_real": 0.71875,
+        "retention_given_touchdown": 0.7419354838709677,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.12,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 55,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.953125,
+        "recovery_given_real": 0.78125,
+        "retention_given_touchdown": 0.819672131147541,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.12,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 56,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.3333333333333333,
+        "retention_given_touchdown": 0.3333333333333333,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.08,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 57,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.984375,
+        "recovery_given_real": 0.328125,
+        "retention_given_touchdown": 0.3333333333333333,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.08,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 58,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.578125,
+        "retention_given_touchdown": 0.578125,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.08,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 59,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.578125,
+        "retention_given_touchdown": 0.578125,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.08,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 60,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.984375,
+        "recovery_given_real": 0.671875,
+        "retention_given_touchdown": 0.6825396825396826,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.08,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 61,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.984375,
+        "recovery_given_real": 0.765625,
+        "retention_given_touchdown": 0.7777777777777778,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.08,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 62,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.8253968253968254,
+        "retention_given_touchdown": 0.8253968253968254,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.08,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 63,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.25,
+        "retention_given_touchdown": 0.25,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.04,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 64,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.9841269841269841,
+        "recovery_given_real": 0.3333333333333333,
+        "retention_given_touchdown": 0.3387096774193548,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.04,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 65,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.40625,
+        "retention_given_touchdown": 0.40625,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.04,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 66,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.59375,
+        "retention_given_touchdown": 0.59375,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.04,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 67,
+        "episodes": 64,
+        "real_rate": 0.96875,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.6935483870967742,
+        "retention_given_touchdown": 0.6935483870967742,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.04,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 68,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.8125,
+        "retention_given_touchdown": 0.8125,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.04,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 69,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.9682539682539683,
+        "recovery_given_real": 0.8571428571428571,
+        "retention_given_touchdown": 0.8852459016393442,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": -0.04,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 70,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.9841269841269841,
+        "recovery_given_real": 0.3968253968253968,
+        "retention_given_touchdown": 0.4032258064516129,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.0,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 71,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.40625,
+        "retention_given_touchdown": 0.40625,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.0,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 72,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.9841269841269841,
+        "recovery_given_real": 0.42857142857142855,
+        "retention_given_touchdown": 0.43548387096774194,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.0,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 73,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.9841269841269841,
+        "recovery_given_real": 0.6349206349206349,
+        "retention_given_touchdown": 0.6451612903225806,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.0,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 74,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.746031746031746,
+        "retention_given_touchdown": 0.746031746031746,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.0,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 75,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.9841269841269841,
+        "recovery_given_real": 0.7777777777777778,
+        "retention_given_touchdown": 0.7903225806451613,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.0,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 76,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.984375,
+        "recovery_given_real": 0.828125,
+        "retention_given_touchdown": 0.8412698412698413,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.0,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 77,
+        "episodes": 64,
+        "real_rate": 0.96875,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.20967741935483872,
+        "retention_given_touchdown": 0.20967741935483872,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.04,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 78,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.96875,
+        "recovery_given_real": 0.296875,
+        "retention_given_touchdown": 0.3064516129032258,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.04,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 79,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.96875,
+        "recovery_given_real": 0.484375,
+        "retention_given_touchdown": 0.5,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.04,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 80,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.609375,
+        "retention_given_touchdown": 0.609375,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.04,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 81,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.96875,
+        "recovery_given_real": 0.71875,
+        "retention_given_touchdown": 0.7419354838709677,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.04,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 82,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.8125,
+        "retention_given_touchdown": 0.8125,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.04,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 83,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.9841269841269841,
+        "recovery_given_real": 0.746031746031746,
+        "retention_given_touchdown": 0.7580645161290323,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.04,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 84,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.953125,
+        "recovery_given_real": 0.203125,
+        "retention_given_touchdown": 0.21311475409836064,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.08,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 85,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.5396825396825397,
+        "retention_given_touchdown": 0.5396825396825397,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.08,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 86,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.984375,
+        "recovery_given_real": 0.453125,
+        "retention_given_touchdown": 0.4603174603174603,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.08,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 87,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.71875,
+        "retention_given_touchdown": 0.71875,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.08,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 88,
+        "episodes": 64,
+        "real_rate": 0.96875,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.7258064516129032,
+        "retention_given_touchdown": 0.7258064516129032,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.08,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 89,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.96875,
+        "recovery_given_real": 0.734375,
+        "retention_given_touchdown": 0.7580645161290323,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.08,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 90,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.9841269841269841,
+        "recovery_given_real": 0.8095238095238095,
+        "retention_given_touchdown": 0.8225806451612904,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.08,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 91,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.9841269841269841,
+        "recovery_given_real": 0.25396825396825395,
+        "retention_given_touchdown": 0.25806451612903225,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.12,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 92,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.984375,
+        "recovery_given_real": 0.359375,
+        "retention_given_touchdown": 0.36507936507936506,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.12,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 93,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.953125,
+        "recovery_given_real": 0.515625,
+        "retention_given_touchdown": 0.5409836065573771,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.12,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 94,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.984375,
+        "recovery_given_real": 0.6875,
+        "retention_given_touchdown": 0.6984126984126984,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.12,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 95,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.9841269841269841,
+        "recovery_given_real": 0.6825396825396826,
+        "retention_given_touchdown": 0.6935483870967742,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.12,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 96,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.75,
+        "retention_given_touchdown": 0.75,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.12,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 97,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.6875,
+        "retention_given_touchdown": 0.6875,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "controller": {
+          "mode": "dynamic_target",
+          "thigh": 0.12,
+          "calf": 0.12
+        }
+      }
+    ]
+  },
+  "winners": {
+    "0.75": {
+      "case": 46,
+      "episodes": 64,
+      "real_rate": 0.984375,
+      "touchdown_given_real": 0.8571428571428571,
+      "recovery_given_real": 0.49206349206349204,
+      "retention_given_touchdown": 0.5740740740740741,
+      "wrong_rate": 0.0,
+      "body_rate": 0.0,
+      "controller": {
+        "mode": "static_latch",
+        "thigh": 0.12,
+        "calf": 0.04
+      }
+    },
+    "1.0": {
+      "case": 48,
+      "episodes": 64,
+      "real_rate": 0.96875,
+      "touchdown_given_real": 0.8387096774193549,
+      "recovery_given_real": 0.6129032258064516,
+      "retention_given_touchdown": 0.7307692307692307,
+      "wrong_rate": 0.0,
+      "body_rate": 0.0,
+      "controller": {
+        "mode": "static_latch",
+        "thigh": 0.12,
+        "calf": 0.12
+      }
+    },
+    "1.25": {
+      "case": 18,
+      "episodes": 64,
+      "real_rate": 1.0,
+      "touchdown_given_real": 0.984375,
+      "recovery_given_real": 0.9375,
+      "retention_given_touchdown": 0.9523809523809523,
+      "wrong_rate": 0.0,
+      "body_rate": 0.0,
+      "controller": {
+        "mode": "static_latch",
+        "thigh": -0.04,
+        "calf": 0.04
+      }
+    }
+  },
+  "confirm": {
+    "0.75": [
+      {
+        "case": 0,
+        "episodes": 512,
+        "real_rate": 0.970703125,
+        "touchdown_given_real": 0.8651911468812877,
+        "recovery_given_real": 0.38028169014084506,
+        "retention_given_touchdown": 0.43953488372093025,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "seed": 857043,
+        "strength": 0.75,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.12,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 0,
+        "episodes": 512,
+        "real_rate": 0.970703125,
+        "touchdown_given_real": 0.8651911468812877,
+        "recovery_given_real": 0.38028169014084506,
+        "retention_given_touchdown": 0.43953488372093025,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "seed": 857044,
+        "strength": 0.75,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.12,
+          "calf": 0.04
+        }
+      }
+    ],
+    "1.0": [
+      {
+        "case": 0,
+        "episodes": 512,
+        "real_rate": 0.974609375,
+        "touchdown_given_real": 0.8697394789579158,
+        "recovery_given_real": 0.5751503006012024,
+        "retention_given_touchdown": 0.6612903225806451,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "seed": 857053,
+        "strength": 1.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.12,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 0,
+        "episodes": 512,
+        "real_rate": 0.974609375,
+        "touchdown_given_real": 0.8697394789579158,
+        "recovery_given_real": 0.5751503006012024,
+        "retention_given_touchdown": 0.6612903225806451,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "seed": 857054,
+        "strength": 1.0,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": 0.12,
+          "calf": 0.12
+        }
+      }
+    ],
+    "1.25": [
+      {
+        "case": 0,
+        "episodes": 512,
+        "real_rate": 0.9921875,
+        "touchdown_given_real": 0.9822834645669292,
+        "recovery_given_real": 0.8582677165354331,
+        "retention_given_touchdown": 0.87374749498998,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "seed": 857063,
+        "strength": 1.25,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.04,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 0,
+        "episodes": 512,
+        "real_rate": 0.9921875,
+        "touchdown_given_real": 0.9822834645669292,
+        "recovery_given_real": 0.8582677165354331,
+        "retention_given_touchdown": 0.87374749498998,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "seed": 857064,
+        "strength": 1.25,
+        "controller": {
+          "mode": "static_latch",
+          "thigh": -0.04,
+          "calf": 0.04
+        }
+      }
+    ]
+  },
+  "winner_file": "/scratch/lj2634/runs/go2_soccer_r8_57_balanced_hold/r857_scan_15640216/output/r857_hold_winner.json",
+  "accepted": false,
+  "verdict": "KEEP_R857_HOLD_CONTROLLER_NOT_READY"
+}

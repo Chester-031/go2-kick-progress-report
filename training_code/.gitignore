@@ -1,0 +1,16 @@
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.mp4
+*.avi
+*.npy
+*.npz
+__pycache__/
+*.pyc
+logs/
+wandb/
+outputs/
+videos/
+slurm-*.out
+slurm-*.err

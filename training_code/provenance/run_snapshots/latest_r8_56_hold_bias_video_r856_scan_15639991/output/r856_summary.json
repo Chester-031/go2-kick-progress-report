@@ -1,0 +1,2177 @@
+{
+  "version": "r8_56_hold_bias_scan",
+  "training": false,
+  "actual_contact": true,
+  "network_frozen": true,
+  "grid_values": [
+    -0.12,
+    -0.08,
+    -0.04,
+    0.0,
+    0.04,
+    0.08,
+    0.12
+  ],
+  "episodes_per_case": 64,
+  "confirm_episodes": 1024,
+  "scans": {
+    "0.75": [
+      {
+        "case": 0,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.8939393939393939,
+        "recovery_given_real": 0.015151515151515152,
+        "latch_given_real": 0.8787878787878788,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.12,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 1,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.7575757575757576,
+        "recovery_given_real": 0.0,
+        "latch_given_real": 0.7121212121212122,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.12,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 2,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.9242424242424242,
+        "recovery_given_real": 0.015151515151515152,
+        "latch_given_real": 0.8484848484848485,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.12,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 3,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.9242424242424242,
+        "recovery_given_real": 0.19696969696969696,
+        "latch_given_real": 0.8333333333333334,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.12,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 4,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.9090909090909091,
+        "recovery_given_real": 0.4090909090909091,
+        "latch_given_real": 0.9090909090909091,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.12,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 5,
+        "episodes": 66,
+        "real_rate": 0.6666666666666666,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.5227272727272727,
+        "latch_given_real": 1.0,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.12,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 6,
+        "episodes": 65,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.9076923076923077,
+        "recovery_given_real": 0.6153846153846154,
+        "latch_given_real": 0.8769230769230769,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.12,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 7,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.9242424242424242,
+        "recovery_given_real": 0.22727272727272727,
+        "latch_given_real": 0.8787878787878788,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.08,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 8,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.8484848484848485,
+        "recovery_given_real": 0.0,
+        "latch_given_real": 0.6818181818181818,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.08,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 9,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.7727272727272727,
+        "recovery_given_real": 0.19696969696969696,
+        "latch_given_real": 0.7272727272727273,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.08,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 10,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.9090909090909091,
+        "recovery_given_real": 0.030303030303030304,
+        "latch_given_real": 0.8939393939393939,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.08,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 11,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.696969696969697,
+        "recovery_given_real": 0.25757575757575757,
+        "latch_given_real": 0.6666666666666666,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.08,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 12,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.9393939393939394,
+        "recovery_given_real": 0.22727272727272727,
+        "latch_given_real": 0.8787878787878788,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.08,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 13,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.9393939393939394,
+        "recovery_given_real": 0.6060606060606061,
+        "latch_given_real": 0.9242424242424242,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.08,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 14,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.8333333333333334,
+        "recovery_given_real": 0.13636363636363635,
+        "latch_given_real": 0.7878787878787878,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.04,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 15,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.7727272727272727,
+        "recovery_given_real": 0.09090909090909091,
+        "latch_given_real": 0.7727272727272727,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.04,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 16,
+        "episodes": 65,
+        "real_rate": 0.9384615384615385,
+        "touchdown_given_real": 0.819672131147541,
+        "recovery_given_real": 0.45901639344262296,
+        "latch_given_real": 0.819672131147541,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.04,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 17,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.765625,
+        "recovery_given_real": 0.171875,
+        "latch_given_real": 0.734375,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.04,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 18,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.8333333333333334,
+        "recovery_given_real": 0.6060606060606061,
+        "latch_given_real": 0.8333333333333334,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.04,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 19,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.9242424242424242,
+        "recovery_given_real": 0.18181818181818182,
+        "latch_given_real": 0.8787878787878788,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.04,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 20,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.9848484848484849,
+        "recovery_given_real": 0.803030303030303,
+        "latch_given_real": 0.9545454545454546,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.04,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 21,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.9242424242424242,
+        "recovery_given_real": 0.15151515151515152,
+        "latch_given_real": 0.9090909090909091,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.0,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 22,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.8484848484848485,
+        "recovery_given_real": 0.10606060606060606,
+        "latch_given_real": 0.7878787878787878,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.0,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 23,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.803030303030303,
+        "recovery_given_real": 0.19696969696969696,
+        "latch_given_real": 0.7575757575757576,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.0,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 24,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.7424242424242424,
+        "recovery_given_real": 0.015151515151515152,
+        "latch_given_real": 0.7121212121212122,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.0,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 25,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.6515151515151515,
+        "recovery_given_real": 0.19696969696969696,
+        "latch_given_real": 0.6363636363636364,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.0,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 26,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.7727272727272727,
+        "recovery_given_real": 0.3333333333333333,
+        "latch_given_real": 0.7727272727272727,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.0,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 27,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.9090909090909091,
+        "recovery_given_real": 0.3787878787878788,
+        "latch_given_real": 0.8333333333333334,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.0,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 28,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.7272727272727273,
+        "recovery_given_real": 0.015151515151515152,
+        "latch_given_real": 0.6515151515151515,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.04,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 29,
+        "episodes": 65,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.8307692307692308,
+        "recovery_given_real": 0.35384615384615387,
+        "latch_given_real": 0.8153846153846154,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.04,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 30,
+        "episodes": 64,
+        "real_rate": 0.90625,
+        "touchdown_given_real": 0.9137931034482759,
+        "recovery_given_real": 0.29310344827586204,
+        "latch_given_real": 0.8793103448275862,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.04,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 31,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.8125,
+        "latch_given_real": 0.96875,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.04,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 32,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.890625,
+        "recovery_given_real": 0.578125,
+        "latch_given_real": 0.875,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.04,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 33,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.453125,
+        "recovery_given_real": 0.140625,
+        "latch_given_real": 0.4375,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.04,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 34,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.984375,
+        "recovery_given_real": 0.140625,
+        "latch_given_real": 0.953125,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.04,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 35,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.953125,
+        "recovery_given_real": 0.78125,
+        "latch_given_real": 0.84375,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.08,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 36,
+        "episodes": 64,
+        "real_rate": 0.96875,
+        "touchdown_given_real": 0.8870967741935484,
+        "recovery_given_real": 0.2903225806451613,
+        "latch_given_real": 0.7419354838709677,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.08,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 37,
+        "episodes": 64,
+        "real_rate": 0.953125,
+        "touchdown_given_real": 0.819672131147541,
+        "recovery_given_real": 0.16393442622950818,
+        "latch_given_real": 0.819672131147541,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.08,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 38,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.96875,
+        "recovery_given_real": 0.203125,
+        "latch_given_real": 0.96875,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.08,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 39,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.703125,
+        "recovery_given_real": 0.0625,
+        "latch_given_real": 0.703125,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.08,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 40,
+        "episodes": 64,
+        "real_rate": 0.890625,
+        "touchdown_given_real": 0.8947368421052632,
+        "recovery_given_real": 0.2631578947368421,
+        "latch_given_real": 0.7719298245614035,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.08,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 41,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.890625,
+        "recovery_given_real": 0.34375,
+        "latch_given_real": 0.890625,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.08,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 42,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.9375,
+        "recovery_given_real": 0.0625,
+        "latch_given_real": 0.84375,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.12,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 43,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.5625,
+        "latch_given_real": 0.984375,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.12,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 44,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.6875,
+        "recovery_given_real": 0.328125,
+        "latch_given_real": 0.6875,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.12,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 45,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.796875,
+        "recovery_given_real": 0.15625,
+        "latch_given_real": 0.59375,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.12,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 46,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.875,
+        "recovery_given_real": 0.4375,
+        "latch_given_real": 0.875,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.12,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 47,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.71875,
+        "recovery_given_real": 0.21875,
+        "latch_given_real": 0.71875,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.12,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 48,
+        "episodes": 64,
+        "real_rate": 0.5,
+        "touchdown_given_real": 0.96875,
+        "recovery_given_real": 0.65625,
+        "latch_given_real": 0.96875,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.12,
+          "calf": 0.12
+        }
+      }
+    ],
+    "1.0": [
+      {
+        "case": 0,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.8939393939393939,
+        "recovery_given_real": 0.0,
+        "latch_given_real": 0.8636363636363636,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.12,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 1,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.7121212121212122,
+        "recovery_given_real": 0.045454545454545456,
+        "latch_given_real": 0.6515151515151515,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.12,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 2,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.8787878787878788,
+        "recovery_given_real": 0.015151515151515152,
+        "latch_given_real": 0.8484848484848485,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.12,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 3,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.9242424242424242,
+        "recovery_given_real": 0.4696969696969697,
+        "latch_given_real": 0.8181818181818182,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.12,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 4,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.4696969696969697,
+        "latch_given_real": 0.9696969696969697,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.12,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 5,
+        "episodes": 66,
+        "real_rate": 0.6666666666666666,
+        "touchdown_given_real": 0.9772727272727273,
+        "recovery_given_real": 0.6136363636363636,
+        "latch_given_real": 0.9772727272727273,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.12,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 6,
+        "episodes": 65,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.9076923076923077,
+        "recovery_given_real": 0.4153846153846154,
+        "latch_given_real": 0.9076923076923077,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.12,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 7,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.8636363636363636,
+        "recovery_given_real": 0.5454545454545454,
+        "latch_given_real": 0.8636363636363636,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.08,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 8,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.8636363636363636,
+        "recovery_given_real": 0.015151515151515152,
+        "latch_given_real": 0.8333333333333334,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.08,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 9,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.9090909090909091,
+        "recovery_given_real": 0.3484848484848485,
+        "latch_given_real": 0.8787878787878788,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.08,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 10,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.8333333333333334,
+        "recovery_given_real": 0.2878787878787879,
+        "latch_given_real": 0.7575757575757576,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.08,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 11,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.696969696969697,
+        "recovery_given_real": 0.22727272727272727,
+        "latch_given_real": 0.6363636363636364,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.08,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 12,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.9696969696969697,
+        "recovery_given_real": 0.6515151515151515,
+        "latch_given_real": 0.9090909090909091,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.08,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 13,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.9393939393939394,
+        "recovery_given_real": 0.6515151515151515,
+        "latch_given_real": 0.8939393939393939,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.08,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 14,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.7575757575757576,
+        "recovery_given_real": 0.3787878787878788,
+        "latch_given_real": 0.7121212121212122,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.04,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 15,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.8333333333333334,
+        "recovery_given_real": 0.2727272727272727,
+        "latch_given_real": 0.803030303030303,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.04,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 16,
+        "episodes": 65,
+        "real_rate": 0.8461538461538461,
+        "touchdown_given_real": 0.9090909090909091,
+        "recovery_given_real": 0.2909090909090909,
+        "latch_given_real": 0.9090909090909091,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.04,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 17,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.875,
+        "recovery_given_real": 0.40625,
+        "latch_given_real": 0.796875,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.04,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 18,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.7424242424242424,
+        "recovery_given_real": 0.4696969696969697,
+        "latch_given_real": 0.7424242424242424,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.04,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 19,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.9393939393939394,
+        "recovery_given_real": 0.4393939393939394,
+        "latch_given_real": 0.8787878787878788,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.04,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 20,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.9848484848484849,
+        "recovery_given_real": 0.8787878787878788,
+        "latch_given_real": 0.9848484848484849,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.04,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 21,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.9090909090909091,
+        "recovery_given_real": 0.6363636363636364,
+        "latch_given_real": 0.8939393939393939,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.0,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 22,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.7272727272727273,
+        "recovery_given_real": 0.25757575757575757,
+        "latch_given_real": 0.6363636363636364,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.0,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 23,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.7575757575757576,
+        "recovery_given_real": 0.30303030303030304,
+        "latch_given_real": 0.696969696969697,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.0,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 24,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.8333333333333334,
+        "recovery_given_real": 0.09090909090909091,
+        "latch_given_real": 0.8181818181818182,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.0,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 25,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.7424242424242424,
+        "recovery_given_real": 0.4393939393939394,
+        "latch_given_real": 0.7272727272727273,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.0,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 26,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.8484848484848485,
+        "recovery_given_real": 0.3787878787878788,
+        "latch_given_real": 0.803030303030303,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.0,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 27,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.9393939393939394,
+        "recovery_given_real": 0.7575757575757576,
+        "latch_given_real": 0.8939393939393939,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.0,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 28,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.7727272727272727,
+        "recovery_given_real": 0.13636363636363635,
+        "latch_given_real": 0.7272727272727273,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.04,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 29,
+        "episodes": 65,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.7538461538461538,
+        "recovery_given_real": 0.6153846153846154,
+        "latch_given_real": 0.7538461538461538,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.04,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 30,
+        "episodes": 64,
+        "real_rate": 0.859375,
+        "touchdown_given_real": 0.8727272727272727,
+        "recovery_given_real": 0.5272727272727272,
+        "latch_given_real": 0.8363636363636363,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.04,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 31,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.984375,
+        "recovery_given_real": 0.421875,
+        "latch_given_real": 0.984375,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.04,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 32,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.984375,
+        "recovery_given_real": 0.265625,
+        "latch_given_real": 0.984375,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.04,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 33,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.796875,
+        "recovery_given_real": 0.609375,
+        "latch_given_real": 0.78125,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.04,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 34,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.859375,
+        "recovery_given_real": 0.25,
+        "latch_given_real": 0.859375,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.04,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 35,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.796875,
+        "recovery_given_real": 0.453125,
+        "latch_given_real": 0.765625,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.08,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 36,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.9523809523809523,
+        "recovery_given_real": 0.4603174603174603,
+        "latch_given_real": 0.9523809523809523,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.08,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 37,
+        "episodes": 64,
+        "real_rate": 0.890625,
+        "touchdown_given_real": 0.7192982456140351,
+        "recovery_given_real": 0.2631578947368421,
+        "latch_given_real": 0.7192982456140351,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.08,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 38,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.9375,
+        "recovery_given_real": 0.796875,
+        "latch_given_real": 0.921875,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.08,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 39,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.703125,
+        "recovery_given_real": 0.46875,
+        "latch_given_real": 0.703125,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.08,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 40,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 0.9523809523809523,
+        "recovery_given_real": 0.4603174603174603,
+        "latch_given_real": 0.8888888888888888,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.08,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 41,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.8125,
+        "recovery_given_real": 0.59375,
+        "latch_given_real": 0.8125,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.08,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 42,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.9375,
+        "recovery_given_real": 0.78125,
+        "latch_given_real": 0.9375,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.12,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 43,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.984375,
+        "recovery_given_real": 0.96875,
+        "latch_given_real": 0.984375,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.12,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 44,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.59375,
+        "recovery_given_real": 0.234375,
+        "latch_given_real": 0.453125,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.12,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 45,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.6875,
+        "recovery_given_real": 0.640625,
+        "latch_given_real": 0.6875,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.12,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 46,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.5625,
+        "recovery_given_real": 0.125,
+        "latch_given_real": 0.546875,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.12,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 47,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.984375,
+        "recovery_given_real": 0.84375,
+        "latch_given_real": 0.984375,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.12,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 48,
+        "episodes": 64,
+        "real_rate": 0.5,
+        "touchdown_given_real": 0.8125,
+        "recovery_given_real": 0.15625,
+        "latch_given_real": 0.8125,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.12,
+          "calf": 0.12
+        }
+      }
+    ],
+    "1.25": [
+      {
+        "case": 0,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.5757575757575758,
+        "latch_given_real": 1.0,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.12,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 1,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.9393939393939394,
+        "recovery_given_real": 0.5454545454545454,
+        "latch_given_real": 0.8939393939393939,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.12,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 2,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.8787878787878788,
+        "latch_given_real": 1.0,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.12,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 3,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.7575757575757576,
+        "latch_given_real": 1.0,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.12,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 4,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.7575757575757576,
+        "latch_given_real": 1.0,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.12,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 5,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.9242424242424242,
+        "latch_given_real": 1.0,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.12,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 6,
+        "episodes": 65,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.8615384615384616,
+        "latch_given_real": 1.0,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.12,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 7,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.5909090909090909,
+        "latch_given_real": 1.0,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.08,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 8,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.7272727272727273,
+        "latch_given_real": 1.0,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.08,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 9,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.7878787878787878,
+        "latch_given_real": 1.0,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.08,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 10,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.9545454545454546,
+        "latch_given_real": 1.0,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.08,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 11,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.9393939393939394,
+        "recovery_given_real": 0.8636363636363636,
+        "latch_given_real": 0.9090909090909091,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.08,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 12,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.9696969696969697,
+        "latch_given_real": 1.0,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.08,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 13,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.9696969696969697,
+        "latch_given_real": 1.0,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.08,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 14,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.7424242424242424,
+        "latch_given_real": 1.0,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.04,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 15,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.803030303030303,
+        "latch_given_real": 0.9848484848484849,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.04,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 16,
+        "episodes": 65,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.9384615384615385,
+        "recovery_given_real": 0.676923076923077,
+        "latch_given_real": 0.9076923076923077,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.04,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 17,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.96875,
+        "recovery_given_real": 0.78125,
+        "latch_given_real": 0.953125,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.04,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 18,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.9848484848484849,
+        "recovery_given_real": 0.7575757575757576,
+        "latch_given_real": 0.9696969696969697,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.04,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 19,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.9848484848484849,
+        "latch_given_real": 1.0,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.04,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 20,
+        "episodes": 66,
+        "real_rate": 0.6666666666666666,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.8636363636363636,
+        "latch_given_real": 1.0,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": -0.04,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 21,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.9848484848484849,
+        "recovery_given_real": 0.6212121212121212,
+        "latch_given_real": 0.9848484848484849,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.0,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 22,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.8333333333333334,
+        "latch_given_real": 1.0,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.0,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 23,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.9242424242424242,
+        "recovery_given_real": 0.7727272727272727,
+        "latch_given_real": 0.9090909090909091,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.0,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 24,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.9090909090909091,
+        "recovery_given_real": 0.7575757575757576,
+        "latch_given_real": 0.9090909090909091,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.0,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 25,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.9090909090909091,
+        "recovery_given_real": 0.6060606060606061,
+        "latch_given_real": 0.803030303030303,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.0,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 26,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.5909090909090909,
+        "latch_given_real": 1.0,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.0,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 27,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.9848484848484849,
+        "latch_given_real": 1.0,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.0,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 28,
+        "episodes": 66,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.4090909090909091,
+        "latch_given_real": 0.9696969696969697,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.04,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 29,
+        "episodes": 65,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.9538461538461539,
+        "recovery_given_real": 0.6461538461538462,
+        "latch_given_real": 0.8615384615384616,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.04,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 30,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.984375,
+        "recovery_given_real": 0.921875,
+        "latch_given_real": 0.96875,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.04,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 31,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.78125,
+        "latch_given_real": 1.0,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.04,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 32,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.96875,
+        "latch_given_real": 1.0,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.04,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 33,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.890625,
+        "recovery_given_real": 0.625,
+        "latch_given_real": 0.875,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.04,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 34,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.96875,
+        "latch_given_real": 1.0,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.04,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 35,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.5625,
+        "latch_given_real": 1.0,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.08,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 36,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.984375,
+        "recovery_given_real": 0.65625,
+        "latch_given_real": 0.984375,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.08,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 37,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.921875,
+        "recovery_given_real": 0.6875,
+        "latch_given_real": 0.859375,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.08,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 38,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 1.0,
+        "latch_given_real": 1.0,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.08,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 39,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.984375,
+        "recovery_given_real": 0.875,
+        "latch_given_real": 0.921875,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.08,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 40,
+        "episodes": 64,
+        "real_rate": 0.984375,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.9206349206349206,
+        "latch_given_real": 1.0,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.08,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 41,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.9375,
+        "latch_given_real": 1.0,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.08,
+          "calf": 0.12
+        }
+      },
+      {
+        "case": 42,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.875,
+        "latch_given_real": 1.0,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.12,
+          "calf": -0.12
+        }
+      },
+      {
+        "case": 43,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.5,
+        "latch_given_real": 1.0,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.12,
+          "calf": -0.08
+        }
+      },
+      {
+        "case": 44,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.9375,
+        "latch_given_real": 1.0,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.12,
+          "calf": -0.04
+        }
+      },
+      {
+        "case": 45,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.90625,
+        "latch_given_real": 1.0,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.12,
+          "calf": 0.0
+        }
+      },
+      {
+        "case": 46,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 0.921875,
+        "recovery_given_real": 0.578125,
+        "latch_given_real": 0.890625,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.12,
+          "calf": 0.04
+        }
+      },
+      {
+        "case": 47,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.953125,
+        "latch_given_real": 1.0,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.12,
+          "calf": 0.08
+        }
+      },
+      {
+        "case": 48,
+        "episodes": 64,
+        "real_rate": 1.0,
+        "touchdown_given_real": 1.0,
+        "recovery_given_real": 0.828125,
+        "latch_given_real": 1.0,
+        "wrong_rate": 0.0,
+        "body_rate": 0.0,
+        "bias": {
+          "thigh": 0.12,
+          "calf": 0.12
+        }
+      }
+    ]
+  },
+  "winners": {
+    "0.75": {
+      "case": 31,
+      "episodes": 64,
+      "real_rate": 1.0,
+      "touchdown_given_real": 1.0,
+      "recovery_given_real": 0.8125,
+      "latch_given_real": 0.96875,
+      "wrong_rate": 0.0,
+      "body_rate": 0.0,
+      "bias": {
+        "thigh": 0.04,
+        "calf": 0.0
+      }
+    },
+    "1.0": {
+      "case": 43,
+      "episodes": 64,
+      "real_rate": 1.0,
+      "touchdown_given_real": 0.984375,
+      "recovery_given_real": 0.96875,
+      "latch_given_real": 0.984375,
+      "wrong_rate": 0.0,
+      "body_rate": 0.0,
+      "bias": {
+        "thigh": 0.12,
+        "calf": -0.08
+      }
+    },
+    "1.25": {
+      "case": 38,
+      "episodes": 64,
+      "real_rate": 1.0,
+      "touchdown_given_real": 1.0,
+      "recovery_given_real": 1.0,
+      "latch_given_real": 1.0,
+      "wrong_rate": 0.0,
+      "body_rate": 0.0,
+      "bias": {
+        "thigh": 0.08,
+        "calf": 0.0
+      }
+    }
+  },
+  "confirm": [
+    {
+      "case": 0,
+      "episodes": 1024,
+      "real_rate": 0.9716796875,
+      "touchdown_given_real": 0.8603015075376884,
+      "recovery_given_real": 0.32663316582914576,
+      "latch_given_real": 0.8180904522613065,
+      "wrong_rate": 0.0,
+      "body_rate": 0.0,
+      "strength": 0.75,
+      "bias": {
+        "thigh": 0.04,
+        "calf": 0.0
+      }
+    },
+    {
+      "case": 0,
+      "episodes": 1024,
+      "real_rate": 0.974609375,
+      "touchdown_given_real": 0.8627254509018036,
+      "recovery_given_real": 0.46292585170340683,
+      "latch_given_real": 0.8286573146292585,
+      "wrong_rate": 0.0,
+      "body_rate": 0.0,
+      "strength": 1.0,
+      "bias": {
+        "thigh": 0.12,
+        "calf": -0.08
+      }
+    },
+    {
+      "case": 0,
+      "episodes": 1024,
+      "real_rate": 0.9921875,
+      "touchdown_given_real": 0.9822834645669292,
+      "recovery_given_real": 0.8405511811023622,
+      "latch_given_real": 0.968503937007874,
+      "wrong_rate": 0.0,
+      "body_rate": 0.0,
+      "strength": 1.25,
+      "bias": {
+        "thigh": 0.08,
+        "calf": 0.0
+      }
+    }
+  ],
+  "winner_file": "/scratch/lj2634/runs/go2_soccer_r8_56_hold_bias/r856_scan_15639991/output/r856_hold_winner.json",
+  "accepted": false,
+  "verdict": "KEEP_R856_HOLD_SCAN_NOT_READY"
+}

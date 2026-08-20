@@ -1,0 +1,21 @@
+{
+  "actor_delta_l2": 0.4620381141843341,
+  "actor_delta_max_abs": 0.013742819428443909,
+  "anchor_samples": 3520,
+  "bridge_events": 465,
+  "critic_updated": false,
+  "elite_samples": 4448,
+  "environment_steps": 2544,
+  "episodes_collected": 4096,
+  "external_teacher": false,
+  "final_loss": 0.039412062615156174,
+  "history_steps": 8,
+  "initial_loss": 0.039942678064107895,
+  "optimization_steps": 250,
+  "output_checkpoint": "/scratch/lj2634/runs/go2_soccer_r8_19_elite_self_imitation/r819_self_imitation_20260809_184844/distill/model_distilled.pt",
+  "ppo_update": false,
+  "source_checkpoint": "/scratch/lj2634/runs/go2_soccer_r8_15_mean_policy_swing/r815_mean_swing_20260809_181704/phaseA_std020/logs/support_model_final.pt",
+  "std_updated": false,
+  "swing_events": 91,
+  "version": "r8_19_elite_self_imitation"
+}

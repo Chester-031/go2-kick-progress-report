@@ -1,0 +1,218 @@
+{
+  "version": "r8_51_kick64_true_contact",
+  "training": true,
+  "actual_contact": true,
+  "obs_contract": "64D=70D[0:63]+70D[69]",
+  "frozen_load_lift_swing_recovery": true,
+  "strike_parent": "/scratch/lj2634/runs/go2_soccer_r8_48_postbridge_strike_ppo/r848_strike_20260811_001923/output/winner_strike_u32.pt",
+  "recovery_parent": "/scratch/lj2634/runs/go2_soccer_r8_49_recovery_finetune/r849_recovery_fixfuture_20260811_005551/output/recovery_vector_finetuned.pt",
+  "recovery_parent_version": "r8_49_recovery_vector_finetune",
+  "r850_parent": "/scratch/lj2634/Isaac-Go2-Low-Level-RL/runs/r850_real_contact_15627265/r850_real_contact_summary.json",
+  "top_geometry": [
+    [
+      0.20000000298023224,
+      -0.019999999552965164
+    ],
+    [
+      0.20000000298023224,
+      -0.03999999910593033
+    ],
+    [
+      0.18000000715255737,
+      -0.03999999910593033
+    ]
+  ],
+  "updates": 12,
+  "rollout_steps": 192,
+  "history": [
+    {
+      "update": 1,
+      "curriculum": "fixed",
+      "active": 225,
+      "contact": 128,
+      "real": 128,
+      "wrong": 0,
+      "body": 0,
+      "recovery": 0,
+      "actor_loss": -0.011254959118862947,
+      "value_loss": 1.8337978621323903
+    },
+    {
+      "update": 2,
+      "curriculum": "fixed",
+      "active": 385,
+      "contact": 128,
+      "real": 124,
+      "wrong": 0,
+      "body": 0,
+      "recovery": 0,
+      "actor_loss": -0.010779008890191713,
+      "value_loss": 1.7043053408463795
+    },
+    {
+      "update": 3,
+      "curriculum": "fixed",
+      "active": 392,
+      "contact": 128,
+      "real": 124,
+      "wrong": 0,
+      "body": 0,
+      "recovery": 0,
+      "actor_loss": -0.005798099562525749,
+      "value_loss": 1.5663460493087769
+    },
+    {
+      "update": 4,
+      "curriculum": "fixed",
+      "active": 250,
+      "contact": 128,
+      "real": 127,
+      "wrong": 0,
+      "body": 0,
+      "recovery": 0,
+      "actor_loss": -0.016298384871333838,
+      "value_loss": 1.3784279525279999
+    },
+    {
+      "update": 5,
+      "curriculum": "three_strength",
+      "active": 490,
+      "contact": 128,
+      "real": 122,
+      "wrong": 0,
+      "body": 0,
+      "recovery": 0,
+      "actor_loss": -0.007716746962008377,
+      "value_loss": 2.782371163368225
+    },
+    {
+      "update": 6,
+      "curriculum": "three_strength",
+      "active": 369,
+      "contact": 128,
+      "real": 125,
+      "wrong": 0,
+      "body": 0,
+      "recovery": 0,
+      "actor_loss": 0.0006185317955290278,
+      "value_loss": 2.5403024752934775
+    },
+    {
+      "update": 7,
+      "curriculum": "three_strength",
+      "active": 455,
+      "contact": 128,
+      "real": 123,
+      "wrong": 0,
+      "body": 0,
+      "recovery": 0,
+      "actor_loss": -0.005687733801702659,
+      "value_loss": 2.5322053035100303
+    },
+    {
+      "update": 8,
+      "curriculum": "three_strength",
+      "active": 475,
+      "contact": 128,
+      "real": 123,
+      "wrong": 0,
+      "body": 0,
+      "recovery": 0,
+      "actor_loss": -0.009968449516842762,
+      "value_loss": 2.3323245843251548
+    },
+    {
+      "update": 9,
+      "curriculum": "continuous",
+      "active": 602,
+      "contact": 128,
+      "real": 120,
+      "wrong": 0,
+      "body": 0,
+      "recovery": 0,
+      "actor_loss": -0.007676487497519702,
+      "value_loss": 1.9330636461575825
+    },
+    {
+      "update": 10,
+      "curriculum": "continuous",
+      "active": 549,
+      "contact": 128,
+      "real": 121,
+      "wrong": 0,
+      "body": 0,
+      "recovery": 0,
+      "actor_loss": -0.0070665522168080015,
+      "value_loss": 1.6441349585851033
+    },
+    {
+      "update": 11,
+      "curriculum": "continuous",
+      "active": 679,
+      "contact": 128,
+      "real": 118,
+      "wrong": 0,
+      "body": 0,
+      "recovery": 0,
+      "actor_loss": -0.00835797656327486,
+      "value_loss": 1.8127730786800385
+    },
+    {
+      "update": 12,
+      "curriculum": "continuous",
+      "active": 653,
+      "contact": 128,
+      "real": 118,
+      "wrong": 0,
+      "body": 0,
+      "recovery": 0,
+      "actor_loss": -0.003552118044657012,
+      "value_loss": 1.5583205322424571
+    }
+  ],
+  "strength_confirm": [
+    {
+      "strength": 0.75,
+      "episodes": 512,
+      "selected_rate": 1.0,
+      "clean_rate": 1.0,
+      "real_strike_rate": 0.96875,
+      "recovery_given_real": 0.0,
+      "wrong_rate": 0.0,
+      "body_rate": 0.0,
+      "precontact_rate": 0.0,
+      "mean_peak_direction_speed_mps": 0.061151702306233346,
+      "mean_directional_disp_m": 0.04518026066944003
+    },
+    {
+      "strength": 1.0,
+      "episodes": 512,
+      "selected_rate": 1.0,
+      "clean_rate": 1.0,
+      "real_strike_rate": 0.974609375,
+      "recovery_given_real": 0.0,
+      "wrong_rate": 0.0,
+      "body_rate": 0.0,
+      "precontact_rate": 0.0,
+      "mean_peak_direction_speed_mps": 0.053670148365199566,
+      "mean_directional_disp_m": 0.03964752273168415
+    },
+    {
+      "strength": 1.25,
+      "episodes": 512,
+      "selected_rate": 1.0,
+      "clean_rate": 1.0,
+      "real_strike_rate": 0.9921875,
+      "recovery_given_real": 0.0,
+      "wrong_rate": 0.0,
+      "body_rate": 0.0,
+      "precontact_rate": 0.0,
+      "mean_peak_direction_speed_mps": 0.05003104323986918,
+      "mean_directional_disp_m": 0.03693263663444668
+    }
+  ],
+  "strength_monotonic": false,
+  "checkpoint": "/scratch/lj2634/runs/go2_soccer_r8_51_kick64_true_contact/r851_kick64_15627683/output/kick64_final.pt",
+  "accepted": false,
+  "verdict": "KEEP_R851_NOT_READY_FOR_ROUTER"
+}

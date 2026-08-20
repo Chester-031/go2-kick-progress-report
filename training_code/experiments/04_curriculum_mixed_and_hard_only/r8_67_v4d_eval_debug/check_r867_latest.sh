@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+ROOT="/scratch/lj2634/runs/go2_soccer_r8_67_v4d_eval_debug"; P="$ROOT/latest_r867.txt"; [[ -s "$P" ]] || { echo VERDICT=R867_NOT_READY; exit 2; }; RUN="$(tr -d '\r\n' < "$P")"; echo "RUN=$RUN"; cat "$RUN/contract.txt"; echo '================ MARKERS ================'; grep -E '\[R867_MARKER\]|Traceback|RuntimeError|ModuleNotFoundError|timeout' "$RUN/worker.log" || true; echo '================ ARTIFACTS ============='; find "$RUN/summaries" "$RUN/trajectories" -type f -size +0c -printf '%p %s bytes\n' 2>/dev/null || true; (cd "$RUN" && sha256sum -c SHA256SUMS); echo TRAINING=FALSE; echo VIDEO_GENERATION=FALSE; echo STATE=DEBUG_DATA_READY; echo VERDICT=R867_READY_FOR_DIAGNOSIS

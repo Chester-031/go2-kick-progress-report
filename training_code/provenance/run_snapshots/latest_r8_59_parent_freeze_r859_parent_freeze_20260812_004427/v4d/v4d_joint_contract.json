@@ -1,0 +1,56 @@
+{
+  "high_level": {
+    "action": "3_dim_continuous_intent",
+    "input": "17_dim_soccer_state",
+    "reward": {
+      "goal": 1,
+      "other": 0,
+      "own_goal": -1
+    },
+    "trainable": true
+  },
+  "low_level": {
+    "action": "12_joint_position_residuals",
+    "input": "teacher_free_62_dim_direct_delta_pose_context",
+    "reward": "execution_quality_only",
+    "trainable": "stage2_only"
+  },
+  "reward_mixing": false,
+  "router": {
+    "implementation": "unchanged_from_v4bc_r1",
+    "kick": null,
+    "skills": [
+      "stand",
+      "locomotion",
+      "push"
+    ]
+  },
+  "stage_schedule": [
+    {
+      "end": 50,
+      "high_lr": 2e-05,
+      "low_lr": 0.0,
+      "low_trainable": false,
+      "name": "high_adapter",
+      "start": 0
+    },
+    {
+      "end": 300,
+      "high_lr": 1e-05,
+      "low_lr": 1e-06,
+      "low_trainable": true,
+      "name": "joint_finetune",
+      "start": 50
+    },
+    {
+      "end": 400,
+      "high_lr": 5e-06,
+      "low_lr": 0.0,
+      "low_trainable": false,
+      "name": "stabilization",
+      "start": 300
+    }
+  ],
+  "teacher_free_actor_observation": true,
+  "version": "v4d_staged_zero_sum_joint"
+}

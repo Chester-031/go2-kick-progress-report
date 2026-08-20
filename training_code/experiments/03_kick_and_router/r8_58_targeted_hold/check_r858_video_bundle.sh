@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+P="/scratch/lj2634/video_handoffs/latest_r858_video_bundle.txt"; [[ -s "$P" ]] || { echo VERDICT=VIDEO_BUNDLE_NOT_READY; exit 2; }
+A="$(tr -d '\r\n' < "$P")"; echo "ARCHIVE=$A"; stat --printf='SIZE=%s bytes MTIME=%y\n' "$A"; sha256sum "$A"; tar -tzf "$A"
+for f in bundle/player/train_r856_hold_bias.py bundle/evidence/r856_hold_winner.json bundle/evidence/r858_summary.json bundle/render_local.sh bundle/check_local_videos.sh bundle/SHA256SUMS; do tar -tzf "$A" | grep -qx "$f" || { echo "MISSING=$f"; exit 3; }; done
+echo VERDICT=VIDEO_BUNDLE_READY_FOR_DTN_DOWNLOAD

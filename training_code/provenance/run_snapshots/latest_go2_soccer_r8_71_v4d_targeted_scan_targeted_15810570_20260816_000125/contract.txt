@@ -1,0 +1,7 @@
+version=r8_71_v4d_targeted_scan
+training=false
+video=false
+checkpoint_frozen=true
+progressive_curriculum=false
+eval_steps=600
+scenario_count=13

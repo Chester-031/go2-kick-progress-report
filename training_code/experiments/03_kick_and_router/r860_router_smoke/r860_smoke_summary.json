@@ -1,0 +1,76 @@
+{
+  "version": "r8_60_isolated_router_smoke",
+  "training": false,
+  "parent_mutation": false,
+  "reward_contract": {
+    "goal": 1,
+    "own_goal": -1,
+    "other": 0
+  },
+  "exclusive_action_owner": true,
+  "single_low_env_step_per_tick": true,
+  "records": [
+    {
+      "case": "locomotion",
+      "owner": "v4d_locomotion"
+    },
+    {
+      "case": "kick_not_ready",
+      "owner": "v4d_locomotion"
+    },
+    {
+      "case": "kick_0",
+      "owner": "r858_kick",
+      "phase": "kick_strike"
+    },
+    {
+      "case": "kick_1",
+      "owner": "r858_kick",
+      "phase": "kick_strike"
+    },
+    {
+      "case": "kick_2",
+      "owner": "r858_kick",
+      "phase": "kick_recovery"
+    },
+    {
+      "case": "recovery_0",
+      "owner": "r855_recovery"
+    },
+    {
+      "case": "recovery_1",
+      "owner": "r855_recovery"
+    },
+    {
+      "case": "return_to_v4d",
+      "owner": "v4d_locomotion"
+    }
+  ],
+  "summary": {
+    "phase": "normal",
+    "skill": "locomotion",
+    "strength": 1.25,
+    "low_env_step_count": 8,
+    "events": 15,
+    "controllers": {
+      "0.75": {
+        "strength": 0.75,
+        "thigh": 0.32,
+        "calf": 0.12,
+        "ramp": 0.35
+      },
+      "1.0": {
+        "strength": 1.0,
+        "thigh": 0.32,
+        "calf": 0.16,
+        "ramp": 0.7
+      },
+      "1.25": {
+        "strength": 1.25,
+        "thigh": -0.04,
+        "calf": 0.04,
+        "ramp": 0.0
+      }
+    }
+  }
+}

@@ -1,0 +1,14 @@
+**/__pycache__/
+**/.pytest_cache/
+*.py[cod]
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.log
+slurm-*.out
+slurm-*.err

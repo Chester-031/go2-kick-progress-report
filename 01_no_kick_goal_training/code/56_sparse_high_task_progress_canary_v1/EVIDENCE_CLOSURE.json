@@ -1,0 +1,176 @@
+{
+  "schema": "sparse_high_task_progress_canary_v1/evidence_closure/v1",
+  "status": "RELEASE_READY_EXACT_PARENT_V55_OWN_ARTIFACTS_PINNED",
+  "parent_v55_own_artifacts": {
+    "required_before_gpu": true,
+    "run_label": "sparse_high_offline_bc_warm_start_v1_17938567_20260918T045821635312091Z",
+    "result_sha256": "30b1369ff05a084733d0278e7fb31dbae0261a243f9a678b3d595e8fe3f7b4e3",
+    "teacher_fixed_summary_sha256": "00b54c399abb05cd34fc7f86a0f5caf62dc4dc3b6eb238aa80d8e0ca07444356",
+    "teacher_fixed_rows_sha256": "248d7e158becb03ec8480cf687d5b9b368380b5c20bca86abfb4ae25fc15a496",
+    "transaction_status_sha256": "09a842bc23895489113f104ec63b640087115619583a7cc08f1eea24680ebfcc",
+    "task_manifest_sha256": "b3af08bf243fa793257ebf625012ef05a43eb38df8e533293be68dfda9b36e3f",
+    "note": "All values must name V55 own artifacts from one exact immutable run. Nested V54/V53 identities are not substitutes."
+  },
+  "observed_fact": {
+    "v54": "A fresh recurrent high completed 240 PPO optimizer steps but its reported on-policy outcomes had only zero sparse reward; fixed strict goals stayed 0.",
+    "v55_teacher_fixed": "All declared fixed-case coverage cells were represented, but the teacher produced 0 strict goals, only 91 contact cases, one terminal-contact case and 262 aggregate contact ticks over 384000 global env-ticks; requested-axis displacement had mean 0.177 m, median 0.065 m, maximum 2.257 m and minimum -1.514 m; first contact averaged 9.77 s; unsafe count was 1.",
+    "v53_current_low": "The same current frozen low and 10 Hz command chain produced true contact in 32/32 cases, about 12.5 contact native ticks per case, about 2.5 m mean requested-axis ball displacement and two safe strict goals in the full-XY arm, one per requested side.",
+    "strict_conclusion": "The physical low-level interface has a scoring/transport witness, while the fresh-high sparse path was reward-starved and the frozen V55 analytic teacher was not a scoring witness. This supports one high-only reward-support canary; it does not prove the shaped policy will solve the task or exclude a later ball-conditioned 50 Hz adapter."
+  },
+  "falsifiable_causal_hypothesis": "The smallest next variable is high-only same-transition task-progress credit. If the first 25600 on-policy transitions do not contain finite, reconstructible, above-noise positive progress on both requested goal sides and negative progress globally, stop before PPO. If support exists, the unchanged V54 budget can test whether this credit improves strict fixed goals.",
+  "smallest_isolated_change": "Replace only the high PPO reward with normalized decrease of robot-to-dynamic-staging plus ball-to-requested-goal path length, retaining strict goal +1 and own-goal -1. The raw 0.55 m behind-ball staging point is projected by the unique componentwise Euclidean projection into the existing V14 reset-safe box x +/-3.65 m, y +/-2.15 m. This is total for ball states outside that box, 1-Lipschitz and reflection symmetric.",
+  "unchanged_invariants": [
+    "fresh GRU recurrent 70-D to 3-D high policy",
+    "exact current frozen low checkpoint and module-state identity",
+    "10 Hz high action held for five 50 Hz low ticks",
+    "V14 full continuous reset distribution from iteration zero",
+    "20-second true finite horizon without timeout bootstrap",
+    "V53 per-native-tick strict terminal and unsafe-same-tick goal rejection",
+    "V54 PPO seed, budget and hyperparameters",
+    "fixed seed75001 288-case evaluation including 36 named hard cases",
+    "no teacher, BC, V4D, curriculum, router, phase, latch, Kick or residual"
+  ],
+  "predeclared_reward_support_gate": "Before the first optimizer update, durably write exactly 25600 raw first-rollout transitions. The RSL runner may already have constructed an optimizer, but its state must still be empty and its step count zero. Reconstruct every L, progress and total reward from physical pre and terminal-tick-frozen post coordinates; require finite fields, complete unique 200x128 coverage, exact deterministic reset serial allocation, valid reset/continuity boundaries, abs(progress)>1e-5, progress<-1e-5 and progress>1e-5 in both recorded and reconstructed values, with progress>1e-5 present on each goal side. Failure stops with zero optimizer steps and no learned checkpoint.",
+  "predeclared_behavioral_gate": "Dense return never authorizes escalation. Final strict safe goals must strictly exceed initial and meet 144/288 overall, 18/36 hard, 66/132 side -1, 78/156 side +1, 9/18 hard on each side and unsafe<=18 for the single-seed half-gate. Any weaker outcome remains no long-training authorization.",
+  "outcome_actions": {
+    "reward_support_reject": "Stop before the first PPO update and preserve the raw receipt; change no second mechanism in this transaction.",
+    "full_training_no_goal": "No breakthrough and no escalation; do not infer that all high learning is impossible.",
+    "full_training_nonimproving": "Fixed goal evidence is not learning-attributable; no escalation.",
+    "full_training_breakthrough_below_half_gate": "Preserve as a witness and require matched independent multiseed confirmation.",
+    "full_training_half_gate": "Require separately reviewed matched multiseed confirmation; V56 itself never authorizes long training."
+  },
+  "engineering_repair_r1": {
+    "failed_run": "sparse_high_task_progress_canary_v1_17939578_20260918T071005373934975Z",
+    "observed_fact": "The exact first Cluster transaction passed the reward-support gate and durably completed the first PPO update. At the first configured faulthandler periodic dump marker, exactly 180 seconds into the training child, the native process terminated with SIGSEGV (child RC 139), without a Python exception or terminal result. The outer transaction correctly closed as an engineering failure with process RC 2. Partial learned checkpoints from this failed transaction are not continuation parents.",
+    "falsifiable_hypothesis": "The periodic all-thread faulthandler dump introduced an asynchronous diagnostic action at the exact crash boundary inside the Isaac command-manager step. Removing only that periodic diagnostic should eliminate this exact 180-second SIGSEGV signature while the shell child timeout continues to provide bounded hang protection.",
+    "smallest_isolated_change": "Remove faulthandler.dump_traceback_later(180.0, repeat=True) from the two Isaac child CLIs. Retain faulthandler.enable(all_threads=True), all shell timeouts, scientific mechanisms, budgets and evidence gates.",
+    "unchanged_invariants": [
+      "contract, reward formula and support thresholds",
+      "environment, reset distribution and terminal semantics",
+      "PPO configuration, seed and bounded optimizer budget",
+      "fixed evaluator cases and behavioral decisions",
+      "independent checker, checkpoint validator and vendor source"
+    ],
+    "predeclared_gate": "A fresh transaction must pass the unchanged pre-GPU gates, produce no periodic faulthandler Timeout marker, avoid child RC 139, and reach an unchanged legal terminal branch with all original guards. The failed run's partial checkpoint must not be loaded or reused.",
+    "outcome_actions": {
+      "same_rc139_without_periodic_dump": "Reject the watchdog hypothesis and stop for a new native-crash attribution; do not add a second repair in the same run.",
+      "other_engineering_failure": "Preserve the one-job evidence and diagnose it read-only before any further run.",
+      "closed_terminal_branch": "Interpret only the original V56 scientific gates; R1 itself adds no behavioral authorization."
+    }
+  },
+  "engineering_repair_r2": {
+    "failed_run": "sparse_high_task_progress_canary_v1_17940941_20260918T111911340609851Z",
+    "failed_job_id": 17940941,
+    "observed_fact": "R1 removed the exact periodic-faulthandler crash signature and completed eight of twelve bounded PPO iterations, with 160 of 240 optimizer steps durably reported. During the ninth rollout, step called _reset_idx for terminal slots and raised RuntimeError: ContactSensor history did not reset. This was an engineering failure before final training or fixed evaluation, not a behavioral result; no partial R1 checkpoint is a continuation parent.",
+    "root_cause": "IsaacLab ContactSensor.reset did clear the selected cached force buffers, but SensorBase.reset also marked those slots outdated. The immediate reset-time check then accessed the public ContactSensor.data property before another physics step. That lazy property refreshed from the still-current previous-episode PhysX contact view and wrote the old terminal contact back into the newly cleared history. The verifier read itself therefore recreated the nonzero history that it reported as a reset failure.",
+    "ball_z_sibling_risk": "The same reset boundary also copied each selected ball's live pre-reset world z into its next reset pose. A terminal airborne or displaced z could therefore leak across episodes even though reset x/y, velocity and serial changed. This sibling risk was found statically in the failed path; it is not claimed as the observed cause of job 17940941, but it must be closed by the same atomic reset repair and physical probe rather than deferred to another training attempt.",
+    "falsifiable_hypothesis": "An atomic reset boundary that installs the canonical reset pose including ball z, resets every contact sensor consumed by V56 after the pose writes, verifies only cached reset state without triggering lazy data refresh, and permits the first public force read only after normal physics should survive a real nonzero-contact subset reset without cross-episode force or height leakage.",
+    "smallest_isolated_change": "Repair only the V56 reset transaction and add its bounded pre-training engineering probe. Preserve the declared V14 x/y/yaw sampling distribution while restoring canonical ball z/quaternion/velocity; do not change task observations, command mapping, reward, terminal thresholds or precedence, recurrent policy, PPO configuration, optimizer budget, fixed cases, scientific gates or decision tokens.",
+    "unchanged_invariants": [
+      "exact V55 parent and qualified frozen-low identities",
+      "V14 x/y/yaw reset samples, serial allocation and full distribution",
+      "10 Hz high commands and five 50 Hz low-control ticks",
+      "same-tick terminal evidence frozen before reset",
+      "task-progress and strict-terminal reward formulas and support thresholds",
+      "twelve PPO iterations, twenty Adam steps per iteration and 240 total steps",
+      "initial and final 288-case fixed evaluations including 36 hard cases",
+      "all original independent checker and no-long-training decision boundaries"
+    ],
+    "pre_training_probe_gate": {
+      "position": "One bounded child in the same Slurm transaction after exact source/task/low checks and before initial fixed evaluation, fresh high-policy construction or PPO optimizer construction.",
+      "pass": "The probe must first establish an actual nonzero robot-ball PhysX contact, then reset selected live slots through the repaired _reset_idx path. Selected ball/base cached current and history buffers must be cleared without any reset-time public ContactSensor.data read, unselected slots must remain unchanged, ball z and the complete live reset pose must match the canonical new sample, sensor refresh must occur only after the next normal physics step, and no previous-episode ball contact may survive that refresh. A durable summary and PASS guard must bind the exact source, task and low identities.",
+      "fail": "Any missing physical-contact precondition, cached reset mismatch, lazy pre-physics read, ball-z inheritance, selected/unselected corruption, post-physics refresh failure or missing durable receipt is an engineering RC-nonzero stop before evaluation, fresh high PPO or checkpoint creation. Do not interpret it behaviorally and do not start the full canary."
+    },
+    "outcome_actions": {
+      "probe_reject": "Preserve the bounded probe evidence and repair the reset hypothesis before another full transaction; do not consume a training budget.",
+      "probe_pass_then_same_reset_failure": "Reject this R2 hypothesis as incomplete and stop for read-only attribution; do not make a fourth blind submission.",
+      "probe_pass_then_other_engineering_failure": "Preserve the one-job evidence and diagnose the new failure read-only before changing another mechanism.",
+      "closed_terminal_branch": "Interpret only the original V56 scientific gates after all twelve iterations, 240 optimizer steps when authorized by reward support, fresh final fixed evaluation and original independent guards close. R2 itself adds no behavioral authorization."
+    }
+  },
+  "engineering_repair_r3": {
+    "failed_run": "sparse_high_task_progress_canary_v1_17943801_20260918T121821021175688Z",
+    "failed_job_id": 17943801,
+    "failed_phase": "contact_reset_lifecycle_probe",
+    "observed_fact": "The R2 transaction passed the exact source-manifest gate and entered the pre-training contact-reset lifecycle probe, but _establish_actual_contact raised before sentinel injection and before any call to _reset_idx. Its final selected-slot readings were only 0.006549851968884468 N from the ball-side filtered matrix and 0.005206768400967121 N from the robot base-body sensor, below the unchanged 1 N contact threshold. The wrapper closed with process RC 2, probe child RC 92, zero PPO optimizer steps, no iteration-progress artifact and LONG_TRAINING_AUTHORIZED=NO.",
+    "strict_scope": "Job 17943801 rejected only the probe's base-center contact-manufacturing precondition. Because _reset_idx was never executed, this run neither exercised nor falsified the R2 atomic reset repair, selected/unselected cache clearing, canonical ball state, or first post-reset refresh.",
+    "falsifiable_hypothesis": "The reset hypothesis can be tested without changing its production implementation by replacing only the unqualified base-center contact fixture with the already-qualified calf-center fixture on the unchanged exact 19-body soccer contact interface. A real same-tick, same-calf witness in both the ball-side filtered pair force and robot-side net force, followed immediately by the real selected-slot reset and a one-physics-tick history check, will distinguish reset leakage from contact-fixture failure.",
+    "smallest_isolated_change": "Change only the bounded probe, its evidence schema/checker and transaction gate. Reuse the calf-center positive-contact construction qualified by job 16315309, where all four calf bodies produced 148--160 N in their expected exact filter slots. Manufacture contact with ball state writes and raw physics only, independent of the learned low actor, low_env.step and action-manager processing. Do not change the 1 N task threshold and do not add a collision sweep to the acceptance path; any sweep is diagnostic-only after a preserved calf-fixture failure.",
+    "unchanged_invariants": [
+      "production current_task_progress_env.py bytes and reset implementation",
+      "production CONTRACT.json, task/reward/observation/action and terminal semantics bytes",
+      "exact V55 parent and qualified frozen-low checkpoint/module-state identities",
+      "PPO seed, recurrent policy, optimizer hyperparameters, twelve-iteration budget and 240-step ceiling",
+      "initial and final seed75001 288-case fixed evaluations including 36 named hard cases",
+      "reward-support reconstruction, behavioral thresholds, independent final decisions and no-long-training boundary",
+      "no continuation or evaluation from any partial checkpoint produced by jobs 17939578 or 17940941"
+    ],
+    "pre_training_probe_gate": {
+      "position": "The repaired probe remains one bounded fresh child in the same Slurm transaction after exact source/task/low checks and before initial fixed evaluation, fresh high-policy construction or PPO optimizer construction.",
+      "physical_contact_lane": "For selected slots, place the ball center at a predeclared live calf-body center, zero ball velocity, and advance only bounded raw physics ticks. On one and the same tick and calf/filter index, every accepted slot must have robot_ball_contact.force_matrix_w norm >= 1 N and contact_forces.net_forces_w norm >= 1 N. Current-frame, per-slot values are authoritative; history maxima, different ticks, different robot bodies, ball displacement and millinewton noise cannot satisfy the gate. After the witnessed tick, call the real _reset_idx immediately without overwriting the selected physical force caches with sentinels.",
+      "immediate_cache_and_raw_view_lane": "Before any public ContactSensor.data access, require the selected private current/history/timer caches to be exactly cleared, lifecycle metadata reset and marked outdated, unselected slots bit-exact, and the complete selected ball root state to equal canonical default state plus the new sampled XY. Snapshot those private caches, query the raw PhysX contact views, then snapshot again and require the two private snapshots to be bit-exact. Raw-view force values are recorded for attribution only: either a stale nonzero prior-frame view or an already-cleared view is legal and neither value determines PASS.",
+      "one_tick_lane": "With no intervening public sensor read, advance exactly one raw physics tick and only then access the public sensor data. Require finite current data, fresh metadata with timestamps advanced by exactly one physics dt, and exact-zero history tails after index zero for both the four-frame ball history and three-frame robot history. A four-tick low_env.step cannot prove this boundary because it can roll an illicit pre-physics sample completely out of both histories.",
+      "sentinel_lane": "Separately from the real-contact lane, inject distinct per-field and per-slot sentinels and exercise both vectorized partial and full resets. Require selected exact clearing, unselected exact preservation, metadata reset and complete canonical ball root state. This lane provides exhaustive cache coverage but cannot substitute for the physical-contact lane.",
+      "production_integration_lane": "After the one-tick causal check, use a separate fresh-reset lane for one normal frozen-low low_env.step. This checks production integration, finiteness and sensor freshness only; its four internal physics ticks are not first-refresh evidence.",
+      "fail": "Any missing same-tick same-calf force witness, cache mutation caused by the raw-view query, selected clear failure, unselected mutation, canonical-state mismatch, one-tick history leak, production integration failure or missing durable trace is an engineering RC-nonzero stop with PPO_OPTIMIZER_STEPS=0 before evaluation, policy construction, optimizer construction or training.",
+      "pass": "Only a durable independently checked PASS for every lane authorizes the same job to start the unchanged initial fixed evaluation and a completely fresh V56 transaction. Probe integrity alone is not behavioral evidence and never authorizes long training."
+    },
+    "outcome_actions": {
+      "probe_reject": "Preserve the per-tick force/body/filter, private-cache, raw-view and first-refresh trace and stop with zero PPO steps. Diagnose that exact evidence; do not lower the contact threshold or start a separate training job.",
+      "probe_pass": "Proceed only within the same evidence-closed job through the unchanged initial evaluation, reward-support gate, fresh bounded PPO when supported, final evaluation and terminal guards.",
+      "partial_reuse_forbidden": "Never load, continue, score as a candidate, or otherwise reuse a partial checkpoint from any failed V56 transaction. Every authorized training attempt starts from the declared fresh high initialization and exact frozen low."
+    }
+  },
+  "engineering_repair_r4": {
+    "failed_job_id": 17944428,
+    "failed_phase": "contact_reset_lifecycle_probe",
+    "elapsed_seconds_approx": 41,
+    "actual_accepted_body_names": [
+      "base", "FL_hip", "FR_hip", "Head_upper", "RL_hip", "RR_hip",
+      "FL_thigh", "FR_thigh", "Head_lower", "RL_thigh", "RR_thigh",
+      "FL_calf", "FR_calf", "RL_calf", "RR_calf",
+      "FL_foot", "FR_foot", "RL_foot", "RR_foot"
+    ],
+    "actual_live_body_names": [
+      "base", "FL_hip", "FR_hip", "Head_upper", "RL_hip", "RR_hip",
+      "FL_thigh", "FR_thigh", "Head_lower", "RL_thigh", "RR_thigh",
+      "FL_calf", "FR_calf", "RL_calf", "RR_calf",
+      "FL_foot", "FR_foot", "RL_foot", "RR_foot"
+    ],
+    "actual_base_contact_body_names": [
+      "base", "FL_hip", "FL_thigh", "FL_calf", "FL_foot",
+      "FR_hip", "FR_thigh", "FR_calf", "FR_foot",
+      "Head_upper", "Head_lower",
+      "RL_hip", "RL_thigh", "RL_calf", "RL_foot",
+      "RR_hip", "RR_thigh", "RR_calf", "RR_foot"
+    ],
+    "observed_fact": "R3 job 17944428 stopped after about 41 seconds while constructing and checking the live contact-contract receipt, before any calf contact trial. The receipt showed that accepted_body_names and live_body_names were the exact accepted 19-name ordered array, while base_contact_body_names contained the same 19 unique names in a different deterministic grouped order. The positional-order assertion therefore rejected a valid live ContactSensor enumeration. No call to _reset_idx occurred, no high policy or optimizer was constructed and PPO optimizer steps remained zero.",
+    "strict_scope": "Job 17944428 falsified only the probe's assumption that articulation bodies, ball-side exact filters and the robot-side ContactSensor share one positional index. It did not exercise or falsify calf contact acquisition, the R2 atomic reset implementation, selected or unselected cache clearing, canonical ball state, the one-tick refresh lane, PPO or task behavior.",
+    "root_cause": "The R3 probe collapsed three distinct live namespaces into one integer: env.robot.body_names for the calf pose, the accepted robot_ball_contact filter order for the ball-side pair force, and env.base_contact.body_names for the robot-side net force. Job 16315309 qualified the articulation-name to exact ball-filter mapping; it neither asserted nor needed the independently enumerated base ContactSensor body order. The 75 static tests used synthetic arrays copied from the accepted contract, so they proved fail-closed positional logic but could not discover the live simulator's different base-sensor ordering.",
+    "falsifiable_hypothesis": "If each calf is joined by name across the three independently indexed interfaces, then the already-qualified physical fixture can be evaluated without weakening identity or force evidence. For every candidate, resolve and record a robot_body_index from live_body_names, a ball_filter_index from accepted_body_names and a base_sensor_body_index from base_contact_body_names; use each index only with its own tensor. A same-tick >=1 N witness in both sensors must still name the same calf in every selected slot.",
+    "smallest_isolated_change": "Change only the bounded probe, its v2 evidence/checker and closure tests to replace positional equality with an exact, unique, name-based three-index join. Keep accepted_body_names and live_body_names exactly ordered as qualified; require base_contact_body_names to be a duplicate-free permutation of the same exact 19-name set. Do not alter the production environment, reset implementation, contract, reward, observation, action, terminal logic, PPO, fixed evaluator, 1 N threshold, raw-physics contact construction or any behavioral decision.",
+    "unchanged_invariants": [
+      "production current_task_progress_env.py and atomic reset bytes",
+      "production CONTRACT.json, task, reward, observation, action and terminal bytes",
+      "exact V55 parent and frozen-low checkpoint and module-state identities",
+      "same-tick dual-sensor force threshold of 1 N for every selected slot",
+      "one-tick raw refresh, private-cache nonmutation, canonical 13D state and sentinel requirements",
+      "PPO seed, hyperparameters, twelve-iteration and 240-step ceiling, fixed evaluations and final decisions",
+      "zero reuse of any partial checkpoint from jobs 17939578, 17940941, 17943801 or 17944428"
+    ],
+    "pre_training_probe_gate": {
+      "contract_mapping": "Before physics, durably record all three actual name arrays and independently reconstruct the three indices for each calf. accepted_body_names and live_body_names must equal the qualified 19-name order exactly. base_contact_body_names must have length 19, contain no duplicate and have exactly the same name set; its order is not required to equal either other interface. Every serialized index must map back to the serialized candidate name in its own array.",
+      "physical_contact_lane": "Use robot_body_index only to place the ball at the live calf, ball_filter_index only for robot_ball_contact.force_matrix_w and base_sensor_body_index only for contact_forces.net_forces_w. Preserve the R3 requirement that all selected slots exceed 1 N in both current-frame readings on one and the same raw-physics tick for the same calf name.",
+      "remaining_lanes": "After the witnessed tick, retain without weakening the immediate real _reset_idx, selected exact private clearing, unselected bit-exact preservation, complete canonical 13D ball state, raw-view cache nonmutation, exactly-one-tick history-tail check, independent normal-low integration and separate partial/full sentinel lanes.",
+      "fail": "Any missing, duplicate or extra name, non-reconstructible index, cross-name or cross-tick force witness, reset or refresh failure, or missing durable trace is an engineering RC-nonzero stop with PPO_OPTIMIZER_STEPS=0 before evaluation, policy construction, optimizer construction or training.",
+      "pass": "Only an independently reconstructed PASS for the name mapping and every unchanged R3 lane may allow the same job to enter the completely fresh original V56 transaction. R4 remains an engineering repair and supplies no behavioral or long-training authorization."
+    },
+    "outcome_actions": {
+      "mapping_reject": "Preserve the three actual arrays and reconstructed per-calf indices, stop with zero PPO steps and diagnose the exact live interface; do not restore positional indexing or lower the force threshold.",
+      "probe_reject_after_mapping": "Preserve the per-tick dual-sensor and reset-lifecycle evidence and diagnose that newly reached lane before any further submission.",
+      "probe_pass": "Proceed only inside the same evidence-closed job through the unchanged fresh initial evaluation, reward-support gate, conditional bounded PPO, final evaluation and terminal guards.",
+      "partial_reuse_forbidden": "Never load, continue or evaluate a checkpoint from job 17944428 or any earlier failed V56 transaction."
+    }
+  },
+  "long_training_authorized": false
+}

@@ -1,6 +1,7 @@
-# Robot Soccer: Reference + Full Training Core
+# Robot Soccer: Weekly Training Start
 
-This directory is the concise runnable version of the no-Kick training code.
+This directory is this week's shared starting point for the no-Kick training
+code. It contains only the current Reference + Full training implementation.
 It keeps the environment, policy, PPO loop, fixed evaluation, and the metrics
 needed to diagnose training. Deployment-specific orchestration and raw rollout
 dumps are intentionally outside this package.
@@ -25,7 +26,7 @@ dumps are intentionally outside this package.
   rate `3e-4`, entropy coefficient `0.03`, gamma `0.997`, lambda `0.98`, five
   epochs, and four minibatches.
 
-The reported experiment used a pre-action high-policy checkpoint with a fresh
+The current baseline uses a pre-action high-policy checkpoint with a fresh
 optimizer. It did **not** warm-start from a Reference-trained checkpoint and it
 did **not** use a staged curriculum. A future Reference-to-Full transfer test
 must therefore be implemented as a separate experiment, not silently folded
@@ -39,10 +40,6 @@ runtime_project/        Isaac Lab task registration and scene configuration
 cluster/                minimal Slurm launch examples
 tests/                  focused behavior and logging tests
 ```
-
-The sibling `robot_soccer_reference_full_v1` directory is the byte-preserving
-research snapshot. This directory is a curated equivalent intended for code
-review; it is not a byte-identical provenance artifact.
 
 ## Requirements
 

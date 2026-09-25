@@ -1,0 +1,16 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+checkpoints/
+runs/
+videos/
+*.pt
+*.pth
+*.ckpt
+*.mp4
+*.log
+*.jsonl
+*.tar
+*.tar.gz
+tensorboard/

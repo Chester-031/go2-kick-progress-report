@@ -10,19 +10,30 @@ that edge one step outward and one at or below ``low_threshold`` moves it
 one step inward.  Ranges therefore grow where the policy copes and shrink
 where it does not, each knob on its own.
 
-The three knobs are the task axes of the reset: the ball's distance from
-the goal it is to be scored in, the robot's distance from the ball, and
-the robot's facing error to the ball (0: looking at the ball, 180: looking
-straight away).  Every range starts as a single point, an easy start
-close to the goal, and is clamped to the knob's limits, which keep every
-combination on the field.  Everything else about a start is drawn the
-same way at every difficulty (``reset_geometry``).
+The four knobs are the task axes of a start: the ball's distance from the
+centre of the goal it is to be scored in, the robot's distance from the
+ball, where the robot stands around the ball (0: straight behind it, in
+line with the goal; 180: between the ball and the goal) and the robot's
+facing error to the ball (0: looking at it; 180: looking straight away).
+Every range starts as a single point at the easiest start: the ball a
+hand's width from the goal, the robot right behind it looking at it and
+at the goal, so that even a policy that only flails sometimes pushes the
+ball in.  Steps grow with distance from the start (``ADRParameter.step_at``):
+while the robot is still learning to stand and walk, the task moves by a
+few centimetres or degrees at a time; once it can reach and push the
+ball, the ranges open in large steps.
 
-A small share of episodes are fixed-difficulty episodes instead
-(``difficulty_ranges``): difficulty d spans each knob from its start
-value d of the way out to its limits.  Those ranges depend on d alone, so
-their goal rate compares across runs and over training, unlike the goal
-rate of training episodes, whose task keeps changing.
+Some knob combinations cannot fit on the field (the robot 2 m on the goal
+side of a ball 0.3 m from the goal).  Such starts are redrawn: every knob
+except a probe's pinned one, and the free choices.  A probe whose pinned
+value admits no start on the field with the current ranges becomes a
+training episode instead.
+
+A small share of episodes are fixed-difficulty episodes
+(``difficulty_ranges``): difficulty d spans each knob from its start value
+d of the way out to its limits.  Those ranges depend on d alone, so their
+goal rate compares across runs and over training, unlike the goal rate
+of training episodes, whose task keeps changing.
 
 ``AutomaticDomainRandomization`` is the environment's reset sampler: every
 start it hands out carries tags (``adr_kind``, ``adr_parameter``,
@@ -40,7 +51,7 @@ from typing import Any, Mapping, Sequence
 import torch
 
 from .resets import ResetBatch
-from .rewards import GOAL_CENTER_X_M
+from .task_limits import GOAL_CENTER_X_M
 
 LOWER, UPPER = 0, 1
 EPISODE_KINDS = ("train", "probe", "evaluation")
@@ -49,43 +60,57 @@ TRAIN, PROBE, EVALUATION = range(len(EPISODE_KINDS))
 
 @dataclass(frozen=True)
 class ADRParameter:
-    """One knob: its valid limits, the starting value and the step per
-    edge move."""
+    """One knob: its valid limits, its starting value, and the step of an
+    edge move, which grows linearly from ``min_step`` at the start value to
+    ``max_step`` at the limit on that side."""
 
     name: str
     minimum: float
     maximum: float
     start: float
-    step: float
+    min_step: float
+    max_step: float
+
+    def step_at(self, edge: float) -> float:
+        """How far an edge currently at ``edge`` moves in one step."""
+
+        limit = self.maximum if edge >= self.start else self.minimum
+        span = abs(limit - self.start)
+        progress = min(1.0, abs(edge - self.start) / span) if span > 0.0 else 0.0
+        return self.min_step + (self.max_step - self.min_step) * progress
 
 
 PARAMETERS = (
     # Ball to the centre of the goal it is to be scored in.
-    ADRParameter("ball_goal_distance_m", 0.5, 6.0, 1.0, 0.25),
-    # Robot base to ball.
-    ADRParameter("robot_ball_distance_m", 0.5, 2.3, 0.8, 0.1),
+    ADRParameter("ball_goal_distance_m", 0.15, 6.0, 0.25, 0.02, 0.5),
+    # Robot base to ball (0.45 m: the robot's nose at the ball).
+    ADRParameter("robot_ball_distance_m", 0.4, 2.3, 0.45, 0.02, 0.25),
     # Robot heading versus the bearing to the ball (either side).
-    ADRParameter("facing_error_deg", 0.0, 180.0, 0.0, 10.0),
+    ADRParameter("facing_error_deg", 0.0, 180.0, 0.0, 2.0, 20.0),
+    # Where the robot stands around the ball, from straight behind it.
+    ADRParameter("robot_bearing_deg", 0.0, 180.0, 0.0, 2.0, 20.0),
 )
 PARAMETER_INDEX = {parameter.name: index for index, parameter in enumerate(PARAMETERS)}
 
-# The free choices of a start, the same at every difficulty: the ball sits
-# within a degree of the goal's centre line, and the robot sits beside and
-# behind it, 122-136 degrees around the ball from the ball-to-goal
-# direction, on either side.  With the knob limits above this keeps the
-# robot and the ball inside |x| <= 3.65, |y| <= 2.15.
+# The ball sits within a degree of the goal's centre line, on either side.
 BALL_LATERAL_DEG = (0.1, 1.0)
-ROBOT_ORBIT_DEG = (122.0, 136.0)
+# A start is on the field when |x| and |y| are within these (metres).
+ROBOT_FIELD_LIMIT_XY = (3.65, 2.15)
+BALL_FIELD_LIMIT_XY = (3.97, 2.15)
+# Redraw rounds before an unplaceable start falls back.
+_PLACEMENT_ROUNDS = 64
 # Widths below this count as this for the entropy, so a point is finite.
 _ENTROPY_FLOOR = 1.0e-3
 
 
-def reset_geometry(values: torch.Tensor, generator: torch.Generator) -> ResetBatch:
-    """Episode starts realizing ``values`` (``[n,3]`` in PARAMETERS order).
+def reset_geometry(values: torch.Tensor, generator: torch.Generator) -> tuple[ResetBatch, torch.Tensor]:
+    """Episode starts realizing ``values`` (``[n,4]`` in PARAMETERS order)
+    and whether each lies on the field.
 
     The goal side, the ball's small lateral angle around the goal centre,
-    the robot's position around the ball and which way it turns away from
-    the ball are drawn here, uniformly, from ``generator``.
+    and which side of the ball the robot stands and turns to are drawn
+    here, uniformly, from ``generator``.  The geometry is exact even when a
+    start does not fit; the caller decides what to do with those.
     """
 
     count = values.shape[0]
@@ -93,32 +118,44 @@ def reset_geometry(values: torch.Tensor, generator: torch.Generator) -> ResetBat
     ball_goal = values[:, PARAMETER_INDEX["ball_goal_distance_m"]]
     robot_ball = values[:, PARAMETER_INDEX["robot_ball_distance_m"]]
     facing = torch.deg2rad(values[:, PARAMETER_INDEX["facing_error_deg"]])
-
-    def uniform(bounds: tuple[float, float]) -> torch.Tensor:
-        low, high = (math.radians(bound) for bound in bounds)
-        return low + (high - low) * torch.rand(count, generator=generator, dtype=torch.float64)
+    bearing = torch.deg2rad(values[:, PARAMETER_INDEX["robot_bearing_deg"]])
 
     def sign() -> torch.Tensor:
         return torch.randint(0, 2, (count,), generator=generator, dtype=torch.float64) * 2.0 - 1.0
 
+    low, high = (math.radians(bound) for bound in BALL_LATERAL_DEG)
     goal_side = sign()
-    lateral = sign() * uniform(BALL_LATERAL_DEG)
-    orbit = sign() * uniform(ROBOT_ORBIT_DEG)
-    facing_sign = sign()
+    lateral = sign() * (low + (high - low) * torch.rand(count, generator=generator, dtype=torch.float64))
     goal_x = goal_side * GOAL_CENTER_X_M
     ball_x = goal_x - goal_side * ball_goal * torch.cos(lateral)
     ball_y = ball_goal * torch.sin(lateral)
-    bearing = torch.atan2(-ball_y, goal_x - ball_x) + orbit
-    robot_x = ball_x + robot_ball * torch.cos(bearing)
-    robot_y = ball_y + robot_ball * torch.sin(bearing)
+    # Straight behind the ball is the direction from the goal centre through it.
+    behind = torch.atan2(ball_y, ball_x - goal_x)
+    around = behind + sign() * bearing
+    robot_x = ball_x + robot_ball * torch.cos(around)
+    robot_y = ball_y + robot_ball * torch.sin(around)
     to_ball = torch.atan2(ball_y - robot_y, ball_x - robot_x)
-    yaw = to_ball + facing_sign * facing
-    return ResetBatch(
+    yaw = to_ball + sign() * facing
+    legal = (
+        (robot_x.abs() <= ROBOT_FIELD_LIMIT_XY[0])
+        & (robot_y.abs() <= ROBOT_FIELD_LIMIT_XY[1])
+        & (ball_x.abs() <= BALL_FIELD_LIMIT_XY[0])
+        & (ball_y.abs() <= BALL_FIELD_LIMIT_XY[1])
+    )
+    batch = ResetBatch(
         robot_xy=torch.stack((robot_x, robot_y), dim=1).float(),
         robot_yaw=torch.atan2(torch.sin(yaw), torch.cos(yaw)).float(),
         ball_xy=torch.stack((ball_x, ball_y), dim=1).float(),
         goal_side=goal_side.long(),
     )
+    return batch, legal
+
+
+def _merge(into: ResetBatch, rows: torch.Tensor, other: ResetBatch) -> None:
+    into.robot_xy[rows] = other.robot_xy
+    into.robot_yaw[rows] = other.robot_yaw
+    into.ball_xy[rows] = other.ball_xy
+    into.goal_side[rows] = other.goal_side
 
 
 class AutomaticDomainRandomization:
@@ -157,11 +194,13 @@ class AutomaticDomainRandomization:
         # Probe results not yet decided on: [parameter, edge] -> (count, successes).
         self._buffer_count = torch.zeros(len(PARAMETERS), 2, dtype=torch.long)
         self._buffer_successes = torch.zeros(len(PARAMETERS), 2, dtype=torch.long)
-        # Since the last ``take_period_metrics``: results recorded and edge
-        # moves per [parameter, edge] (+1 outward, -1 inward).
+        # Since the last ``take_period_metrics``: results recorded, edge moves
+        # per [parameter, edge] (+1 outward, -1 inward) and probes that could
+        # not be placed on the field.
         self._period_results = torch.zeros(len(PARAMETERS), 2, dtype=torch.long)
         self._period_successes = torch.zeros(len(PARAMETERS), 2, dtype=torch.long)
         self._period_moves = torch.zeros(len(PARAMETERS), 2, dtype=torch.long)
+        self._period_unplaced_probes = torch.zeros(len(PARAMETERS), 2, dtype=torch.long)
 
     def ranges(self) -> torch.Tensor:
         """A copy of the current ``[low, high]`` per knob, in PARAMETERS order."""
@@ -219,17 +258,41 @@ class AutomaticDomainRandomization:
             fixed = torch.stack([self.difficulty_ranges(float(value)) for value in difficulty[evaluation]])
             low[evaluation] = fixed[:, :, 0]
             high[evaluation] = fixed[:, :, 1]
-        values = low + (high - low) * torch.rand(count, len(PARAMETERS), generator=generator, dtype=torch.float64)
-
         parameter = torch.randint(0, len(PARAMETERS), (count,), generator=generator)
         edge = torch.randint(0, 2, (count,), generator=generator)
         probe = kind == PROBE
         rows = torch.nonzero(probe).flatten()
-        values[rows, parameter[rows]] = self._ranges[parameter[rows], edge[rows]]
+        # A probe's range for its pinned knob is the edge itself.
+        pinned = self._ranges[parameter[rows], edge[rows]]
+        low[rows, parameter[rows]] = pinned
+        high[rows, parameter[rows]] = pinned
+
+        values = low + (high - low) * torch.rand(count, len(PARAMETERS), generator=generator, dtype=torch.float64)
+        batch, legal = reset_geometry(values, generator)
+        for _ in range(_PLACEMENT_ROUNDS):
+            if bool(legal.all()):
+                break
+            redo = torch.nonzero(~legal).flatten()
+            values[redo] = low[redo] + (high[redo] - low[redo]) * torch.rand(
+                redo.numel(), len(PARAMETERS), generator=generator, dtype=torch.float64
+            )
+            redone, redone_legal = reset_geometry(values[redo], generator)
+            _merge(batch, redo, redone)
+            legal[redo] = redone_legal
+        if not bool(legal.all()):
+            # Unplaceable probes become training episodes; anything still off
+            # the field starts at the start values, which always fit.
+            stuck = ~legal
+            for index, side in zip(parameter[stuck & probe].tolist(), edge[stuck & probe].tolist()):
+                self._period_unplaced_probes[index, side] += 1
+            kind[stuck & probe] = TRAIN
+            redo = torch.nonzero(stuck).flatten()
+            values[redo] = torch.tensor([p.start for p in PARAMETERS], dtype=torch.float64)
+            redone, _ = reset_geometry(values[redo], generator)
+            _merge(batch, redo, redone)
+        probe = kind == PROBE
         parameter[~probe] = -1
         edge[~probe] = -1
-
-        batch = reset_geometry(values, generator)
         batch.tags.update(
             {
                 "adr_kind": kind,
@@ -281,17 +344,11 @@ class AutomaticDomainRandomization:
         parameter = PARAMETERS[index]
         low, high = self._ranges[index].tolist()
         if edge == UPPER:
-            high = (
-                min(parameter.maximum, high + parameter.step)
-                if direction > 0
-                else max(low, high - parameter.step)
-            )
+            step = parameter.step_at(high)
+            high = min(parameter.maximum, high + step) if direction > 0 else max(low, high - step)
         else:
-            low = (
-                max(parameter.minimum, low - parameter.step)
-                if direction > 0
-                else min(high, low + parameter.step)
-            )
+            step = parameter.step_at(low)
+            low = max(parameter.minimum, low - step) if direction > 0 else min(high, low + step)
         moved = [low, high] != self._ranges[index].tolist()
         self._ranges[index] = torch.tensor([low, high], dtype=torch.float64)
         return moved
@@ -303,11 +360,9 @@ class AutomaticDomainRandomization:
         return float(torch.log(widths).mean())
 
     def take_period_metrics(self) -> dict[str, Any]:
-        """The ranges now, plus probe results and edge moves since the last
-        call (one call per training iteration), then reset the period.
-
-        Per knob: ``low``/``high``, and per edge the number of probe
-        results, their success rate and the net edge moves.
+        """The ranges now, plus probe results, edge moves and unplaceable
+        probes since the last call (one call per training iteration), then
+        reset the period.
         """
 
         knobs = {}
@@ -323,11 +378,13 @@ class AutomaticDomainRandomization:
                     ),
                     "moves": int(self._period_moves[index, edge]),
                     "buffered": int(self._buffer_count[index, edge]),
+                    "unplaced_probes": int(self._period_unplaced_probes[index, edge]),
                 }
             knobs[parameter.name] = knob
         self._period_results.zero_()
         self._period_successes.zero_()
         self._period_moves.zero_()
+        self._period_unplaced_probes.zero_()
         return {"entropy": self.entropy(), "knobs": knobs}
 
     def state_dict(self) -> dict[str, Any]:

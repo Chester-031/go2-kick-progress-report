@@ -21,7 +21,8 @@ from .commands import CommandSurface
 from .config import FieldGeometry, POLICY_ACTION_DIM, POLICY_OBSERVATION_DIM
 from .native_safe_joint_action import NativeSafeJointPositionAction
 from .contact import ROBOT_BODY_NAMES, validate_live_robot_body_names
-from .rewards import (
+from .shaping import PotentialShaping, ShapingState
+from .task_limits import (
     BALL_SIDE_BOUNDARY_M,
     BASE_FALL_FORCE_THRESHOLD_N,
     CONTACT_FORCE_THRESHOLD_N,
@@ -30,8 +31,6 @@ from .rewards import (
     ROBOT_FIELD_HALF_LENGTH_M,
     ROBOT_FIELD_HALF_WIDTH_M,
     TERMINAL_GOAL_HALF_WIDTH_M,
-    torch_progress,
-    torch_task_geometry,
 )
 
 
@@ -45,6 +44,8 @@ TRUE_CONTACT_FORCE_THRESHOLD_N = CONTACT_FORCE_THRESHOLD_N
 # events happen on one tick the earliest listed wins: a goal is only a goal
 # if nothing unsafe happened on that tick.
 OUTCOMES = ("goal", "own_goal", "fall", "boundary", "joint_hard_limit", "timeout")
+# The shaping potentials, in the order of the per-episode shaping columns.
+SHAPING_COMPONENTS = ("ball_goal", "robot_ball", "base_height", "upright")
 
 
 def extract_policy_tensor(value: Any) -> torch.Tensor:
@@ -149,6 +150,12 @@ class CurrentTaskProgressHighGoalEnv:
     The 20 s horizon is a true finite horizon, so the RSL adapter exposes
     no ``time_outs`` and PPO never bootstraps across it.
 
+    The reward is +1 for a goal, -1 for an own goal, plus the
+    potential-based shaping of ``shaping`` between the state before the
+    held action and the state it ended in (the terminal tick's state for a
+    slot that terminated), with no potential after any terminal
+    transition, timeout included.
+
     Where each episode starts comes from ``reset_sampler`` (see
     ``resets.ResetBatch``); the environment only writes those poses and
     carries the batch's tags into the finished-episode records.  Finished
@@ -170,6 +177,7 @@ class CurrentTaskProgressHighGoalEnv:
         low_env: FrozenLowInferenceEnv,
         frozen_low_actor: torch.nn.Module,
         reset_sampler: ResetSampler,
+        shaping: PotentialShaping,
         command_vertices: Sequence[Sequence[float]],
         command_axis_ranges: Sequence[Sequence[float]],
         command_rate_limits: Sequence[float],
@@ -224,6 +232,7 @@ class CurrentTaskProgressHighGoalEnv:
         self.cfg = SimpleNamespace(is_finite_horizon=True)
         self.geometry = geometry
         self.reset_sampler = reset_sampler
+        self.shaping = shaping
 
         self.command_surface = CommandSurface(
             vertices=command_vertices,
@@ -245,8 +254,10 @@ class CurrentTaskProgressHighGoalEnv:
         # Record the simulator state after each reset for episode metrics.
         self.live_reset_robot_xy_yaw = torch.zeros(self.num_envs, 3, device=self.device)
         self.live_reset_ball_xy = torch.zeros(self.num_envs, 2, device=self.device)
-        self.episode_initial_l_m = torch.zeros(self.num_envs, device=self.device)
-        self.episode_cumulative_progress = torch.zeros(self.num_envs, device=self.device)
+        # Undiscounted shaping collected so far this episode, in total and
+        # per potential (in SHAPING_COMPONENTS order).
+        self.episode_shaping_return = torch.zeros(self.num_envs, device=self.device)
+        self.episode_shaping_components = torch.zeros(self.num_envs, len(SHAPING_COMPONENTS), device=self.device)
         self.vector_steps = 0
 
         self._observation = torch.zeros(self.num_envs, self.num_obs, device=self.device)
@@ -304,7 +315,8 @@ class CurrentTaskProgressHighGoalEnv:
         self.first_contact_native_tick[ids] = -1
         self.episode_native_tick[ids] = 0
         self.episode_length_buf[ids] = 0
-        self.episode_cumulative_progress[ids] = 0.0
+        self.episode_shaping_return[ids] = 0.0
+        self.episode_shaping_components[ids] = 0.0
         if hasattr(self.base_env, "episode_length_buf"):
             self.base_env.episode_length_buf[ids] = 0
 
@@ -337,8 +349,6 @@ class CurrentTaskProgressHighGoalEnv:
         live_ball_xy = self.ball.data.root_pos_w[ids, :2] - origins[:, :2]
         self.live_reset_robot_xy_yaw[ids] = torch.cat((live_robot_xy, live_robot_yaw.unsqueeze(1)), dim=1)
         self.live_reset_ball_xy[ids] = live_ball_xy
-        initial_l, _, _, _ = torch_task_geometry(live_robot_xy, live_ball_xy, goal_side)
-        self.episode_initial_l_m[ids] = initial_l
         # Keep sensor resets last: reading sensor.data after them would
         # lazily restore the terminal contact of the previous episode.
         self.ball_contact.reset(ids)
@@ -393,6 +403,8 @@ class CurrentTaskProgressHighGoalEnv:
         pre_robot_xy = (self.robot.data.root_pos_w[:, :2] - self.env_origins[:, :2]).detach().clone()
         pre_ball_xy = (self.ball.data.root_pos_w[:, :2] - self.env_origins[:, :2]).detach().clone()
         pre_goal_side = self.goal_side.detach().clone()
+        pre_height = self.robot.data.root_pos_w[:, 2].detach().clone()
+        pre_up = -self.robot.data.projected_gravity_b[:, 2].detach().clone()
 
         applied_command, bounded_action = self.command_surface.limit(
             latent_action.detach().to(self.device), self.previous_command
@@ -420,6 +432,8 @@ class CurrentTaskProgressHighGoalEnv:
         post_hard_excess = torch.zeros(self.num_envs, device=self.device)
         post_guard_changed = torch.zeros(self.num_envs, dtype=torch.long, device=self.device)
         post_guard_max = torch.zeros(self.num_envs, device=self.device)
+        post_height = pre_height.clone()
+        post_up = pre_up.clone()
 
         for _low_tick in range(self.low_steps_per_high_action):
             tick_active = active.clone()
@@ -457,6 +471,8 @@ class CurrentTaskProgressHighGoalEnv:
             post_hard_excess = torch.where(tick_active, hard_excess, post_hard_excess)
             post_guard_changed = torch.where(tick_active, (guard > 1.0e-9).sum(dim=1), post_guard_changed)
             post_guard_max = torch.where(tick_active, guard.amax(dim=1), post_guard_max)
+            post_height = torch.where(tick_active, self.robot.data.root_pos_w[:, 2], post_height)
+            post_up = torch.where(tick_active, -self.robot.data.projected_gravity_b[:, 2], post_up)
             contact = contact_force >= TRUE_CONTACT_FORCE_THRESHOLD_N
             new_contact = contact & ~self.contact_seen & tick_active
             self.first_contact_native_tick = torch.where(
@@ -490,23 +506,23 @@ class CurrentTaskProgressHighGoalEnv:
         self.episode_length_buf += 1
         timeout = (self.episode_length_buf >= self.max_episode_length) & active
 
-        progress, _ = torch_progress(
-            pre_robot_xy,
-            pre_ball_xy,
-            post_robot_xy,
-            post_ball_xy,
-            pre_goal_side,
+        done = terminal_goal | terminal_own | terminal_boundary | terminal_fall | terminal_joint | timeout
+        goal_xy = torch.zeros_like(pre_robot_xy)
+        goal_xy[:, 0] = pre_goal_side.to(goal_xy.dtype) * GOAL_CENTER_X_M
+        shaping, components = self.shaping(
+            ShapingState(pre_robot_xy, pre_ball_xy, goal_xy, pre_height, pre_up),
+            ShapingState(post_robot_xy, post_ball_xy, goal_xy, post_height, post_up),
+            done,
         )
-        reward = progress + terminal_goal.to(progress.dtype) - terminal_own.to(progress.dtype)
+        reward = shaping + terminal_goal.to(shaping.dtype) - terminal_own.to(shaping.dtype)
         failed |= ~torch.isfinite(reward).all()
         if bool(failed):
             raise RuntimeError(
                 "step failed a safety check: non-finite low observation, action or reward, "
                 "a lost command, or a native termination"
             )
-        self.episode_cumulative_progress += progress
-
-        done = terminal_goal | terminal_own | terminal_boundary | terminal_fall | terminal_joint | timeout
+        self.episode_shaping_return += shaping
+        self.episode_shaping_components += torch.stack([components[name] for name in SHAPING_COMPONENTS], dim=1)
         done_ids = torch.nonzero(done, as_tuple=False).flatten()
         episodes: dict[str, torch.Tensor] = {}
         if done_ids.numel():
@@ -521,9 +537,6 @@ class CurrentTaskProgressHighGoalEnv:
                 )
             ):
                 outcome = torch.where(flag[done_ids], OUTCOMES.index(name), outcome)
-            final_l, _, _, _ = torch_task_geometry(
-                post_robot_xy[done_ids], post_ball_xy[done_ids], self.goal_side[done_ids]
-            )
             reset_ball = self.live_reset_ball_xy[done_ids]
             terminal_ball = post_ball_xy[done_ids]
             side = self.goal_side[done_ids]
@@ -538,9 +551,11 @@ class CurrentTaskProgressHighGoalEnv:
                 "terminal_base_contact_force_n": post_base_force[done_ids],
                 "terminal_joint_hard_limit_excess_rad": post_hard_excess[done_ids],
                 "native_safe_guard_max_correction_rad": post_guard_max[done_ids],
-                "initial_l_m": self.episode_initial_l_m[done_ids],
-                "final_l_m": final_l,
-                "cumulative_progress_reward": self.episode_cumulative_progress[done_ids],
+                "shaping_return": self.episode_shaping_return[done_ids],
+                **{
+                    f"shaping_{name}": self.episode_shaping_components[done_ids, index]
+                    for index, name in enumerate(SHAPING_COMPONENTS)
+                },
                 "requested_goal_axis_ball_displacement_m": side.to(torch.float32) * (terminal_ball[:, 0] - reset_ball[:, 0]),
                 "abs_lateral_ball_drift_m": (terminal_ball[:, 1] - reset_ball[:, 1]).abs(),
             }

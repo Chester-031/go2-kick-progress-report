@@ -40,6 +40,7 @@ from robot_soccer.config import (  # noqa: E402
     COMMAND_VERTICES,
 )
 from robot_soccer.resets import ResetBatch  # noqa: E402
+from robot_soccer.shaping import PotentialShaping, ShapingState, ShapingWeights  # noqa: E402
 
 FIXTURE = Path(__file__).parent / "fixtures" / "environment_characterization.json"
 NUM_ENVS = 24
@@ -71,9 +72,6 @@ COMPARED_FIELDS = (
     "episode_native_ticks",
     "terminal_robot_xy_m",
     "terminal_ball_xy_m",
-    "initial_l_m",
-    "final_l_m",
-    "cumulative_progress_reward",
     "requested_goal_axis_ball_displacement_m",
     "abs_lateral_ball_drift_m",
 )
@@ -174,6 +172,7 @@ def make_wrapper(low_env, actor):
         low_env=low_env,
         frozen_low_actor=actor,
         reset_sampler=ScriptedResetSampler(),
+        shaping=PotentialShaping(ShapingWeights(), gamma=0.997),
         command_vertices=COMMAND_VERTICES,
         command_axis_ranges=COMMAND_AXIS_RANGES,
         command_rate_limits=COMMAND_RATE_LIMITS_PER_SECOND,
@@ -214,6 +213,46 @@ class EnvironmentCharacterizationTest(unittest.TestCase):
             FIXTURE.write_text(json.dumps(result, indent=1, sort_keys=True) + "\n", encoding="utf-8")
         expected = json.loads(FIXTURE.read_text(encoding="utf-8"))
         assert_close(self, expected, result, "rollout")
+
+
+class ShapingInEnvironmentTest(unittest.TestCase):
+    def test_every_episode_discounts_to_minus_its_start_potential(self) -> None:
+        """Ng et al.'s invariance, end to end: for each finished episode the
+        discounted shaping reward (reward minus the +-1 goal terms) adds up
+        to -Phi(start state), so shaping cannot favour any behaviour."""
+
+        gamma = 0.997
+        base = FakeSoccerBaseEnv(NUM_ENVS)
+        env = make_wrapper(environment_module.FrozenLowInferenceEnv(FakeGymEnv(base)), frozen_low_actor())
+        observation = env.get_observations()
+        discounted = torch.zeros(NUM_ENVS, dtype=torch.float64)
+        age = torch.zeros(NUM_ENVS, dtype=torch.long)
+        checked = 0
+        for _ in range(STEPS):
+            observation, reward, done, extras = env.step(scripted_latent_action(observation))
+            episodes = extras["episodes"]
+            sparse = torch.zeros(NUM_ENVS, dtype=torch.float64)
+            done_ids = torch.nonzero(done).flatten()
+            if done_ids.numel():
+                sparse[done_ids] = episodes["goal"].double() - episodes["own_goal"].double()
+            discounted += gamma ** age.double() * (reward.double() - sparse)
+            age += 1
+            if done_ids.numel():
+                start = ShapingState(
+                    robot_xy=episodes["reset_robot_xy_m"],
+                    ball_xy=episodes["reset_ball_xy_m"],
+                    goal_xy=torch.stack(
+                        (episodes["goal_side"].float() * 4.11, torch.zeros(done_ids.numel())), dim=1
+                    ),
+                    base_height_m=torch.full((done_ids.numel(),), 0.30),
+                    up_z=torch.ones(done_ids.numel()),
+                )
+                expected = -env.shaping.potential(start).double()
+                self.assertLess(float((discounted[done_ids] - expected).abs().max()), 1e-3)
+                checked += int(done_ids.numel())
+                discounted[done_ids] = 0.0
+                age[done_ids] = 0
+        self.assertGreater(checked, 20)
 
 
 if __name__ == "__main__":

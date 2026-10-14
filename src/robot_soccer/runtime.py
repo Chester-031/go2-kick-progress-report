@@ -136,6 +136,7 @@ def make_environment(
     import isaac_go2_low_level_rl.tasks.manager_based.soccer  # noqa: F401
 
     from .env_cfg import SparseHighEnvCfg
+    from .shaping import PotentialShaping, ShapingWeights
     from .environment import (
         CurrentTaskProgressHighGoalEnv,
         CurrentTaskProgressHighRslAdapter,
@@ -167,6 +168,7 @@ def make_environment(
         low_env=FrozenLowInferenceEnv(gym_env),
         frozen_low_actor=actor,
         reset_sampler=reset_sampler,
+        shaping=PotentialShaping(ShapingWeights(), gamma=GAMMA),
         command_vertices=COMMAND_VERTICES,
         command_axis_ranges=COMMAND_AXIS_RANGES,
         command_rate_limits=COMMAND_RATE_LIMITS_PER_SECOND,

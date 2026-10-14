@@ -26,7 +26,7 @@ def synthetic_episodes(adr: AutomaticDomainRandomization, count: int, skill: flo
     values = batch.tags["adr_values"].double()
     minimum = torch.tensor([parameter.minimum for parameter in PARAMETERS], dtype=torch.float64)
     maximum = torch.tensor([parameter.maximum for parameter in PARAMETERS], dtype=torch.float64)
-    hardness = ((values - minimum) / (maximum - minimum) * torch.tensor([0.5, 0.2, 0.3], dtype=torch.float64)).sum(1)
+    hardness = ((values - minimum) / (maximum - minimum) * torch.tensor([0.45, 0.15, 0.2, 0.2], dtype=torch.float64)).sum(1)
     goal = torch.rand(count, generator=generator, dtype=torch.float64) < torch.sigmoid(8.0 * (skill - hardness))
     # Non-goals end as own goal, fall, boundary, joint limit or timeout.
     other = torch.multinomial(torch.tensor([0.04, 0.25, 0.25, 0.06, 0.40]), count, replacement=True,
@@ -40,7 +40,11 @@ def synthetic_episodes(adr: AutomaticDomainRandomization, count: int, skill: flo
         "own_goal": outcome == OUTCOME_NAMES.index("own_goal"),
         "contact_seen": contact,
         "unsafe_pre_goal": (outcome >= 1) & (outcome <= 4),
-        "cumulative_progress_reward": 0.3 * goal.double() + 0.05 * torch.rand(count, generator=generator),
+        "shaping_return": 0.3 * goal.double() + 0.05 * torch.rand(count, generator=generator),
+        "shaping_ball_goal": 0.25 * goal.double(),
+        "shaping_robot_ball": 0.05 * torch.rand(count, generator=generator, dtype=torch.float64),
+        "shaping_base_height": -0.02 * torch.rand(count, generator=generator, dtype=torch.float64),
+        "shaping_upright": -0.01 * torch.rand(count, generator=generator, dtype=torch.float64),
         "episode_native_ticks": ticks,
         "first_true_contact_native_tick": torch.where(contact, ticks // 3, torch.full_like(ticks, -1)),
         "requested_goal_axis_ball_displacement_m": torch.where(goal, values[:, 0], 0.2 * values[:, 0]).float(),

@@ -14,20 +14,23 @@ TensorBoard.  ``scripts/plot_training.py`` reads only those two files.
 from __future__ import annotations
 
 import json
+import math
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
 import torch
 
 from .adr import EPISODE_KINDS, EVALUATION, PARAMETERS
-from .rewards import GOAL_CENTER_X_M
+from .task_limits import GOAL_CENTER_X_M
 
 OUTCOME_NAMES = ("goal", "own_goal", "fall", "boundary", "joint_hard_limit", "timeout")
-# Cell edges of the knob grid, per knob in ADR PARAMETERS order.
+# Cell edges of the knob grid, per knob in ADR PARAMETERS order: fine near
+# the easy start, where ADR spends the early part of training.
 KNOB_GRID_EDGES = (
-    tuple(0.5 + 0.5 * index for index in range(12)),  # ball-goal 0.5..6.0 m
-    tuple(0.5 + 0.3 * index for index in range(7)),  # robot-ball 0.5..2.3 m
-    tuple(30.0 * index for index in range(7)),  # facing error 0..180 deg
+    (0.15, 0.3, 0.5, 0.75, 1.0, 1.5, 2.0, 3.0, 4.0, 5.0, 6.0),  # ball-goal m
+    (0.4, 0.5, 0.6, 0.8, 1.0, 1.4, 1.8, 2.3),  # robot-ball m
+    (0.0, 10.0, 20.0, 45.0, 90.0, 135.0, 180.0),  # facing error deg
+    (0.0, 10.0, 20.0, 45.0, 90.0, 135.0, 180.0),  # robot bearing deg
 )
 NATIVE_TICK_SECONDS = 0.02
 
@@ -42,9 +45,11 @@ def concatenate_episodes(batches: Sequence[Mapping[str, torch.Tensor]]) -> dict[
 
 
 def initial_geometry(episodes: Mapping[str, torch.Tensor]) -> dict[str, torch.Tensor]:
-    """Each episode's start measured from the reset poses as the three task
-    axes: robot-ball distance (m), ball-goal distance (m) and the robot's
-    facing error to the ball (deg, 0 = facing the ball, 180 = facing away).
+    """Each episode's start measured from the reset poses as the four task
+    axes: robot-ball distance (m), ball-goal distance (m), the robot's
+    facing error to the ball (deg, 0 = facing the ball, 180 = facing away)
+    and the robot's bearing around the ball (deg, 0 = straight behind the
+    ball in line with the goal, 180 = between the ball and the goal).
     These are the ADR knobs as realized in the simulator."""
 
     robot = episodes["reset_robot_xy_m"].double()
@@ -54,10 +59,13 @@ def initial_geometry(episodes: Mapping[str, torch.Tensor]) -> dict[str, torch.Te
     to_ball = ball - robot
     bearing = torch.atan2(to_ball[:, 1], to_ball[:, 0])
     facing = torch.atan2(torch.sin(bearing - yaw), torch.cos(bearing - yaw)).abs()
+    behind = torch.atan2(ball[:, 1], ball[:, 0] - side * GOAL_CENTER_X_M)
+    around = torch.atan2(-to_ball[:, 1], -to_ball[:, 0])
     return {
         "robot_ball_m": torch.linalg.vector_norm(to_ball, dim=1),
         "ball_goal_m": torch.hypot(side * GOAL_CENTER_X_M - ball[:, 0], -ball[:, 1]),
         "facing_deg": torch.rad2deg(facing),
+        "bearing_deg": torch.rad2deg(torch.atan2(torch.sin(around - behind), torch.cos(around - behind)).abs()),
     }
 
 
@@ -66,32 +74,28 @@ def _rate(numerator: int, denominator: int) -> float | None:
 
 
 def _knob_grid(episodes: Mapping[str, torch.Tensor]) -> list[list[int]]:
-    """Sparse ``[i, j, k, episodes, goals, contacts]`` rows over the grid
-    cells (KNOB_GRID_EDGES) of each episode's requested knob values."""
+    """Sparse rows ``[cell index per knob..., episodes, goals, contacts]``
+    over the grid cells (KNOB_GRID_EDGES) of each episode's requested knob
+    values."""
 
     values = episodes["adr_values"].double()
-    cells = []
+    shape = tuple(len(edges) - 1 for edges in KNOB_GRID_EDGES)
+    flat = torch.zeros(values.shape[0], dtype=torch.long)
     for axis, edges in enumerate(KNOB_GRID_EDGES):
         inner = torch.tensor(edges[1:-1], dtype=torch.float64)
-        cells.append(torch.bucketize(values[:, axis].contiguous(), inner, right=True))
-    shape = tuple(len(edges) - 1 for edges in KNOB_GRID_EDGES)
-    flat = (cells[0] * shape[1] + cells[1]) * shape[2] + cells[2]
-    size = shape[0] * shape[1] * shape[2]
+        flat = flat * shape[axis] + torch.bucketize(values[:, axis].contiguous(), inner, right=True)
+    size = math.prod(shape)
     counts = torch.bincount(flat, minlength=size)
     goals = torch.bincount(flat, weights=episodes["goal"].double(), minlength=size)
     contacts = torch.bincount(flat, weights=episodes["contact_seen"].double(), minlength=size)
     rows = []
     for cell in torch.nonzero(counts).flatten().tolist():
-        rows.append(
-            [
-                cell // (shape[1] * shape[2]),
-                (cell // shape[2]) % shape[1],
-                cell % shape[2],
-                int(counts[cell]),
-                int(goals[cell]),
-                int(contacts[cell]),
-            ]
-        )
+        index = []
+        remainder = cell
+        for size_of_axis in reversed(shape):
+            index.append(remainder % size_of_axis)
+            remainder //= size_of_axis
+        rows.append([*reversed(index), int(counts[cell]), int(goals[cell]), int(contacts[cell])])
     return rows
 
 
@@ -108,8 +112,8 @@ def summarize_episodes(episodes: Mapping[str, torch.Tensor]) -> dict[str, Any]:
     goal = episodes["goal"]
     contact = episodes["contact_seen"]
     unsafe = episodes["unsafe_pre_goal"]
-    progress = episodes["cumulative_progress_reward"].double()
-    returns = progress + goal.double() - episodes["own_goal"].double()
+    shaping = episodes["shaping_return"].double()
+    returns = shaping + goal.double() - episodes["own_goal"].double()
     if not bool(torch.isfinite(returns).all()):
         raise ValueError("episode return is non-finite")
     outcomes = torch.bincount(episodes["outcome"], minlength=len(OUTCOME_NAMES))
@@ -142,7 +146,12 @@ def summarize_episodes(episodes: Mapping[str, torch.Tensor]) -> dict[str, Any]:
     return {
         "completed_episodes": count,
         "mean_episode_return": float(returns.mean()),
-        "mean_cumulative_progress_reward": float(progress.mean()),
+        "mean_shaping_return": float(shaping.mean()),
+        "mean_shaping_by_potential": {
+            name[len("shaping_"):]: float(episodes[name].double().mean())
+            for name in episodes
+            if name.startswith("shaping_") and name != "shaping_return"
+        },
         "goal_count": goal_count,
         "goal_rate": goal_count / count,
         "contact_count": contact_count,

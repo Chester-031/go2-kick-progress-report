@@ -26,7 +26,7 @@ Figures:
   07_goal_by_knob    goal rate along each knob, early vs late in training
   08_episode_timing  episode length, time to goal and to first ball contact,
                      ball progress toward the goal
-  09_ppo             PPO losses
+  09_ppo             PPO losses, episode return, shaping return per potential
   10_throughput      transitions per second and where each iteration's wall
                      time goes
 """
@@ -57,6 +57,7 @@ KNOB_LABEL = {
     "ball_goal_distance_m": "ball to goal (m)",
     "robot_ball_distance_m": "robot to ball (m)",
     "facing_error_deg": "facing error to ball (deg)",
+    "robot_bearing_deg": "robot around ball (deg, 0 = behind)",
 }
 KIND_LABEL = {"train": "training (current ranges)", "probe": "probes (one edge pinned)",
               "evaluation": "fixed difficulty (all)"}
@@ -300,9 +301,10 @@ def knob_grid(runs: list[dict], first_fraction: float, last_fraction: float) -> 
         start = int(np.floor(first_fraction * len(records)))
         stop = max(start + 1, int(np.ceil(last_fraction * len(records))))
         for record in records[start:stop]:
-            for i, j, k, count, goal, _ in record.get("knob_grid", []):
-                episodes[i, j, k] += count
-                goals[i, j, k] += goal
+            for row in record.get("knob_grid", []):
+                cell = tuple(row[:len(shape)])
+                episodes[cell] += row[len(shape)]
+                goals[cell] += row[len(shape) + 1]
     return episodes, goals
 
 
@@ -310,35 +312,33 @@ def plot_knob_heatmaps(runs: list[dict], out: Path, window_fraction: float) -> N
     edges = [np.asarray(axis) for axis in runs[0]["info"]["knob_grid_edges"]]
     names = [parameter["name"] for parameter in runs[0]["info"]["adr_parameters"]]
     episodes, goals = knob_grid(runs, 1.0 - window_fraction, 1.0)
-    pairs = ((0, 1), (0, 2), (1, 2))
-    fig, axes = plt.subplots(2, 3, figsize=(14, 7.6))
+    knobs = range(len(names))
+    pairs = [(x_axis, y_axis) for x_axis in knobs for y_axis in knobs if x_axis < y_axis]
+    fig, axes = plt.subplots(2, len(pairs), figsize=(4.3 * len(pairs), 7.4), squeeze=False)
     for column, (x_axis, y_axis) in enumerate(pairs):
-        other = tuple({0, 1, 2} - {x_axis, y_axis})
-        count = episodes.sum(axis=other).T if x_axis < y_axis else episodes.sum(axis=other)
-        goal = goals.sum(axis=other).T if x_axis < y_axis else goals.sum(axis=other)
+        other = tuple(index for index in knobs if index not in (x_axis, y_axis))
+        count = episodes.sum(axis=other).T
+        goal = goals.sum(axis=other).T
         rate = np.where(count >= 10, goal / np.maximum(count, 1), np.nan)
-        for row, (values, colormap, limits, title) in enumerate((
-            (rate, SEQUENTIAL, (0.0, 1.0), "goal rate (cells with >= 10 episodes)"),
-            (np.where(count > 0, count, np.nan), SEQUENTIAL, (None, None), "episodes started there"),
+        for row, (values, limits, title) in enumerate((
+            (rate, (0.0, 1.0), "goal rate (cells with >= 10 episodes)"),
+            (np.where(count > 0, count, np.nan), (None, None), "episodes started there"),
         )):
             axis = axes[row][column]
-            image = axis.pcolormesh(edges[x_axis], edges[y_axis], values, cmap=colormap, vmin=limits[0],
-                                    vmax=limits[1], edgecolors=SURFACE, linewidth=1.0)
+            # Cells are drawn at equal size (the grid is finer near the
+            # start) with the cell edges as tick labels.
+            image = axis.pcolormesh(np.arange(len(edges[x_axis])), np.arange(len(edges[y_axis])), values,
+                                    cmap=SEQUENTIAL, vmin=limits[0], vmax=limits[1], edgecolors=SURFACE,
+                                    linewidth=1.0)
             axis.grid(False)
+            axis.set_xticks(np.arange(len(edges[x_axis])), [f"{edge:g}" for edge in edges[x_axis]], fontsize=7)
+            axis.set_yticks(np.arange(len(edges[y_axis])), [f"{edge:g}" for edge in edges[y_axis]], fontsize=7)
             axis.set_xlabel(KNOB_LABEL.get(names[x_axis], names[x_axis]))
             axis.set_ylabel(KNOB_LABEL.get(names[y_axis], names[y_axis]))
             axis.set_title(title, fontsize=9)
             colorbar = fig.colorbar(image, ax=axis, fraction=0.046, pad=0.03)
             colorbar.outline.set_visible(False)
-            if row == 0:
-                for yi in range(values.shape[0]):
-                    for xi in range(values.shape[1]):
-                        if np.isfinite(values[yi, xi]):
-                            centre_x = (edges[x_axis][xi] + edges[x_axis][xi + 1]) / 2
-                            centre_y = (edges[y_axis][yi] + edges[y_axis][yi + 1]) / 2
-                            axis.text(centre_x, centre_y, f"{values[yi, xi]:.2f}", ha="center", va="center",
-                                      fontsize=6.5, color=INK if values[yi, xi] < 0.55 else SURFACE)
-    fig.suptitle(f"Where the policy scores, over pairs of knobs (third knob pooled), last "
+    fig.suptitle(f"Where the policy scores, over each pair of knobs (other knobs pooled), last "
                  f"{window_fraction:.0%} of training, all runs and episode kinds pooled", y=1.01)
     fig.tight_layout()
     save(fig, out, "06_knob_heatmaps.png")
@@ -349,11 +349,11 @@ def plot_goal_by_knob(runs: list[dict], out: Path) -> None:
     names = [parameter["name"] for parameter in runs[0]["info"]["adr_parameters"]]
     windows = ((0.0, 0.2, "first 20%"), (0.4, 0.6, "middle 20%"), (0.8, 1.0, "last 20%"))
     shades = (BLUE_RAMP[3], BLUE_RAMP[7], BLUE_RAMP[11])
-    fig, axes = plt.subplots(1, 3, figsize=(13, 3.6), sharey=True)
+    fig, axes = plt.subplots(1, len(names), figsize=(4.3 * len(names), 3.6), sharey=True)
     for (first, last, label), shade in zip(windows, shades):
         episodes, goals = knob_grid(runs, first, last)
         for knob, axis in enumerate(axes):
-            other = tuple(index for index in range(3) if index != knob)
+            other = tuple(index for index in range(len(names)) if index != knob)
             count = episodes.sum(axis=other)
             rate = np.where(count >= 10, goals.sum(axis=other) / np.maximum(count, 1), np.nan)
             centres = (edges[knob][:-1] + edges[knob][1:]) / 2
@@ -394,21 +394,26 @@ def plot_episode_timing(runs: list[dict], out: Path, window: int) -> None:
 
 
 def plot_ppo(runs: list[dict], out: Path, window: int) -> None:
-    names = sorted({name for run in runs for record in run["records"] for name in record.get("losses", {})})
-    names += ["mean_episode_return"]
-    columns = min(len(names), 4)
-    rows = int(np.ceil(len(names) / columns))
+    losses = sorted({name for run in runs for record in run["records"] for name in record.get("losses", {})})
+    potentials = sorted({name for run in runs for record in run["records"]
+                         for name in record.get("mean_shaping_by_potential", {})})
+    panels = [(f"loss: {name.replace('_', ' ')}", ("losses", name)) for name in losses]
+    panels += [("mean episode return", ("mean_episode_return",)),
+               ("mean shaping return", ("mean_shaping_return",))]
+    panels += [(f"shaping: {name.replace('_', ' ')}", ("mean_shaping_by_potential", name)) for name in potentials]
+    columns = min(len(panels), 4)
+    rows = int(np.ceil(len(panels) / columns))
     fig, axes = plt.subplots(rows, columns, figsize=(3.4 * columns, 3.0 * rows), squeeze=False, sharex=True)
-    for axis, name in zip(axes.flat, names):
-        keys = (name,) if name == "mean_episode_return" else ("losses", name)
+    for axis, (title, keys) in zip(axes.flat, panels):
         for index, run in enumerate(runs):
             axis.plot(run["iteration"], smooth(field(run, *keys), window), color=SERIES[index % len(SERIES)])
-        axis.set_title(name.replace("_", " "))
-    for axis in list(axes.flat)[len(names):]:
+        axis.set_title(title)
+    for axis in list(axes.flat)[len(panels):]:
         axis.set_visible(False)
     for axis in axes[-1]:
         axis.set_xlabel("PPO iteration")
-    fig.suptitle("PPO losses and mean episode return (moving average)", y=1.02)
+    fig.suptitle("PPO losses, episode return, and the undiscounted shaping return per potential "
+                 "(moving average)", y=1.02)
     run_legend(fig, runs, y=-0.02)
     fig.tight_layout()
     save(fig, out, "09_ppo.png")

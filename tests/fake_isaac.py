@@ -86,6 +86,7 @@ class _Articulation:
                 dim=-1,
             ),
             default_root_state=torch.zeros(num_envs, 13, device=device),
+            projected_gravity_b=torch.tensor([[0.0, 0.0, -1.0]], device=device).repeat(num_envs, 1),
         )
 
     def write_root_pose_to_sim(self, pose: torch.Tensor, env_ids: Any = None) -> None:

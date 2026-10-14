@@ -134,6 +134,12 @@ class DirectSoccerEnvCfg(UnitreeGo2FlatEnvCfg):
             filter_prim_paths_expr=list(exact_robot_filter_paths()),
         )
         self.sim.physx.enable_ccd = True
+        # When rendered (videos), look at env 0's whole field from the side.
+        self.viewer.origin_type = "env"
+        self.viewer.env_index = 0
+        self.viewer.eye = (0.0, -7.5, 6.0)
+        self.viewer.lookat = (0.0, 0.0, 0.0)
+        self.viewer.resolution = (1280, 720)
 
         if self.control == "position":
             self.actions.joint_pos.scale = POSITION_ACTION_SCALE

@@ -357,11 +357,11 @@
    "abs_lateral_ball_drift_m": 0.5515499114990234,
    "boundary": true,
    "contact_seen": true,
-   "cumulative_progress_reward": -0.001601799686587524,
+   "cumulative_progress_reward": -0.0016017996848250032,
    "episode_high_ticks": 45,
    "episode_native_ticks": 223,
    "fall": false,
-   "final_l_m": 5.160309139047345,
+   "final_l_m": 5.160309258238865,
    "first_true_contact_native_tick": 0,
    "goal": false,
    "goal_side": 1,
@@ -369,7 +369,7 @@
    "joint_hard_limit": false,
    "maximum_contact_force_n": 5.0,
    "native_safe_guard_changed_elements": 6,
-   "native_safe_guard_max_correction_rad": 0.06724792718887329,
+   "native_safe_guard_max_correction_rad": 0.0672479122877121,
    "outcome": "boundary",
    "own_goal": false,
    "requested_goal_axis_ball_displacement_m": 0.10161185264587402,
@@ -391,7 +391,7 @@
    "terminal_contact_force_n": 0.0,
    "terminal_joint_hard_limit_excess_rad": 0.0,
    "terminal_robot_xy_m": [
-    0.016967177391052246,
+    0.016967296600341797,
     2.156496047973633
    ],
    "timeout": false,
@@ -457,7 +457,7 @@
    "joint_hard_limit": false,
    "maximum_contact_force_n": 5.0,
    "native_safe_guard_changed_elements": 5,
-   "native_safe_guard_max_correction_rad": 0.06492961943149567,
+   "native_safe_guard_max_correction_rad": 0.06492960453033447,
    "outcome": "boundary",
    "own_goal": false,
    "requested_goal_axis_ball_displacement_m": 0.0,
@@ -489,11 +489,11 @@
    "abs_lateral_ball_drift_m": 0.0,
    "boundary": false,
    "contact_seen": false,
-   "cumulative_progress_reward": 0.06922502501943471,
+   "cumulative_progress_reward": 0.06926144951661957,
    "episode_high_ticks": 56,
    "episode_native_ticks": 280,
    "fall": true,
-   "final_l_m": 7.033969314426662,
+   "final_l_m": 7.033625295159479,
    "first_true_contact_native_tick": null,
    "goal": false,
    "goal_side": 1,
@@ -501,7 +501,7 @@
    "joint_hard_limit": false,
    "maximum_contact_force_n": 0.0,
    "native_safe_guard_changed_elements": 7,
-   "native_safe_guard_max_correction_rad": 0.08509750664234161,
+   "native_safe_guard_max_correction_rad": 0.08503343164920807,
    "outcome": "fall",
    "own_goal": false,
    "requested_goal_axis_ball_displacement_m": 0.0,
@@ -523,8 +523,8 @@
    "terminal_contact_force_n": 0.0,
    "terminal_joint_hard_limit_excess_rad": 0.0,
    "terminal_robot_xy_m": [
-    -1.9831600189208984,
-    -0.6798305511474609
+    -1.9821670055389404,
+    -0.6797237396240234
    ],
    "timeout": false,
    "unsafe_pre_goal": true
@@ -665,11 +665,11 @@
    "abs_lateral_ball_drift_m": 0.0,
    "boundary": false,
    "contact_seen": false,
-   "cumulative_progress_reward": 0.12664899831719684,
+   "cumulative_progress_reward": 0.12711881317869111,
    "episode_high_ticks": 83,
    "episode_native_ticks": 414,
    "fall": true,
-   "final_l_m": 6.4576771519464975,
+   "final_l_m": 6.453244797882223,
    "first_true_contact_native_tick": null,
    "goal": false,
    "goal_side": 1,
@@ -677,7 +677,7 @@
    "joint_hard_limit": false,
    "maximum_contact_force_n": 0.0,
    "native_safe_guard_changed_elements": 6,
-   "native_safe_guard_max_correction_rad": 0.06077072396874428,
+   "native_safe_guard_max_correction_rad": 0.060690443962812424,
    "outcome": "fall",
    "own_goal": false,
    "requested_goal_axis_ball_displacement_m": 0.0,
@@ -699,8 +699,8 @@
    "terminal_contact_force_n": 0.0,
    "terminal_joint_hard_limit_excess_rad": 0.0,
    "terminal_robot_xy_m": [
-    -1.7226428985595703,
-    -0.1705608367919922
+    -1.7199821472167969,
+    -0.16646957397460938
    ],
    "timeout": false,
    "unsafe_pre_goal": true
@@ -709,11 +709,11 @@
    "abs_lateral_ball_drift_m": 0.5606956481933594,
    "boundary": true,
    "contact_seen": true,
-   "cumulative_progress_reward": 0.003462564618485836,
+   "cumulative_progress_reward": 0.0034626660495601946,
    "episode_high_ticks": 45,
    "episode_native_ticks": 225,
    "fall": false,
-   "final_l_m": 5.094558693641993,
+   "final_l_m": 5.094557817458116,
    "first_true_contact_native_tick": 0,
    "goal": false,
    "goal_side": 1,
@@ -721,10 +721,10 @@
    "joint_hard_limit": false,
    "maximum_contact_force_n": 5.0,
    "native_safe_guard_changed_elements": 6,
-   "native_safe_guard_max_correction_rad": 0.06736786663532257,
+   "native_safe_guard_max_correction_rad": 0.06736777722835541,
    "outcome": "boundary",
    "own_goal": false,
-   "requested_goal_axis_ball_displacement_m": 0.14210033416748047,
+   "requested_goal_axis_ball_displacement_m": 0.14210093021392822,
    "requested_goal_line_reached": false,
    "reset_ball_xy_m": [
     0.0,
@@ -736,14 +736,14 @@
    ],
    "reset_robot_yaw_rad": 1.5700000524520874,
    "terminal_ball_xy_m": [
-    0.14210033416748047,
+    0.14210093021392822,
     2.6106948852539062
    ],
    "terminal_base_contact_force_n": 0.0,
    "terminal_contact_force_n": 0.0,
    "terminal_joint_hard_limit_excess_rad": 0.0,
    "terminal_robot_xy_m": [
-    0.02725040912628174,
+    0.02725064754486084,
     2.162015914916992
    ],
    "timeout": false,
@@ -885,11 +885,11 @@
    "abs_lateral_ball_drift_m": 0.0,
    "boundary": false,
    "contact_seen": false,
-   "cumulative_progress_reward": 0.17047215707469635,
+   "cumulative_progress_reward": 0.17076387574154903,
    "episode_high_ticks": 110,
    "episode_native_ticks": 548,
    "fall": true,
-   "final_l_m": 6.010263625389014,
+   "final_l_m": 6.007511621133006,
    "first_true_contact_native_tick": null,
    "goal": false,
    "goal_side": 1,
@@ -897,7 +897,7 @@
    "joint_hard_limit": false,
    "maximum_contact_force_n": 0.0,
    "native_safe_guard_changed_elements": 6,
-   "native_safe_guard_max_correction_rad": 0.05975574627518654,
+   "native_safe_guard_max_correction_rad": 0.05976409837603569,
    "outcome": "fall",
    "own_goal": false,
    "requested_goal_axis_ball_displacement_m": 0.0,
@@ -919,8 +919,8 @@
    "terminal_contact_force_n": 0.0,
    "terminal_joint_hard_limit_excess_rad": 0.0,
    "terminal_robot_xy_m": [
-    -1.463674545288086,
-    0.24148333072662354
+    -1.462005615234375,
+    0.24440908432006836
    ],
    "timeout": false,
    "unsafe_pre_goal": true
@@ -1073,7 +1073,7 @@
    "joint_hard_limit": false,
    "maximum_contact_force_n": 5.0,
    "native_safe_guard_changed_elements": 5,
-   "native_safe_guard_max_correction_rad": 0.03474326431751251,
+   "native_safe_guard_max_correction_rad": 0.03474326804280281,
    "outcome": "goal",
    "own_goal": false,
    "requested_goal_axis_ball_displacement_m": 0.6602458953857422,
@@ -1105,11 +1105,11 @@
    "abs_lateral_ball_drift_m": 0.0,
    "boundary": false,
    "contact_seen": false,
-   "cumulative_progress_reward": 0.2029345139409627,
+   "cumulative_progress_reward": 0.203043651892163,
    "episode_high_ticks": 137,
    "episode_native_ticks": 682,
    "fall": true,
-   "final_l_m": 5.861322014053953,
+   "final_l_m": 5.860291364557396,
    "first_true_contact_native_tick": null,
    "goal": false,
    "goal_side": 1,
@@ -1117,7 +1117,7 @@
    "joint_hard_limit": false,
    "maximum_contact_force_n": 0.0,
    "native_safe_guard_changed_elements": 6,
-   "native_safe_guard_max_correction_rad": 0.06313148140907288,
+   "native_safe_guard_max_correction_rad": 0.06314663589000702,
    "outcome": "fall",
    "own_goal": false,
    "requested_goal_axis_ball_displacement_m": 0.0,
@@ -1139,8 +1139,8 @@
    "terminal_contact_force_n": 0.0,
    "terminal_joint_hard_limit_excess_rad": 0.0,
    "terminal_robot_xy_m": [
-    -1.2722434997558594,
-    0.5606975555419922
+    -1.2712421417236328,
+    0.5622844696044922
    ],
    "timeout": false,
    "unsafe_pre_goal": true
@@ -1413,11 +1413,11 @@
    "abs_lateral_ball_drift_m": 0.36740684509277344,
    "boundary": false,
    "contact_seen": true,
-   "cumulative_progress_reward": 0.06009803155697799,
+   "cumulative_progress_reward": 0.060097934792489635,
    "episode_high_ticks": 135,
    "episode_native_ticks": 672,
    "fall": false,
-   "final_l_m": 0.39363894291050255,
+   "final_l_m": 0.39363989033403196,
    "first_true_contact_native_tick": 152,
    "goal": true,
    "goal_side": 1,
@@ -1425,7 +1425,7 @@
    "joint_hard_limit": false,
    "maximum_contact_force_n": 5.0,
    "native_safe_guard_changed_elements": 4,
-   "native_safe_guard_max_correction_rad": 0.039845988154411316,
+   "native_safe_guard_max_correction_rad": 0.03984601050615311,
    "outcome": "goal",
    "own_goal": false,
    "requested_goal_axis_ball_displacement_m": 0.8119621276855469,
@@ -1448,7 +1448,7 @@
    "terminal_joint_hard_limit_excess_rad": 0.0,
    "terminal_robot_xy_m": [
     3.691263198852539,
-    0.2229785919189453
+    0.2229776382446289
    ],
    "timeout": false,
    "unsafe_pre_goal": false
@@ -1765,11 +1765,11 @@
    "abs_lateral_ball_drift_m": 0.0,
    "boundary": false,
    "contact_seen": false,
-   "cumulative_progress_reward": 0.07734510791982521,
+   "cumulative_progress_reward": 0.07752297131176535,
    "episode_high_ticks": 62,
    "episode_native_ticks": 307,
    "fall": false,
-   "final_l_m": 6.940015737193473,
+   "final_l_m": 6.938338043634402,
    "first_true_contact_native_tick": null,
    "goal": false,
    "goal_side": 1,
@@ -1777,7 +1777,7 @@
    "joint_hard_limit": true,
    "maximum_contact_force_n": 0.0,
    "native_safe_guard_changed_elements": 7,
-   "native_safe_guard_max_correction_rad": 0.08046789467334747,
+   "native_safe_guard_max_correction_rad": 0.08014678955078125,
    "outcome": "joint_hard_limit",
    "own_goal": false,
    "requested_goal_axis_ball_displacement_m": 0.0,
@@ -1799,8 +1799,8 @@
    "terminal_contact_force_n": 0.0,
    "terminal_joint_hard_limit_excess_rad": 0.009999990463256836,
    "terminal_robot_xy_m": [
-    -1.9607305526733398,
-    -0.6016120910644531
+    -1.9605350494384766,
+    -0.5999317169189453
    ],
    "timeout": false,
    "unsafe_pre_goal": true
@@ -1897,11 +1897,11 @@
    "abs_lateral_ball_drift_m": 0.0,
    "boundary": false,
    "contact_seen": false,
-   "cumulative_progress_reward": 0.15911979907815763,
+   "cumulative_progress_reward": 0.1594746730015045,
    "episode_high_ticks": 101,
    "episode_native_ticks": 504,
    "fall": false,
-   "final_l_m": 6.134282101838228,
+   "final_l_m": 6.130933831008088,
    "first_true_contact_native_tick": null,
    "goal": false,
    "goal_side": 1,
@@ -1909,7 +1909,7 @@
    "joint_hard_limit": true,
    "maximum_contact_force_n": 0.0,
    "native_safe_guard_changed_elements": 6,
-   "native_safe_guard_max_correction_rad": 0.059402044862508774,
+   "native_safe_guard_max_correction_rad": 0.059404406696558,
    "outcome": "joint_hard_limit",
    "own_goal": false,
    "requested_goal_axis_ball_displacement_m": 0.0,
@@ -1931,32 +1931,32 @@
    "terminal_contact_force_n": 0.0,
    "terminal_joint_hard_limit_excess_rad": 0.009999990463256836,
    "terminal_robot_xy_m": [
-    -1.5366110801696777,
-    0.12667083740234375
+    -1.5347708463668823,
+    0.13002872467041016
    ],
    "timeout": false,
    "unsafe_pre_goal": true
   },
   {
-   "abs_lateral_ball_drift_m": 0.34528112411499023,
+   "abs_lateral_ball_drift_m": 0.34917116165161133,
    "boundary": false,
    "contact_seen": true,
-   "cumulative_progress_reward": 0.21391783810205334,
+   "cumulative_progress_reward": 0.21385795177363526,
    "episode_high_ticks": 200,
    "episode_native_ticks": 1000,
    "fall": false,
-   "final_l_m": 5.70404835447837,
-   "first_true_contact_native_tick": 803,
+   "final_l_m": 5.7046125372705045,
+   "first_true_contact_native_tick": 802,
    "goal": false,
    "goal_side": 1,
    "initial_l_m": 7.722145080566406,
    "joint_hard_limit": false,
    "maximum_contact_force_n": 5.0,
    "native_safe_guard_changed_elements": 6,
-   "native_safe_guard_max_correction_rad": 0.06319056451320648,
+   "native_safe_guard_max_correction_rad": 0.06317856907844543,
    "outcome": "timeout",
    "own_goal": false,
-   "requested_goal_axis_ball_displacement_m": 0.20567190647125244,
+   "requested_goal_axis_ball_displacement_m": 0.20786404609680176,
    "requested_goal_line_reached": false,
    "reset_ball_xy_m": [
     -1.0,
@@ -1968,15 +1968,15 @@
    ],
    "reset_robot_yaw_rad": -2.4000000953674316,
    "terminal_ball_xy_m": [
-    -0.7943280935287476,
-    1.355281114578247
+    -0.7921359539031982,
+    1.3591711521148682
    ],
    "terminal_base_contact_force_n": 0.0,
    "terminal_contact_force_n": 0.0,
    "terminal_joint_hard_limit_excess_rad": 0.0,
    "terminal_robot_xy_m": [
-    -1.028949499130249,
-    0.9613989591598511
+    -1.0278558731079102,
+    0.9632080793380737
    ],
    "timeout": true,
    "unsafe_pre_goal": false
@@ -2114,6 +2114,6 @@
    "unsafe_pre_goal": true
   }
  ],
- "final_observation_sum": 86.18211747889633,
- "reward_sum": 9.634587668580934
+ "final_observation_sum": 86.18521353027305,
+ "reward_sum": 9.636165463132784
 }

@@ -21,7 +21,7 @@ from .resets import (
     sample_training_reset,
 )
 from .observations import build_entity_observation
-from .commands import limit_latent_high_command
+from .commands import CommandSurface
 from .config import FieldGeometry, POLICY_ACTION_DIM, POLICY_OBSERVATION_DIM
 from .native_safe_joint_action import NativeSafeJointPositionAction
 from .contact import ROBOT_BODY_NAMES, validate_live_robot_body_names
@@ -205,13 +205,13 @@ class CurrentTaskProgressHighGoalEnv:
         self.seed = int(seed)
         self.sample_serial = 0
 
-        self.command_vertices = torch.as_tensor(command_vertices, dtype=torch.float32, device=self.device)
-        self.command_axis_ranges = torch.as_tensor(command_axis_ranges, dtype=torch.float32, device=self.device)
-        self.command_rate_limits = torch.as_tensor(command_rate_limits, dtype=torch.float32, device=self.device)
-        if self.command_vertices.ndim != 2 or self.command_vertices.shape[1] != 3:
-            raise RuntimeError("qualified command vertices changed")
-        if self.command_axis_ranges.shape != (3, 2) or self.command_rate_limits.shape != (3,):
-            raise RuntimeError("qualified command range/rate changed")
+        self.command_surface = CommandSurface(
+            vertices=command_vertices,
+            axis_ranges=command_axis_ranges,
+            rate_limits_per_second=command_rate_limits,
+            high_control_dt=self.high_control_dt,
+            device=self.device,
+        )
         self.previous_command = torch.zeros(self.num_envs, 3, device=self.device)
 
         self.goal_xy_w = torch.zeros(self.num_envs, 2, device=self.device)
@@ -566,13 +566,8 @@ class CurrentTaskProgressHighGoalEnv:
         pre_ball_xy = (self.ball.data.root_pos_w[:, :2] - self.env_origins[:, :2]).detach().clone()
         pre_goal_side = self.goal_side.detach().clone()
 
-        applied_command, bounded_action = limit_latent_high_command(
-            latent_action=latent_action.detach().to(self.device),
-            previous_command=self.previous_command,
-            vertices=self.command_vertices,
-            axis_ranges=self.command_axis_ranges,
-            rate_limits_per_second=self.command_rate_limits,
-            high_control_dt=self.high_control_dt,
+        applied_command, bounded_action = self.command_surface.limit(
+            latent_action.detach().to(self.device), self.previous_command
         )
         if not bool(torch.isfinite(applied_command).all()):
             raise RuntimeError("applied command is non-finite")

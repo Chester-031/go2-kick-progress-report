@@ -264,7 +264,6 @@ class ShapingInEnvironmentTest(unittest.TestCase):
                     ),
                     base_height_m=torch.full((done_ids.numel(),), 0.30),
                     up_z=torch.ones(done_ids.numel()),
-                    joint_limit_proximity=torch.zeros(done_ids.numel()),
                 )
                 expected = -env.shaping.potential(start).double()
                 self.assertLess(float((discounted[done_ids] - expected).abs().max()), 1e-3)

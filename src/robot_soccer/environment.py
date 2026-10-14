@@ -28,7 +28,6 @@ from .task_limits import (
     CONTACT_FORCE_THRESHOLD_N,
     GOAL_CENTER_X_M,
     JOINT_HARD_LIMIT_TOLERANCE_RAD,
-    JOINT_LIMIT_MARGIN_RAD,
     ROBOT_FIELD_HALF_LENGTH_M,
     ROBOT_FIELD_HALF_WIDTH_M,
     TERMINAL_GOAL_HALF_WIDTH_M,
@@ -46,7 +45,7 @@ TRUE_CONTACT_FORCE_THRESHOLD_N = CONTACT_FORCE_THRESHOLD_N
 # if nothing unsafe happened on that tick.
 OUTCOMES = ("goal", "own_goal", "fall", "boundary", "joint_hard_limit", "timeout")
 # The shaping potentials, in the order of the per-episode shaping columns.
-SHAPING_COMPONENTS = ("ball_goal", "robot_ball", "base_height", "upright", "joint_limit")
+SHAPING_COMPONENTS = ("ball_goal", "robot_ball", "base_height", "upright")
 
 
 def extract_policy_tensor(value: Any) -> torch.Tensor:
@@ -392,7 +391,6 @@ class CurrentTaskProgressHighGoalEnv:
         pre_goal_side = self.goal_side.detach().clone()
         pre_height = self.robot.data.root_pos_w[:, 2].detach().clone()
         pre_up = -self.robot.data.projected_gravity_b[:, 2].detach().clone()
-        pre_joints = self._joint_limit_proximity()
 
         bounded_action = self.control.start(latent_action.detach().to(self.device))
 
@@ -419,7 +417,6 @@ class CurrentTaskProgressHighGoalEnv:
         post_guard_max = torch.zeros(self.num_envs, device=self.device)
         post_height = pre_height.clone()
         post_up = pre_up.clone()
-        post_joints = pre_joints.clone()
         native_reward = torch.zeros(self.num_envs, device=self.device)
 
         def native_observation() -> torch.Tensor:
@@ -462,7 +459,6 @@ class CurrentTaskProgressHighGoalEnv:
             post_guard_max = torch.where(tick_active, guard.amax(dim=1), post_guard_max)
             post_height = torch.where(tick_active, self.robot.data.root_pos_w[:, 2], post_height)
             post_up = torch.where(tick_active, -self.robot.data.projected_gravity_b[:, 2], post_up)
-            post_joints = torch.where(tick_active, self._joint_limit_proximity(), post_joints)
             contact = contact_force >= TRUE_CONTACT_FORCE_THRESHOLD_N
             new_contact = contact & ~self.contact_seen & tick_active
             self.first_contact_native_tick = torch.where(
@@ -500,8 +496,8 @@ class CurrentTaskProgressHighGoalEnv:
         goal_xy = torch.zeros_like(pre_robot_xy)
         goal_xy[:, 0] = pre_goal_side.to(goal_xy.dtype) * GOAL_CENTER_X_M
         shaping, components = self.shaping(
-            ShapingState(pre_robot_xy, pre_ball_xy, goal_xy, pre_height, pre_up, pre_joints),
-            ShapingState(post_robot_xy, post_ball_xy, goal_xy, post_height, post_up, post_joints),
+            ShapingState(pre_robot_xy, pre_ball_xy, goal_xy, pre_height, pre_up),
+            ShapingState(post_robot_xy, post_ball_xy, goal_xy, post_height, post_up),
             done,
         )
         reward = shaping + native_reward + terminal_goal.to(shaping.dtype) - terminal_own.to(shaping.dtype)
@@ -611,31 +607,15 @@ class CurrentTaskProgressHighGoalEnv:
             raise RuntimeError("base contact history is unavailable")
         return torch.linalg.vector_norm(history[:, :, self.base_body_index, :], dim=-1).amax(dim=1)
 
-    def _joint_hard_limits(self) -> torch.Tensor:
-        """``[N, joints, 2]`` hard limits (Isaac Lab 2.0 calls them
-        ``joint_limits``, later versions ``joint_pos_limits``)."""
-
-        limits = getattr(self.robot.data, "joint_pos_limits", None)
-        return self.robot.data.joint_limits if limits is None else limits
-
     def _joint_hard_excess(self) -> torch.Tensor:
-        """The largest distance any joint is past its hard limit (rad)."""
-
         position = self.robot.data.joint_pos
-        limits = self._joint_hard_limits()
+        # Isaac Lab 2.0 calls the hard limits joint_limits.
+        limits = getattr(self.robot.data, "joint_pos_limits", None)
+        if limits is None:
+            limits = self.robot.data.joint_limits
         below = torch.clamp(limits[..., 0] - position, min=0.0)
         above = torch.clamp(position - limits[..., 1], min=0.0)
         return torch.maximum(below, above).amax(dim=1)
-
-    def _joint_limit_proximity(self) -> torch.Tensor:
-        """How deep the joints are in the margin next to their nearest hard
-        limit, in margins, summed over joints (the shaping's joint-limit
-        input; see ``shaping.ShapingState``)."""
-
-        position = self.robot.data.joint_pos
-        limits = self._joint_hard_limits()
-        nearest = torch.minimum(position - limits[..., 0], limits[..., 1] - position)
-        return ((JOINT_LIMIT_MARGIN_RAD - nearest) / JOINT_LIMIT_MARGIN_RAD).clamp_min(0.0).sum(dim=1)
 
     def close(self) -> None:
         self.low_env.close()

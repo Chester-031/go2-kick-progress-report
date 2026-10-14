@@ -31,5 +31,3 @@ BALL_SIDE_BOUNDARY_M = _canonical_float32(2.61)
 CONTACT_FORCE_THRESHOLD_N = _canonical_float32(1.0)
 # Any contact force on the base (the trunk touching the ground) is a fall.
 BASE_FALL_FORCE_THRESHOLD_N = _canonical_float32(1.0)
-# How far past a joint's hard limit counts as violating it.
-JOINT_HARD_LIMIT_TOLERANCE_RAD = _canonical_float32(1.0e-5)

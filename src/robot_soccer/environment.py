@@ -27,7 +27,6 @@ from .task_limits import (
     BASE_FALL_FORCE_THRESHOLD_N,
     CONTACT_FORCE_THRESHOLD_N,
     GOAL_CENTER_X_M,
-    JOINT_HARD_LIMIT_TOLERANCE_RAD,
     ROBOT_FIELD_HALF_LENGTH_M,
     ROBOT_FIELD_HALF_WIDTH_M,
     TERMINAL_GOAL_HALF_WIDTH_M,
@@ -43,7 +42,7 @@ TRUE_CONTACT_FORCE_THRESHOLD_N = CONTACT_FORCE_THRESHOLD_N
 # Episode outcomes, by code (the ``outcome`` episode column).  When several
 # events happen on one tick the earliest listed wins: a goal is only a goal
 # if nothing unsafe happened on that tick.
-OUTCOMES = ("goal", "own_goal", "fall", "boundary", "joint_hard_limit", "timeout")
+OUTCOMES = ("goal", "own_goal", "fall", "boundary", "timeout")
 # The shaping potentials, in the order of the per-episode shaping columns.
 SHAPING_COMPONENTS = ("ball_goal", "robot_ball", "base_height", "upright")
 
@@ -147,9 +146,11 @@ class CurrentTaskProgressHighGoalEnv:
     """The soccer task, stepped through a ``control``.
 
     One policy action is held for ``control.ticks_per_action`` native
-    ticks.  After every tick the task checks goal, own goal, boundary, fall
-    and joint hard limit; an unsafe event on the same tick as a goal
-    cancels the goal.  A slot that terminates is frozen at that tick (its
+    ticks.  After every tick the task checks goal, own goal, boundary and
+    fall; an unsafe event on the same tick as a goal cancels the goal.
+    Joint hard limits end nothing (the simulator enforces them; hitting a
+    stop matters only on a real robot); each episode records its largest
+    overshoot past one.  A slot that terminates is frozen at that tick (its
     joint action is zeroed and its post state stops updating) while the
     other slots finish the held action.
     The 20 s horizon is a true finite horizon, so the RSL adapter exposes
@@ -242,6 +243,8 @@ class CurrentTaskProgressHighGoalEnv:
         self.episode_shaping_return = torch.zeros(self.num_envs, device=self.device)
         self.episode_shaping_components = torch.zeros(self.num_envs, len(SHAPING_COMPONENTS), device=self.device)
         self.episode_native_reward = torch.zeros(self.num_envs, device=self.device)
+        # Largest distance any joint went past its hard limit this episode.
+        self.episode_max_joint_overshoot = torch.zeros(self.num_envs, device=self.device)
         self.vector_steps = 0
 
         self._observation = torch.zeros(self.num_envs, self.num_obs, device=self.device)
@@ -302,6 +305,7 @@ class CurrentTaskProgressHighGoalEnv:
         self.episode_shaping_return[ids] = 0.0
         self.episode_shaping_components[ids] = 0.0
         self.episode_native_reward[ids] = 0.0
+        self.episode_max_joint_overshoot[ids] = 0.0
         if hasattr(self.base_env, "episode_length_buf"):
             self.base_env.episode_length_buf[ids] = 0
 
@@ -399,7 +403,6 @@ class CurrentTaskProgressHighGoalEnv:
         terminal_own = torch.zeros_like(active)
         terminal_boundary = torch.zeros_like(active)
         terminal_fall = torch.zeros_like(active)
-        terminal_joint = torch.zeros_like(active)
         terminal_requested = torch.zeros_like(active)
         contact_this_high = torch.zeros_like(active)
         # Any per-tick failure is recorded here and raised once after the loop.
@@ -412,7 +415,6 @@ class CurrentTaskProgressHighGoalEnv:
         post_ball_xy = pre_ball_xy.clone()
         post_contact_force = torch.zeros(self.num_envs, device=self.device)
         post_base_force = torch.zeros(self.num_envs, device=self.device)
-        post_hard_excess = torch.zeros(self.num_envs, device=self.device)
         post_guard_changed = torch.zeros(self.num_envs, dtype=torch.long, device=self.device)
         post_guard_max = torch.zeros(self.num_envs, device=self.device)
         post_height = pre_height.clone()
@@ -454,7 +456,11 @@ class CurrentTaskProgressHighGoalEnv:
             post_ball_xy = torch.where(keep, ball_xy, post_ball_xy)
             post_contact_force = torch.where(tick_active, contact_force, post_contact_force)
             post_base_force = torch.where(tick_active, base_force, post_base_force)
-            post_hard_excess = torch.where(tick_active, hard_excess, post_hard_excess)
+            self.episode_max_joint_overshoot = torch.where(
+                tick_active,
+                torch.maximum(self.episode_max_joint_overshoot, hard_excess),
+                self.episode_max_joint_overshoot,
+            )
             post_guard_changed = torch.where(tick_active, (guard > 1.0e-9).sum(dim=1), post_guard_changed)
             post_guard_max = torch.where(tick_active, guard.amax(dim=1), post_guard_max)
             post_height = torch.where(tick_active, self.robot.data.root_pos_w[:, 2], post_height)
@@ -478,21 +484,19 @@ class CurrentTaskProgressHighGoalEnv:
             own = (selected <= -GOAL_CENTER_X_M) & inside & tick_active
             boundary = boundary_violation(robot_xy, ball_xy, self.geometry) & tick_active
             fall = (base_force > BASE_FALL_FORCE_THRESHOLD_N) & tick_active
-            joint = (hard_excess > JOINT_HARD_LIMIT_TOLERANCE_RAD) & tick_active
-            unsafe = own | boundary | fall | joint
+            unsafe = own | boundary | fall
 
             terminal_goal |= requested_line & ~unsafe
             terminal_own |= own
             terminal_boundary |= boundary
             terminal_fall |= fall
-            terminal_joint |= joint
             terminal_requested |= requested_line
             active &= ~(requested_line | unsafe)
 
         self.episode_length_buf += 1
         timeout = (self.episode_length_buf >= self.max_episode_length) & active
 
-        done = terminal_goal | terminal_own | terminal_boundary | terminal_fall | terminal_joint | timeout
+        done = terminal_goal | terminal_own | terminal_boundary | terminal_fall | timeout
         goal_xy = torch.zeros_like(pre_robot_xy)
         goal_xy[:, 0] = pre_goal_side.to(goal_xy.dtype) * GOAL_CENTER_X_M
         shaping, components = self.shaping(
@@ -520,7 +524,6 @@ class CurrentTaskProgressHighGoalEnv:
                     ("own_goal", terminal_own),
                     ("fall", terminal_fall),
                     ("boundary", terminal_boundary),
-                    ("joint_hard_limit", terminal_joint),
                 )
             ):
                 outcome = torch.where(flag[done_ids], OUTCOMES.index(name), outcome)
@@ -536,7 +539,7 @@ class CurrentTaskProgressHighGoalEnv:
                 "maximum_contact_force_n": self.maximum_contact_force[done_ids],
                 "terminal_contact_force_n": post_contact_force[done_ids],
                 "terminal_base_contact_force_n": post_base_force[done_ids],
-                "terminal_joint_hard_limit_excess_rad": post_hard_excess[done_ids],
+                "max_joint_overshoot_rad": self.episode_max_joint_overshoot[done_ids],
                 "native_safe_guard_max_correction_rad": post_guard_max[done_ids],
                 "shaping_return": self.episode_shaping_return[done_ids],
                 "native_reward_return": self.episode_native_reward[done_ids],
@@ -554,7 +557,6 @@ class CurrentTaskProgressHighGoalEnv:
                 "own_goal": terminal_own[done_ids],
                 "boundary": terminal_boundary[done_ids],
                 "fall": terminal_fall[done_ids],
-                "joint_hard_limit": terminal_joint[done_ids],
                 "timeout": timeout[done_ids],
                 "requested_goal_line_reached": terminal_requested[done_ids],
                 "contact_seen": self.contact_seen[done_ids],
@@ -565,10 +567,10 @@ class CurrentTaskProgressHighGoalEnv:
             }
             episodes = _to_host_columns(float_columns, torch.float32)
             episodes.update(_to_host_columns(integer_columns, torch.long))
-            for name in ("goal", "own_goal", "boundary", "fall", "joint_hard_limit", "timeout",
+            for name in ("goal", "own_goal", "boundary", "fall", "timeout",
                          "requested_goal_line_reached", "contact_seen"):
                 episodes[name] = episodes[name].bool()
-            episodes["unsafe_pre_goal"] = episodes["own_goal"] | episodes["boundary"] | episodes["fall"] | episodes["joint_hard_limit"]
+            episodes["unsafe_pre_goal"] = episodes["own_goal"] | episodes["boundary"] | episodes["fall"]
             for name, value in self.reset_tags.items():
                 episodes[name] = value[done_ids].cpu()
             self._reset_idx(done_ids)
@@ -608,6 +610,8 @@ class CurrentTaskProgressHighGoalEnv:
         return torch.linalg.vector_norm(history[:, :, self.base_body_index, :], dim=-1).amax(dim=1)
 
     def _joint_hard_excess(self) -> torch.Tensor:
+        """The largest distance any joint is past its hard limit (rad)."""
+
         position = self.robot.data.joint_pos
         # Isaac Lab 2.0 calls the hard limits joint_limits.
         limits = getattr(self.robot.data, "joint_pos_limits", None)

@@ -63,7 +63,7 @@ KNOB_LABEL = {
 KIND_LABEL = {"train": "training (current ranges)", "probe": "probes (one edge pinned)",
               "evaluation": "fixed difficulty (all)"}
 OUTCOME_LABEL = {"goal": "goal", "own_goal": "own goal", "fall": "fall", "boundary": "out of bounds",
-                 "joint_hard_limit": "joint limit", "timeout": "timeout (20 s)"}
+                 "timeout": "timeout (20 s)"}
 
 
 def style() -> None:
@@ -380,8 +380,11 @@ def plot_episode_timing(runs: list[dict], out: Path, window: int) -> None:
         ("mean ball progress toward goal (m)", ("mean_goal_axis_ball_displacement_m",)),
         ("ball-contact rate", ("contact_rate",)),
         ("unsafe-end rate", ("unsafe_rate",)),
+        ("mean largest joint overshoot past a limit (rad)", ("max_joint_overshoot_rad", "mean")),
     )
-    fig, axes = plt.subplots(2, 3, figsize=(13, 6.4), sharex=True)
+    fig, axes = plt.subplots(2, 4, figsize=(17, 6.4), sharex=True)
+    for axis in list(axes.flat)[len(panels):]:
+        axis.set_visible(False)
     for axis, (title, keys) in zip(axes.flat, panels):
         for index, run in enumerate(runs):
             axis.plot(run["iteration"], smooth(field(run, *keys), window), color=SERIES[index % len(SERIES)])

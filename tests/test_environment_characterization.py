@@ -46,7 +46,7 @@ from robot_soccer.shaping import PotentialShaping, ShapingState, ShapingWeights 
 
 FIXTURE = Path(__file__).parent / "fixtures" / "environment_characterization.json"
 NUM_ENVS = 24
-STEPS = 230
+STEPS = 300
 # Episode fields every version of the wrapper must reproduce exactly.
 COMPARED_FIELDS = (
     "goal_side",
@@ -58,7 +58,6 @@ COMPARED_FIELDS = (
     "own_goal",
     "boundary",
     "fall",
-    "joint_hard_limit",
     "timeout",
     "unsafe_pre_goal",
     "requested_goal_line_reached",
@@ -67,7 +66,7 @@ COMPARED_FIELDS = (
     "maximum_contact_force_n",
     "terminal_contact_force_n",
     "terminal_base_contact_force_n",
-    "terminal_joint_hard_limit_excess_rad",
+    "max_joint_overshoot_rad",
     "native_safe_guard_changed_elements",
     "native_safe_guard_max_correction_rad",
     "episode_high_ticks",

@@ -47,7 +47,8 @@ def draw_frame(figure, body, ball, names, episode, robot_trail, ball_trail, foot
         text, color = footer
         figure.text(0.01, 0.91, text, fontsize=15, fontweight="bold", color=color, va="top")
 
-    close = figure.add_subplot(1, 2, 1, projection="3d")
+    layout = figure.add_gridspec(1, 2, width_ratios=(1.5, 1.0), left=0.0, right=0.98, bottom=0.04, top=0.86)
+    close = figure.add_subplot(layout[0, 0], projection="3d")
     base = body[index["base"]]
     for leg in LEGS:
         chain = np.stack([body[index[f"{leg}_{link}"]] for link in ("hip", "thigh", "calf", "foot")])
@@ -60,7 +61,7 @@ def draw_frame(figure, body, ball, names, episode, robot_trail, ball_trail, foot
         close.plot(head[:, 0], head[:, 1], head[:, 2], color=INK, linewidth=2)
     close.scatter(*ball, color=BALL, s=180, depthshade=False)
     centre = (base[:2] + ball[:2]) / 2.0 if np.linalg.norm(base[:2] - ball[:2]) < 2.0 else base[:2]
-    half = 1.2
+    half = 0.9
     close.set_xlim(centre[0] - half, centre[0] + half)
     close.set_ylim(centre[1] - half, centre[1] + half)
     close.set_zlim(0.0, 0.8)
@@ -70,11 +71,11 @@ def draw_frame(figure, body, ball, names, episode, robot_trail, ball_trail, foot
         for y in (-GOAL_HALF_WIDTH, GOAL_HALF_WIDTH):
             close.plot([goal_x, goal_x], [y, y], [0.0, 0.5], color=GOAL_COLOR, linewidth=3)
         close.plot([goal_x, goal_x], [-GOAL_HALF_WIDTH, GOAL_HALF_WIDTH], [0.5, 0.5], color=GOAL_COLOR, linewidth=3)
-    close.view_init(elev=22, azim=-60)
+    close.view_init(elev=16, azim=-60)
     close.set_title("close-up (follows the robot)", fontsize=10)
     close.tick_params(labelsize=6)
 
-    top = figure.add_subplot(1, 2, 2)
+    top = figure.add_subplot(layout[0, 1])
     top.set_facecolor("#eef3e8")
     top.plot([-4, 4, 4, -4, -4], [-2.5, -2.5, 2.5, 2.5, -2.5], color=MUTED, linewidth=1)
     top.axvline(0, color=GRID, linewidth=1)

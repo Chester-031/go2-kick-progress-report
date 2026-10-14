@@ -371,9 +371,10 @@ class CurrentTaskProgressHighGoalEnv:
         return self._observation
 
     def reset(self) -> torch.Tensor:
-        # Construction already installs the first complete reset batch.
-        if self.vector_steps == 0:
-            return self.get_observations()
+        """Start a new episode in every slot, drawn from the reset sampler as
+        it is now.  Training never calls this (construction already filled
+        every slot); playback scripts do after changing the ADR ranges."""
+
         self._reset_idx(torch.arange(self.num_envs, dtype=torch.long, device=self.device))
         return self.get_observations()
 

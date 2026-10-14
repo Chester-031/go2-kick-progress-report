@@ -136,6 +136,7 @@ def make_environment(
     import isaac_go2_low_level_rl.tasks.manager_based.soccer  # noqa: F401
 
     from .env_cfg import SparseHighEnvCfg
+    from .resets import StageBResetSampler
     from .environment import (
         CurrentTaskProgressHighGoalEnv,
         CurrentTaskProgressHighRslAdapter,
@@ -166,7 +167,7 @@ def make_environment(
     env = CurrentTaskProgressHighGoalEnv(
         low_env=FrozenLowInferenceEnv(gym_env),
         frozen_low_actor=actor,
-        seed=int(seed),
+        reset_sampler=StageBResetSampler(int(seed)),
         command_vertices=COMMAND_VERTICES,
         command_axis_ranges=COMMAND_AXIS_RANGES,
         command_rate_limits=COMMAND_RATE_LIMITS_PER_SECOND,

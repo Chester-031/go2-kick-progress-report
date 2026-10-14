@@ -14,12 +14,7 @@ from typing import Any, Sequence
 import torch
 from tensordict import TensorDict
 
-from .resets import (
-    ResetSample,
-    is_hard_goal_facing_ball_behind,
-    relative_bucket,
-    sample_training_reset,
-)
+from .resets import ResetSampler
 from .observations import build_entity_observation
 from .commands import CommandSurface
 from .config import FieldGeometry, POLICY_ACTION_DIM, POLICY_OBSERVATION_DIM
@@ -31,11 +26,9 @@ from .rewards import (
     CONTACT_FORCE_THRESHOLD_N,
     GOAL_CENTER_X_M,
     JOINT_HARD_LIMIT_TOLERANCE_RAD,
-    PATH_NORMALIZER_M,
     ROBOT_FIELD_HALF_LENGTH_M,
     ROBOT_FIELD_HALF_WIDTH_M,
     TERMINAL_GOAL_HALF_WIDTH_M,
-    scalar_task_geometry,
     torch_progress,
     torch_task_geometry,
 )
@@ -47,6 +40,10 @@ PROGRAMMED_LOCAL_SAMPLE_TOLERANCE_M = 2.0e-5
 
 
 TRUE_CONTACT_FORCE_THRESHOLD_N = CONTACT_FORCE_THRESHOLD_N
+# Episode outcomes, by code (the ``outcome`` episode column).  When several
+# events happen on one tick the earliest listed wins: a goal is only a goal
+# if nothing unsafe happened on that tick.
+OUTCOMES = ("goal", "own_goal", "fall", "boundary", "joint_hard_limit", "timeout")
 
 
 def extract_policy_tensor(value: Any) -> torch.Tensor:
@@ -141,7 +138,26 @@ class FrozenLowInferenceEnv:
 
 
 class CurrentTaskProgressHighGoalEnv:
-    """Finite-horizon task with same-tick safety precedence."""
+    """The 10 Hz soccer task over the frozen 50 Hz low policy.
+
+    One high action is held for five native ticks.  After every tick the
+    task checks goal, own goal, boundary, fall and joint hard limit; an
+    unsafe event on the same tick as a goal cancels the goal.  A slot that
+    terminates is frozen at that tick (its command is zeroed and its post
+    state stops updating) while the other slots finish the held action.
+    The 20 s horizon is a true finite horizon, so the RSL adapter exposes
+    no ``time_outs`` and PPO never bootstraps across it.
+
+    Where each episode starts comes from ``reset_sampler`` (see
+    ``resets.ResetBatch``); the environment only writes those poses and
+    carries the batch's tags into the finished-episode records.  Finished
+    episodes are reported per step as one columnar batch
+    (``extras["episodes"]``: field name -> CPU tensor, one row per episode,
+    rows in env-id order), gathered after the held action in two
+    device-to-host copies.  Per-step safety checks are folded into one
+    deferred check so the step synchronizes with the device only a few
+    times however many slots reset or terminate.
+    """
 
     num_obs = POLICY_OBSERVATION_DIM
     num_actions = POLICY_ACTION_DIM
@@ -152,7 +168,7 @@ class CurrentTaskProgressHighGoalEnv:
         *,
         low_env: FrozenLowInferenceEnv,
         frozen_low_actor: torch.nn.Module,
-        seed: int,
+        reset_sampler: ResetSampler,
         command_vertices: Sequence[Sequence[float]],
         command_axis_ranges: Sequence[Sequence[float]],
         command_rate_limits: Sequence[float],
@@ -182,6 +198,10 @@ class CurrentTaskProgressHighGoalEnv:
         self.ball_contact = self.base_env.scene["robot_ball_contact"]
         self.base_contact = self.base_env.scene["contact_forces"]
         validate_live_robot_body_names(self.robot.body_names)
+        base_names = tuple(str(name) for name in self.base_contact.body_names)
+        if "base" not in base_names:
+            raise RuntimeError("base contact sensor lacks base")
+        self.base_body_index = base_names.index("base")
         self.action_term = live_action_term(self.base_env)
         if not isinstance(self.action_term, NativeSafeJointPositionAction):
             raise RuntimeError(f"unexpected action term: {type(self.action_term).__name__}")
@@ -202,8 +222,7 @@ class CurrentTaskProgressHighGoalEnv:
         # RSL `time_outs` key so PPO never bootstraps across the 20-second end.
         self.cfg = SimpleNamespace(is_finite_horizon=True)
         self.geometry = geometry
-        self.seed = int(seed)
-        self.sample_serial = 0
+        self.reset_sampler = reset_sampler
 
         self.command_surface = CommandSurface(
             vertices=command_vertices,
@@ -219,13 +238,9 @@ class CurrentTaskProgressHighGoalEnv:
         self.maximum_contact_force = torch.zeros(self.num_envs, device=self.device)
         self.first_contact_native_tick = torch.full((self.num_envs,), -1, dtype=torch.long, device=self.device)
         self.episode_native_tick = torch.zeros(self.num_envs, dtype=torch.long, device=self.device)
-        self.hard_case = torch.zeros(self.num_envs, dtype=torch.bool, device=self.device)
         self.goal_side = torch.ones(self.num_envs, dtype=torch.long, device=self.device)
-        self.current_sample_serial = torch.full((self.num_envs,), -1, dtype=torch.long, device=self.device)
-        self.current_item_seed = torch.full((self.num_envs,), -1, dtype=torch.long, device=self.device)
-        self.reset_regime = [""] * self.num_envs
-        self.bucket = [""] * self.num_envs
-        self.reset_samples: list[ResetSample | None] = [None] * self.num_envs
+        # Per-slot copies of the reset batch's tags, allocated on first use.
+        self.reset_tags: dict[str, torch.Tensor] = {}
         # Record the simulator state after each reset for episode metrics.
         self.live_reset_robot_xy_yaw = torch.zeros(self.num_envs, 3, device=self.device)
         self.live_reset_ball_xy = torch.zeros(self.num_envs, 2, device=self.device)
@@ -236,52 +251,48 @@ class CurrentTaskProgressHighGoalEnv:
         self._observation = torch.zeros(self.num_envs, self.num_obs, device=self.device)
         self._reset_idx(torch.arange(self.num_envs, dtype=torch.long, device=self.device))
 
-    def _next_sample(self) -> tuple[ResetSample, int, str]:
-        self.sample_serial += 1
-        item_seed = self.seed * 1_000_003 + self.sample_serial
-        sample, regime = sample_training_reset(item_seed, self.sample_serial)
-        return sample, item_seed, regime
-
     def _reset_idx(self, env_ids: torch.Tensor) -> None:
-        if env_ids.numel() == 0:
-            return
-        ids = torch.sort(env_ids.to(device=self.device, dtype=torch.long).flatten()).values
-        if int(torch.unique(ids).numel()) != int(ids.numel()):
-            raise RuntimeError("reset environment IDs are not unique")
-        self.base_env._reset_idx(ids)
+        """Start new episodes in ``env_ids`` (sorted, unique) from one batch
+        of the reset sampler, in env-id order."""
+
+        ids = env_ids.to(device=self.device, dtype=torch.long).flatten()
         count = int(ids.numel())
+        if count == 0:
+            return
+        self.base_env._reset_idx(ids)
+        batch = self.reset_sampler(count)
+        if batch.robot_xy.shape != (count, 2) or batch.ball_xy.shape != (count, 2):
+            raise RuntimeError("reset sampler returned the wrong batch size")
+        robot_xy = batch.robot_xy.to(self.device, torch.float32)
+        robot_yaw = batch.robot_yaw.to(self.device, torch.float32)
+        ball_xy = batch.ball_xy.to(self.device, torch.float32)
+        goal_side = batch.goal_side.to(self.device, torch.long)
+
         defaults = self.robot.data.default_joint_pos[ids].clone()
         self.robot.write_joint_state_to_sim(defaults, torch.zeros_like(defaults), env_ids=ids)
         origins = self.env_origins[ids]
         robot_pose = torch.zeros(count, 7, device=self.device)
-        robot_velocity = torch.zeros(count, 6, device=self.device)
-        robot_z = self.robot.data.root_pos_w[ids, 2].clone()
+        robot_pose[:, :2] = origins[:, :2] + robot_xy
+        robot_pose[:, 2] = self.robot.data.root_pos_w[ids, 2]
+        robot_pose[:, 3] = torch.cos(robot_yaw / 2.0)
+        robot_pose[:, 6] = torch.sin(robot_yaw / 2.0)
         ball_default_root_state = self.ball.data.default_root_state[ids].clone()
-        if tuple(ball_default_root_state.shape) != (count, 13) or not bool(torch.isfinite(ball_default_root_state).all()):
-            raise RuntimeError("canonical ball default root state changed")
         ball_pose = ball_default_root_state[:, :7].clone()
         ball_pose[:, :3] += origins
+        ball_pose[:, :2] = origins[:, :2] + ball_xy
         ball_velocity = ball_default_root_state[:, 7:].clone()
-        for local_index, env_id in enumerate(ids.detach().cpu().tolist()):
-            sample, item_seed, reset_regime = self._next_sample()
-            robot_pose[local_index, 0] = origins[local_index, 0] + sample.robot_xy[0]
-            robot_pose[local_index, 1] = origins[local_index, 1] + sample.robot_xy[1]
-            robot_pose[local_index, 2] = robot_z[local_index]
-            robot_pose[local_index, 3] = math.cos(sample.robot_yaw / 2.0)
-            robot_pose[local_index, 6] = math.sin(sample.robot_yaw / 2.0)
-            ball_pose[local_index, 0] = origins[local_index, 0] + sample.ball_xy[0]
-            ball_pose[local_index, 1] = origins[local_index, 1] + sample.ball_xy[1]
-            self.goal_xy_w[env_id, 0] = origins[local_index, 0] + sample.goal_side * self.geometry.field_half_length
-            self.goal_xy_w[env_id, 1] = origins[local_index, 1]
-            self.goal_side[env_id] = sample.goal_side
-            self.current_sample_serial[env_id] = self.sample_serial
-            self.current_item_seed[env_id] = item_seed
-            self.reset_regime[env_id] = reset_regime
-            self.hard_case[env_id] = is_hard_goal_facing_ball_behind(sample)
-            self.bucket[env_id] = relative_bucket(sample)
-            self.reset_samples[env_id] = sample
+        self.goal_xy_w[ids, 0] = origins[:, 0] + goal_side.to(torch.float32) * self.geometry.field_half_length
+        self.goal_xy_w[ids, 1] = origins[:, 1]
+        self.goal_side[ids] = goal_side
+        for name, value in batch.tags.items():
+            if name not in self.reset_tags:
+                self.reset_tags[name] = torch.zeros(
+                    (self.num_envs, *value.shape[1:]), dtype=value.dtype, device=self.device
+                )
+            self.reset_tags[name][ids] = value.to(self.device)
+
         self.robot.write_root_pose_to_sim(robot_pose, env_ids=ids)
-        self.robot.write_root_velocity_to_sim(robot_velocity, env_ids=ids)
+        self.robot.write_root_velocity_to_sim(torch.zeros(count, 6, device=self.device), env_ids=ids)
         self.ball.write_root_pose_to_sim(ball_pose, env_ids=ids)
         self.ball.write_root_velocity_to_sim(ball_velocity, env_ids=ids)
         self.command[ids, :3] = 0.0
@@ -295,38 +306,11 @@ class CurrentTaskProgressHighGoalEnv:
         self.episode_cumulative_progress[ids] = 0.0
         if hasattr(self.base_env, "episode_length_buf"):
             self.base_env.episode_length_buf[ids] = 0
-        if not bool((self.command[ids, :3].abs() <= 1.0e-8).all()):
-            raise RuntimeError("command buffer did not reset")
-        previous_action = getattr(self.base_env.action_manager, "prev_action", None)
-        if not torch.is_tensor(previous_action) or tuple(previous_action.shape) != (self.num_envs, 12):
-            raise RuntimeError("previous action buffer changed")
-        if not bool((previous_action[ids].abs() <= 1.0e-8).all()):
-            raise RuntimeError("previous action did not reset")
 
-        live_robot_world_xy = self.robot.data.root_pos_w[ids, :2]
-        live_ball_world_xy = self.ball.data.root_pos_w[ids, :2]
-        programmed_robot_world_xy = robot_pose[:, :2]
-        programmed_ball_world_xy = ball_pose[:, :2]
-        programmed_robot_local_xy = programmed_robot_world_xy - origins[:, :2]
-        programmed_ball_local_xy = programmed_ball_world_xy - origins[:, :2]
-        if not torch.allclose(
-            live_robot_world_xy,
-            programmed_robot_world_xy,
-            rtol=0.0,
-            atol=LIVE_RESET_XY_TOLERANCE_M,
-        ):
-            raise RuntimeError("robot root pose write did not reach the simulator")
-        if not torch.allclose(
-            live_ball_world_xy,
-            programmed_ball_world_xy,
-            rtol=0.0,
-            atol=LIVE_RESET_XY_TOLERANCE_M,
-        ):
-            raise RuntimeError("ball root pose write did not reach the simulator")
-        live_robot_xy = live_robot_world_xy - origins[:, :2]
+        # One check that every write reached the simulator: the live root
+        # states equal what was written and the action buffers are clear.
+        live_robot_xy = self.robot.data.root_pos_w[ids, :2] - origins[:, :2]
         live_robot_yaw = yaw_from_quaternion(self.robot.data.root_quat_w[ids])
-        live_robot = torch.cat((live_robot_xy, live_robot_yaw.unsqueeze(1)), dim=1)
-        live_ball = live_ball_world_xy - origins[:, :2]
         live_ball_root_state = torch.cat(
             (
                 self.ball.data.root_pos_w[ids],
@@ -336,71 +320,28 @@ class CurrentTaskProgressHighGoalEnv:
             ),
             dim=1,
         )
-        expected_ball_root_state = torch.cat((ball_pose, ball_velocity), dim=1)
-        if not bool(
-            torch.allclose(
-                live_ball_root_state,
-                expected_ball_root_state,
-                rtol=0.0,
-                atol=LIVE_RESET_XY_TOLERANCE_M,
-            )
-        ):
-            raise RuntimeError("live ball reset state differs from canonical default state plus sampled XY")
-        for local_index, env_id in enumerate(ids.detach().cpu().tolist()):
-            sample = self.reset_samples[env_id]
-            if sample is None:
-                raise RuntimeError("reset sample disappeared before state validation")
-            expected_robot = torch.tensor(
-                [*sample.robot_xy, sample.robot_yaw], dtype=torch.float64
-            )
-            actual_robot = live_robot[local_index].detach().cpu().to(torch.float64)
-            expected_ball = torch.tensor(sample.ball_xy, dtype=torch.float64)
-            actual_ball = live_ball[local_index].detach().cpu().to(torch.float64)
-            programmed_robot = programmed_robot_local_xy[local_index].detach().cpu().to(torch.float64)
-            programmed_ball = programmed_ball_local_xy[local_index].detach().cpu().to(torch.float64)
-            if not torch.allclose(
-                actual_robot[:2], programmed_robot, rtol=0.0, atol=LIVE_RESET_XY_TOLERANCE_M
-            ):
-                raise RuntimeError("robot local reset differs from programmed reset")
-            if not torch.allclose(
-                programmed_robot,
-                expected_robot[:2],
-                rtol=0.0,
-                atol=PROGRAMMED_LOCAL_SAMPLE_TOLERANCE_M,
-            ):
-                raise RuntimeError("robot reset differs from sampled reset")
-            yaw_error = math.atan2(
-                math.sin(float(actual_robot[2] - expected_robot[2])),
-                math.cos(float(actual_robot[2] - expected_robot[2])),
-            )
-            if abs(yaw_error) > LIVE_RESET_YAW_TOLERANCE_RAD:
-                raise RuntimeError("live robot reset yaw differs from fixed reset sample")
-            if not torch.allclose(
-                actual_ball, programmed_ball, rtol=0.0, atol=LIVE_RESET_XY_TOLERANCE_M
-            ):
-                raise RuntimeError("ball local reset differs from programmed reset")
-            if not torch.allclose(
-                programmed_ball,
-                expected_ball,
-                rtol=0.0,
-                atol=PROGRAMMED_LOCAL_SAMPLE_TOLERANCE_M,
-            ):
-                raise RuntimeError("ball reset differs from sampled reset")
-            self.live_reset_robot_xy_yaw[env_id] = live_robot[local_index]
-            self.live_reset_ball_xy[env_id] = live_ball[local_index]
-        initial_l, _, _, _ = torch_task_geometry(live_robot[:, :2], live_ball, self.goal_side[ids])
+        previous_action = getattr(self.base_env.action_manager, "prev_action", None)
+        if not torch.is_tensor(previous_action) or tuple(previous_action.shape) != (self.num_envs, 12):
+            raise RuntimeError("previous action buffer changed")
+        yaw_error = torch.atan2(torch.sin(live_robot_yaw - robot_yaw), torch.cos(live_robot_yaw - robot_yaw))
+        write_failed = (
+            ((self.robot.data.root_pos_w[ids, :2] - robot_pose[:, :2]).abs() > LIVE_RESET_XY_TOLERANCE_M).any()
+            | ((live_ball_root_state - torch.cat((ball_pose, ball_velocity), dim=1)).abs() > LIVE_RESET_XY_TOLERANCE_M).any()
+            | (yaw_error.abs() > LIVE_RESET_YAW_TOLERANCE_RAD).any()
+            | (previous_action[ids].abs() > 1.0e-8).any()
+            | (self.command[ids, :3].abs() > 1.0e-8).any()
+        )
+        if bool(write_failed):
+            raise RuntimeError("reset state did not reach the simulator")
+        live_ball_xy = self.ball.data.root_pos_w[ids, :2] - origins[:, :2]
+        self.live_reset_robot_xy_yaw[ids] = torch.cat((live_robot_xy, live_robot_yaw.unsqueeze(1)), dim=1)
+        self.live_reset_ball_xy[ids] = live_ball_xy
+        initial_l, _, _, _ = torch_task_geometry(live_robot_xy, live_ball_xy, goal_side)
         self.episode_initial_l_m[ids] = initial_l
-        self._observation = self._build_observation()
-        # Keep sensor resets last: reading sensor.data here would lazily restore
-        # the terminal contact that belongs to the previous episode.
+        # Keep sensor resets last: reading sensor.data after them would
+        # lazily restore the terminal contact of the previous episode.
         self.ball_contact.reset(ids)
         self.base_contact.reset(ids)
-
-    def _low_observation(self) -> torch.Tensor:
-        value = extract_policy_tensor(self.low_env.get_observations())
-        if value.shape != (self.num_envs, 48) or not bool(torch.isfinite(value).all()):
-            raise RuntimeError(f"low observation changed: {tuple(value.shape)}")
-        return value
 
     def _build_observation(self) -> torch.Tensor:
         # Round2 may clear the command-manager tensor after base.step when it
@@ -408,9 +349,9 @@ class CurrentTaskProgressHighGoalEnv:
         # executed and must not corrupt the next high observation.  Reinstall
         # the held command without advancing physics or processing an action.
         self.command[:, :3] = self.previous_command
-        low_observation = self._low_observation()
-        if not bool(torch.allclose(low_observation[:, 9:12], self.previous_command, rtol=0.0, atol=1.0e-6)):
-            raise RuntimeError("next-high native command slot differs from held applied command")
+        low_observation = extract_policy_tensor(self.low_env.get_observations())
+        if low_observation.shape != (self.num_envs, 48):
+            raise RuntimeError(f"low observation changed: {tuple(low_observation.shape)}")
         remaining = 1.0 - self.episode_length_buf.float() / float(self.max_episode_length)
         observation, _ = build_entity_observation(
             low_observation=low_observation,
@@ -429,30 +370,6 @@ class CurrentTaskProgressHighGoalEnv:
             raise RuntimeError("70-D high observation lost the held applied command")
         return observation
 
-    def _ball_contact_force(self) -> torch.Tensor:
-        history = getattr(self.ball_contact.data, "force_matrix_w_history", None)
-        expected = (self.num_envs, 4, 1, len(ROBOT_BODY_NAMES), 3)
-        if not torch.is_tensor(history) or tuple(history.shape) != expected:
-            actual = None if not torch.is_tensor(history) else tuple(history.shape)
-            raise RuntimeError(f"robot-ball ContactSensor shape changed: {actual}")
-        return torch.linalg.vector_norm(history, dim=-1).amax(dim=(1, 2, 3))
-
-    def _base_contact_force(self) -> torch.Tensor:
-        names = tuple(str(name) for name in self.base_contact.body_names)
-        if "base" not in names:
-            raise RuntimeError("base contact sensor lacks base")
-        history = getattr(self.base_contact.data, "net_forces_w_history", None)
-        if not torch.is_tensor(history) or history.ndim != 4 or history.shape[0] != self.num_envs:
-            raise RuntimeError("base contact history is unavailable")
-        return torch.linalg.vector_norm(history[:, :, names.index("base"), :], dim=-1).amax(dim=1)
-
-    def _joint_hard_excess(self) -> torch.Tensor:
-        position = self.robot.data.joint_pos
-        limits = self.robot.data.joint_pos_limits
-        below = torch.clamp(limits[..., 0] - position, min=0.0)
-        above = torch.clamp(position - limits[..., 1], min=0.0)
-        return torch.maximum(below, above).amax(dim=1)
-
     def get_observations(self) -> torch.Tensor:
         self._observation = self._build_observation()
         return self._observation
@@ -463,96 +380,6 @@ class CurrentTaskProgressHighGoalEnv:
             return self.get_observations()
         self._reset_idx(torch.arange(self.num_envs, dtype=torch.long, device=self.device))
         return self.get_observations()
-
-    def _terminal_event(
-        self,
-        env_id: int,
-        *,
-        goal: bool,
-        own_goal: bool,
-        boundary: bool,
-        fall: bool,
-        joint_hard_limit: bool,
-        timeout: bool,
-        requested_line: bool,
-        robot_xy: torch.Tensor,
-        ball_xy: torch.Tensor,
-        contact_force: float,
-        base_force: float,
-        hard_excess: float,
-        completed_high_ticks: int,
-        transition_pre_robot_xy: torch.Tensor,
-        transition_pre_ball_xy: torch.Tensor,
-    ) -> dict[str, Any]:
-        sample = self.reset_samples[env_id]
-        if sample is None:
-            raise RuntimeError("terminal row lost reset sample")
-        unsafe = bool(own_goal or boundary or fall or joint_hard_limit)
-        outcome = (
-            "goal" if goal else "own_goal" if own_goal else "fall" if fall
-            else "boundary" if boundary else "joint_hard_limit" if joint_hard_limit
-            else "timeout"
-        )
-        pre_geometry = scalar_task_geometry(
-            transition_pre_robot_xy.detach().cpu().tolist(),
-            transition_pre_ball_xy.detach().cpu().tolist(),
-            int(self.goal_side[env_id].item()),
-        )
-        final_geometry = scalar_task_geometry(
-            robot_xy.detach().cpu().tolist(),
-            ball_xy.detach().cpu().tolist(),
-            int(self.goal_side[env_id].item()),
-        )
-        transition_progress = (pre_geometry.path_length_m - final_geometry.path_length_m) / PATH_NORMALIZER_M
-        cumulative_progress = float(self.episode_cumulative_progress[env_id].item()) + transition_progress
-        reset_ball = self.live_reset_ball_xy[env_id].detach().cpu().tolist()
-        terminal_ball = ball_xy.detach().cpu().tolist()
-        side = int(self.goal_side[env_id].item())
-        return {
-            "hard_goal_facing_ball_behind": bool(self.hard_case[env_id].item()),
-            "bucket": self.bucket[env_id],
-            "reset_regime": self.reset_regime[env_id],
-            "goal_side": int(self.goal_side[env_id].item()),
-            "sample_serial": int(self.current_sample_serial[env_id].item()),
-            "item_seed": int(self.current_item_seed[env_id].item()),
-            "reset_robot_xy_m": self.live_reset_robot_xy_yaw[env_id, :2].detach().cpu().tolist(),
-            "reset_robot_yaw_rad": float(self.live_reset_robot_xy_yaw[env_id, 2].item()),
-            "reset_ball_xy_m": self.live_reset_ball_xy[env_id].detach().cpu().tolist(),
-            "outcome": outcome,
-            "goal": bool(goal),
-            "own_goal": bool(own_goal),
-            "boundary": bool(boundary),
-            "fall": bool(fall),
-            "joint_hard_limit": bool(joint_hard_limit),
-            "timeout": bool(timeout),
-            "unsafe_pre_goal": unsafe,
-            "requested_goal_line_reached": bool(requested_line),
-            "contact_seen": bool(self.contact_seen[env_id].item()),
-            "first_true_contact_native_tick": (
-                None
-                if int(self.first_contact_native_tick[env_id].item()) < 0
-                else int(self.first_contact_native_tick[env_id].item())
-            ),
-            "maximum_contact_force_n": float(self.maximum_contact_force[env_id].item()),
-            "terminal_contact_force_n": float(contact_force),
-            "terminal_base_contact_force_n": float(base_force),
-            "terminal_joint_hard_limit_excess_rad": float(hard_excess),
-            "native_safe_guard_changed_elements": int(
-                (self.action_term.last_guard_correction[env_id].abs() > 1.0e-9).sum().item()
-            ),
-            "native_safe_guard_max_correction_rad": float(
-                self.action_term.last_guard_correction[env_id].abs().max().item()
-            ),
-            "episode_high_ticks": int(completed_high_ticks),
-            "episode_native_ticks": int(self.episode_native_tick[env_id].item()),
-            "terminal_robot_xy_m": robot_xy.detach().cpu().tolist(),
-            "terminal_ball_xy_m": terminal_ball,
-            "initial_l_m": float(self.episode_initial_l_m[env_id].item()),
-            "final_l_m": final_geometry.path_length_m,
-            "cumulative_progress_reward": cumulative_progress,
-            "requested_goal_axis_ball_displacement_m": side * (terminal_ball[0] - reset_ball[0]),
-            "abs_lateral_ball_drift_m": abs(terminal_ball[1] - reset_ball[1]),
-        }
 
     @torch.inference_mode(False)
     def step(self, latent_action: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, dict[str, Any]]:
@@ -569,8 +396,6 @@ class CurrentTaskProgressHighGoalEnv:
         applied_command, bounded_action = self.command_surface.limit(
             latent_action.detach().to(self.device), self.previous_command
         )
-        if not bool(torch.isfinite(applied_command).all()):
-            raise RuntimeError("applied command is non-finite")
         self.previous_command = applied_command.clone()
 
         active = torch.ones(self.num_envs, dtype=torch.bool, device=self.device)
@@ -579,8 +404,10 @@ class CurrentTaskProgressHighGoalEnv:
         terminal_boundary = torch.zeros_like(active)
         terminal_fall = torch.zeros_like(active)
         terminal_joint = torch.zeros_like(active)
-        terminal_events_by_env: dict[int, dict[str, Any]] = {}
+        terminal_requested = torch.zeros_like(active)
         contact_this_high = torch.zeros_like(active)
+        # Any per-tick failure is recorded here and raised once after the loop.
+        failed = torch.zeros((), dtype=torch.bool, device=self.device)
 
         # Post-state fields are updated only while a slot is active.  Therefore
         # a terminal slot is frozen at the exact native tick that triggered
@@ -590,48 +417,57 @@ class CurrentTaskProgressHighGoalEnv:
         post_contact_force = torch.zeros(self.num_envs, device=self.device)
         post_base_force = torch.zeros(self.num_envs, device=self.device)
         post_hard_excess = torch.zeros(self.num_envs, device=self.device)
+        post_guard_changed = torch.zeros(self.num_envs, dtype=torch.long, device=self.device)
+        post_guard_max = torch.zeros(self.num_envs, device=self.device)
 
         for _low_tick in range(self.low_steps_per_high_action):
             tick_active = active.clone()
-            self.command[:, :3] = 0.0
-            self.command[tick_active, :3] = applied_command[tick_active]
-            native_observation = self._low_observation()
-            if not bool(torch.allclose(native_observation[:, 9:12], self.command[:, :3], rtol=0.0, atol=1.0e-6)):
-                raise RuntimeError("native command slice differs from reinstalled command")
-            low_action = torch.zeros(self.num_envs, 12, device=self.device)
-            if bool(tick_active.any()):
-                with torch.no_grad():
-                    low_action[tick_active] = self.low_actor(native_observation[tick_active])
-            if not bool(torch.isfinite(low_action).all()):
-                raise RuntimeError("low action is non-finite")
+            self.command[:, :3] = torch.where(tick_active.unsqueeze(1), applied_command, torch.zeros_like(applied_command))
+            native_observation = extract_policy_tensor(self.low_env.get_observations())
+            if native_observation.shape != (self.num_envs, 48):
+                raise RuntimeError(f"low observation changed: {tuple(native_observation.shape)}")
+            failed |= ~torch.isfinite(native_observation).all()
+            failed |= (native_observation[:, 9:12] - self.command[:, :3]).abs().amax() > 1.0e-6
+            with torch.no_grad():
+                low_action = torch.where(
+                    tick_active.unsqueeze(1),
+                    self.low_actor(native_observation),
+                    torch.zeros(self.num_envs, 12, device=self.device),
+                )
+            failed |= ~torch.isfinite(low_action).all()
             native_done = normalize_done(
                 self.low_env.step(low_action.detach()),
                 num_envs=self.num_envs,
                 device=self.device,
             )
-            if bool(native_done.any()):
-                raise RuntimeError("disabled native termination emitted done")
+            failed |= native_done.any()
 
             contact_force = self._ball_contact_force()
             base_force = self._base_contact_force()
             hard_excess = self._joint_hard_excess()
+            guard = self.action_term.last_guard_correction.abs()
             robot_xy = self.robot.data.root_pos_w[:, :2] - self.env_origins[:, :2]
             ball_xy = self.ball.data.root_pos_w[:, :2] - self.env_origins[:, :2]
-            post_robot_xy[tick_active] = robot_xy[tick_active]
-            post_ball_xy[tick_active] = ball_xy[tick_active]
-            post_contact_force[tick_active] = contact_force[tick_active]
-            post_base_force[tick_active] = base_force[tick_active]
-            post_hard_excess[tick_active] = hard_excess[tick_active]
+            keep = tick_active.unsqueeze(1)
+            post_robot_xy = torch.where(keep, robot_xy, post_robot_xy)
+            post_ball_xy = torch.where(keep, ball_xy, post_ball_xy)
+            post_contact_force = torch.where(tick_active, contact_force, post_contact_force)
+            post_base_force = torch.where(tick_active, base_force, post_base_force)
+            post_hard_excess = torch.where(tick_active, hard_excess, post_hard_excess)
+            post_guard_changed = torch.where(tick_active, (guard > 1.0e-9).sum(dim=1), post_guard_changed)
+            post_guard_max = torch.where(tick_active, guard.amax(dim=1), post_guard_max)
             contact = contact_force >= TRUE_CONTACT_FORCE_THRESHOLD_N
             new_contact = contact & ~self.contact_seen & tick_active
-            self.first_contact_native_tick[new_contact] = self.episode_native_tick[new_contact]
+            self.first_contact_native_tick = torch.where(
+                new_contact, self.episode_native_tick, self.first_contact_native_tick
+            )
             self.contact_seen |= contact & tick_active
             self.maximum_contact_force = torch.maximum(
                 self.maximum_contact_force,
                 torch.where(tick_active, contact_force, torch.zeros_like(contact_force)),
             )
             contact_this_high |= contact & tick_active
-            self.episode_native_tick[tick_active] += 1
+            self.episode_native_tick += tick_active.long()
 
             selected = self.goal_side.to(ball_xy.dtype) * ball_xy[:, 0]
             inside = ball_xy[:, 1].abs() <= TERMINAL_GOAL_HALF_WIDTH_M
@@ -641,57 +477,17 @@ class CurrentTaskProgressHighGoalEnv:
             fall = (base_force > BASE_FALL_FORCE_THRESHOLD_N) & tick_active
             joint = (hard_excess > JOINT_HARD_LIMIT_TOLERANCE_RAD) & tick_active
             unsafe = own | boundary | fall | joint
-            goal = requested_line & ~unsafe
-            terminal_now = requested_line | unsafe
 
-            terminal_goal |= goal
+            terminal_goal |= requested_line & ~unsafe
             terminal_own |= own
             terminal_boundary |= boundary
             terminal_fall |= fall
             terminal_joint |= joint
-            for env_id in torch.nonzero(terminal_now, as_tuple=False).flatten().detach().cpu().tolist():
-                terminal_events_by_env[env_id] = self._terminal_event(
-                    env_id,
-                    goal=bool(goal[env_id].item()),
-                    own_goal=bool(own[env_id].item()),
-                    boundary=bool(boundary[env_id].item()),
-                    fall=bool(fall[env_id].item()),
-                    joint_hard_limit=bool(joint[env_id].item()),
-                    timeout=False,
-                    requested_line=bool(requested_line[env_id].item()),
-                    robot_xy=robot_xy[env_id],
-                    ball_xy=ball_xy[env_id],
-                    contact_force=float(contact_force[env_id].item()),
-                    base_force=float(base_force[env_id].item()),
-                    hard_excess=float(hard_excess[env_id].item()),
-                    completed_high_ticks=int(self.episode_length_buf[env_id].item()) + 1,
-                    transition_pre_robot_xy=pre_robot_xy[env_id],
-                    transition_pre_ball_xy=pre_ball_xy[env_id],
-                )
-            active &= ~terminal_now
+            terminal_requested |= requested_line
+            active &= ~(requested_line | unsafe)
 
         self.episode_length_buf += 1
         timeout = (self.episode_length_buf >= self.max_episode_length) & active
-        if bool(timeout.any()):
-            for env_id in torch.nonzero(timeout, as_tuple=False).flatten().detach().cpu().tolist():
-                terminal_events_by_env[env_id] = self._terminal_event(
-                    env_id,
-                    goal=False,
-                    own_goal=False,
-                    boundary=False,
-                    fall=False,
-                    joint_hard_limit=False,
-                    timeout=True,
-                    requested_line=False,
-                    robot_xy=post_robot_xy[env_id],
-                    ball_xy=post_ball_xy[env_id],
-                    contact_force=float(post_contact_force[env_id].item()),
-                    base_force=float(post_base_force[env_id].item()),
-                    hard_excess=float(post_hard_excess[env_id].item()),
-                    completed_high_ticks=int(self.episode_length_buf[env_id].item()),
-                    transition_pre_robot_xy=pre_robot_xy[env_id],
-                    transition_pre_ball_xy=pre_ball_xy[env_id],
-                )
 
         progress, _ = torch_progress(
             pre_robot_xy,
@@ -700,34 +496,129 @@ class CurrentTaskProgressHighGoalEnv:
             post_ball_xy,
             pre_goal_side,
         )
-        strict_reward = terminal_goal.to(progress.dtype) - terminal_own.to(progress.dtype)
-        reward = progress + strict_reward
-        if not bool(torch.isfinite(reward).all()):
-            raise RuntimeError("task-progress reward is non-finite")
-        if bool(terminal_goal.any()) and not bool((reward[terminal_goal] > 0.0).all()):
-            raise RuntimeError("goal transition total reward lost positive sign")
-        if bool(terminal_own.any()) and not bool((reward[terminal_own] < 0.0).all()):
-            raise RuntimeError("own-goal transition total reward lost negative sign")
+        reward = progress + terminal_goal.to(progress.dtype) - terminal_own.to(progress.dtype)
+        failed |= ~torch.isfinite(reward).all()
+        if bool(failed):
+            raise RuntimeError(
+                "step failed a safety check: non-finite low observation, action or reward, "
+                "a lost command, or a native termination"
+            )
         self.episode_cumulative_progress += progress
 
         done = terminal_goal | terminal_own | terminal_boundary | terminal_fall | terminal_joint | timeout
-        done_ids = torch.sort(torch.nonzero(done, as_tuple=False).flatten()).values
-        terminal_events = [terminal_events_by_env[int(env_id)] for env_id in done_ids.detach().cpu().tolist()]
-        self.vector_steps += 1
+        done_ids = torch.nonzero(done, as_tuple=False).flatten()
+        episodes: dict[str, torch.Tensor] = {}
         if done_ids.numel():
+            outcome = torch.full_like(done_ids, OUTCOMES.index("timeout"))
+            for name, flag in reversed(
+                (
+                    ("goal", terminal_goal),
+                    ("own_goal", terminal_own),
+                    ("fall", terminal_fall),
+                    ("boundary", terminal_boundary),
+                    ("joint_hard_limit", terminal_joint),
+                )
+            ):
+                outcome = torch.where(flag[done_ids], OUTCOMES.index(name), outcome)
+            final_l, _, _, _ = torch_task_geometry(
+                post_robot_xy[done_ids], post_ball_xy[done_ids], self.goal_side[done_ids]
+            )
+            reset_ball = self.live_reset_ball_xy[done_ids]
+            terminal_ball = post_ball_xy[done_ids]
+            side = self.goal_side[done_ids]
+            float_columns = {
+                "reset_robot_xy_m": self.live_reset_robot_xy_yaw[done_ids, :2],
+                "reset_robot_yaw_rad": self.live_reset_robot_xy_yaw[done_ids, 2],
+                "reset_ball_xy_m": reset_ball,
+                "terminal_robot_xy_m": post_robot_xy[done_ids],
+                "terminal_ball_xy_m": terminal_ball,
+                "maximum_contact_force_n": self.maximum_contact_force[done_ids],
+                "terminal_contact_force_n": post_contact_force[done_ids],
+                "terminal_base_contact_force_n": post_base_force[done_ids],
+                "terminal_joint_hard_limit_excess_rad": post_hard_excess[done_ids],
+                "native_safe_guard_max_correction_rad": post_guard_max[done_ids],
+                "initial_l_m": self.episode_initial_l_m[done_ids],
+                "final_l_m": final_l,
+                "cumulative_progress_reward": self.episode_cumulative_progress[done_ids],
+                "requested_goal_axis_ball_displacement_m": side.to(torch.float32) * (terminal_ball[:, 0] - reset_ball[:, 0]),
+                "abs_lateral_ball_drift_m": (terminal_ball[:, 1] - reset_ball[:, 1]).abs(),
+            }
+            integer_columns = {
+                "goal_side": side,
+                "outcome": outcome,
+                "goal": terminal_goal[done_ids],
+                "own_goal": terminal_own[done_ids],
+                "boundary": terminal_boundary[done_ids],
+                "fall": terminal_fall[done_ids],
+                "joint_hard_limit": terminal_joint[done_ids],
+                "timeout": timeout[done_ids],
+                "requested_goal_line_reached": terminal_requested[done_ids],
+                "contact_seen": self.contact_seen[done_ids],
+                "first_true_contact_native_tick": self.first_contact_native_tick[done_ids],
+                "native_safe_guard_changed_elements": post_guard_changed[done_ids],
+                "episode_high_ticks": self.episode_length_buf[done_ids],
+                "episode_native_ticks": self.episode_native_tick[done_ids],
+            }
+            episodes = _to_host_columns(float_columns, torch.float32)
+            episodes.update(_to_host_columns(integer_columns, torch.long))
+            for name in ("goal", "own_goal", "boundary", "fall", "joint_hard_limit", "timeout",
+                         "requested_goal_line_reached", "contact_seen"):
+                episodes[name] = episodes[name].bool()
+            episodes["unsafe_pre_goal"] = episodes["own_goal"] | episodes["boundary"] | episodes["fall"] | episodes["joint_hard_limit"]
+            for name, value in self.reset_tags.items():
+                episodes[name] = value[done_ids].cpu()
             self._reset_idx(done_ids)
+        self.vector_steps += 1
         observation = self.get_observations()
         extras = {
-            "terminal_events": terminal_events,
+            "episodes": episodes,
             "task": {
-                "contact_fraction": float(contact_this_high.float().mean().item()),
-                "bounded_action_abs_mean": float(bounded_action.abs().mean().item()),
+                "contact_fraction": contact_this_high.float().mean(),
+                "bounded_action_abs_mean": bounded_action.abs().mean(),
             },
         }
         return observation, reward, done, extras
 
+    def _ball_contact_force(self) -> torch.Tensor:
+        history = getattr(self.ball_contact.data, "force_matrix_w_history", None)
+        expected = (self.num_envs, 4, 1, len(ROBOT_BODY_NAMES), 3)
+        if not torch.is_tensor(history) or tuple(history.shape) != expected:
+            actual = None if not torch.is_tensor(history) else tuple(history.shape)
+            raise RuntimeError(f"robot-ball ContactSensor shape changed: {actual}")
+        return torch.linalg.vector_norm(history, dim=-1).amax(dim=(1, 2, 3))
+
+    def _base_contact_force(self) -> torch.Tensor:
+        history = getattr(self.base_contact.data, "net_forces_w_history", None)
+        if not torch.is_tensor(history) or history.ndim != 4 or history.shape[0] != self.num_envs:
+            raise RuntimeError("base contact history is unavailable")
+        return torch.linalg.vector_norm(history[:, :, self.base_body_index, :], dim=-1).amax(dim=1)
+
+    def _joint_hard_excess(self) -> torch.Tensor:
+        position = self.robot.data.joint_pos
+        limits = self.robot.data.joint_pos_limits
+        below = torch.clamp(limits[..., 0] - position, min=0.0)
+        above = torch.clamp(position - limits[..., 1], min=0.0)
+        return torch.maximum(below, above).amax(dim=1)
+
     def close(self) -> None:
         self.low_env.close()
+
+
+def _to_host_columns(columns: dict[str, torch.Tensor], dtype: torch.dtype) -> dict[str, torch.Tensor]:
+    """Copy same-length columns to the host in one transfer and split them
+    back by name ([n] columns stay [n], [n,k] columns stay [n,k])."""
+
+    widths = [1 if value.ndim == 1 else int(value.shape[1]) for value in columns.values()]
+    packed = torch.cat(
+        [value.reshape(value.shape[0], -1).to(dtype) for value in columns.values()], dim=1
+    ).cpu()
+    result: dict[str, torch.Tensor] = {}
+    start = 0
+    for (name, value), width in zip(columns.items(), widths):
+        piece = packed[:, start:start + width]
+        result[name] = piece[:, 0] if value.ndim == 1 else piece
+        start += width
+    return result
 
 
 class CurrentTaskProgressHighRslAdapter:

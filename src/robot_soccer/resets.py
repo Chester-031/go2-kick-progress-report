@@ -2,9 +2,12 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import math
 import random
+from typing import Protocol
+
+import torch
 
 from .config import FieldGeometry
 
@@ -24,6 +27,52 @@ class ResetSample:
     robot_yaw: float
     ball_xy: tuple[float, float]
     goal_side: int
+
+
+@dataclass(frozen=True)
+class ResetBatch:
+    """Where a batch of new episodes starts, in env-local field coordinates.
+
+    ``robot_xy`` and ``ball_xy`` are ``[n,2]`` metres, ``robot_yaw`` is
+    ``[n]`` radians and ``goal_side`` ``[n]`` is +1 or -1 (the goal the
+    robot attacks).  ``tags`` holds any per-episode values the sampler
+    wants back in the finished-episode records (each ``[n]`` or ``[n,k]``),
+    keyed by the record field name.
+    """
+
+    robot_xy: torch.Tensor
+    robot_yaw: torch.Tensor
+    ball_xy: torch.Tensor
+    goal_side: torch.Tensor
+    tags: dict[str, torch.Tensor] = field(default_factory=dict)
+
+
+class ResetSampler(Protocol):
+    """Gives the environment the start of ``count`` new episodes."""
+
+    def __call__(self, count: int) -> ResetBatch: ...
+
+
+class StageBResetSampler:
+    """The Stage B curriculum's resets, one ``sample_training_reset`` per
+    episode with a running serial, as a ``ResetSampler``."""
+
+    def __init__(self, seed: int) -> None:
+        self.seed = int(seed)
+        self.serial = 0
+
+    def __call__(self, count: int) -> ResetBatch:
+        samples = []
+        for _ in range(count):
+            self.serial += 1
+            sample, _ = sample_training_reset(self.seed * 1_000_003 + self.serial, self.serial)
+            samples.append(sample)
+        return ResetBatch(
+            robot_xy=torch.tensor([sample.robot_xy for sample in samples], dtype=torch.float32),
+            robot_yaw=torch.tensor([sample.robot_yaw for sample in samples], dtype=torch.float32),
+            ball_xy=torch.tensor([sample.ball_xy for sample in samples], dtype=torch.float32),
+            goal_side=torch.tensor([sample.goal_side for sample in samples], dtype=torch.long),
+        )
 
 
 @dataclass(frozen=True)

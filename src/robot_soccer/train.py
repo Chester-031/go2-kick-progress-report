@@ -80,7 +80,7 @@ def run(args: argparse.Namespace) -> int:
     import torch
     from rsl_rl.runners import OnPolicyRunner
 
-    from .metrics import TrainingMetrics
+    from .metrics import TrainingMetrics, concatenate_episodes
     from .recurrent import clone_hidden_state, restore_hidden_state
     from .resets import activate_for_iteration
     from .runtime import (
@@ -148,19 +148,17 @@ def run(args: argparse.Namespace) -> int:
 
     try:
         for iteration in range(1, args.iterations + 1):
-            events: list[dict[str, Any]] = []
+            episode_batches: list[dict[str, Any]] = []
             optimizer_before = optimizer_steps
             with torch.inference_mode():
                 for _ in range(args.steps_per_env):
                     action = runner.alg.act(observation)
-                    if not torch.isfinite(action).all():
-                        raise RuntimeError("policy produced a non-finite action")
                     observation, reward, done, extras = adapter.step(action.to(adapter.device))
                     observation = observation.to(args.device)
                     reward = reward.to(args.device)
                     done = done.to(args.device)
                     runner.alg.process_env_step(observation, reward, done, extras)
-                    events.extend(extras["terminal_events"])
+                    episode_batches.append(extras["episodes"])
 
             actor_hidden = clone_hidden_state(policy.memory_a.hidden_state)
             critic_hidden = clone_hidden_state(policy.memory_c.hidden_state)
@@ -179,7 +177,11 @@ def run(args: argparse.Namespace) -> int:
             if optimizer_steps - optimizer_before != 20:
                 raise RuntimeError("PPO update must perform exactly 20 optimizer steps")
 
-            record = metrics.write(iteration=iteration, events=events, losses=losses)
+            record = metrics.write(
+                iteration=iteration,
+                episodes=concatenate_episodes(episode_batches),
+                losses=losses,
+            )
             if iteration in CHECKPOINT_ITERATIONS or iteration == args.iterations:
                 name = f"model_iteration_{iteration:02d}.pt"
                 save_high_policy(

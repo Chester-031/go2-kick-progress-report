@@ -37,7 +37,7 @@ from robot_soccer.config import (  # noqa: E402
     COMMAND_RATE_LIMITS_PER_SECOND,
     COMMAND_VERTICES,
 )
-from robot_soccer.resets import ResetSample  # noqa: E402
+from robot_soccer.resets import ResetBatch, ResetSample  # noqa: E402
 
 FIXTURE = Path(__file__).parent / "fixtures" / "environment_characterization.json"
 NUM_ENVS = 24
@@ -119,7 +119,7 @@ def run_scripted_rollout(make_env) -> dict:
         observation, reward, done, extras = env.step(scripted_latent_action(observation))
         reward_sum += float(reward.sum())
         done_count += int(done.sum())
-        events.extend(extras["terminal_events"])
+        events.extend(episode_rows(extras["episodes"]))
     return {
         "events": [{name: event[name] for name in COMPARED_FIELDS} for event in events],
         "reward_sum": reward_sum,
@@ -128,12 +128,46 @@ def run_scripted_rollout(make_env) -> dict:
     }
 
 
+def episode_rows(columns: dict) -> list[dict]:
+    """Turn one step's columnar episode batch into per-episode dicts in the
+    fixture's format (outcome names, None for 'no contact')."""
+
+    if not columns:
+        return []
+    rows = []
+    for index in range(len(columns["outcome"])):
+        row = {name: value[index].tolist() for name, value in columns.items()}
+        row["outcome"] = environment_module.OUTCOMES[row["outcome"]]
+        if row["first_true_contact_native_tick"] < 0:
+            row["first_true_contact_native_tick"] = None
+        rows.append(row)
+    return rows
+
+
+class ScriptedResetSampler:
+    """``scripted_reset`` for a running serial, as a reset sampler."""
+
+    def __init__(self) -> None:
+        self.serial = 0
+
+    def __call__(self, count: int) -> ResetBatch:
+        samples = []
+        for _ in range(count):
+            self.serial += 1
+            samples.append(scripted_reset(7, self.serial)[0])
+        return ResetBatch(
+            robot_xy=torch.tensor([sample.robot_xy for sample in samples]),
+            robot_yaw=torch.tensor([sample.robot_yaw for sample in samples]),
+            ball_xy=torch.tensor([sample.ball_xy for sample in samples]),
+            goal_side=torch.tensor([sample.goal_side for sample in samples]),
+        )
+
+
 def make_wrapper(low_env, actor):
-    environment_module.sample_training_reset = scripted_reset
     return environment_module.CurrentTaskProgressHighGoalEnv(
         low_env=low_env,
         frozen_low_actor=actor,
-        seed=7,
+        reset_sampler=ScriptedResetSampler(),
         command_vertices=COMMAND_VERTICES,
         command_axis_ranges=COMMAND_AXIS_RANGES,
         command_rate_limits=COMMAND_RATE_LIMITS_PER_SECOND,
@@ -141,7 +175,11 @@ def make_wrapper(low_env, actor):
 
 
 def assert_close(test: unittest.TestCase, expected, actual, path: str) -> None:
-    if isinstance(expected, float) or isinstance(actual, float):
+    if path.endswith("_yaw_rad"):
+        # A heading of +pi and -pi is the same pose.
+        difference = math.remainder(float(expected) - float(actual), 2.0 * math.pi)
+        test.assertLess(abs(difference), 1.0e-5, f"{path}: expected {expected}, got {actual}")
+    elif isinstance(expected, float) or isinstance(actual, float):
         test.assertTrue(
             math.isclose(float(expected), float(actual), rel_tol=1.0e-5, abs_tol=1.0e-5),
             f"{path}: expected {expected}, got {actual}",

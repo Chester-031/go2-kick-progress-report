@@ -10,11 +10,13 @@ that edge one step outward and one at or below ``low_threshold`` moves it
 one step inward.  Ranges therefore grow where the policy copes and shrink
 where it does not, each knob on its own.
 
-The four knobs are the task axes of a start: the ball's distance from the
-centre of the goal it is to be scored in, the robot's distance from the
-ball, where the robot stands around the ball (0: straight behind it, in
-line with the goal; 180: between the ball and the goal) and the robot's
-facing error to the ball (0: looking at it; 180: looking straight away).
+The five knobs are the task axes of a start: the ball's distance from the
+centre of the goal it is to be scored in and its angle off the goal's
+centre line, the robot's distance from the ball, where the robot stands
+around the ball (0: straight behind it, in line with the goal; 180:
+between the ball and the goal) and the robot's facing error to the ball
+(0: looking at it; 180: looking straight away).  At their limits they
+reach every corner of the field.
 Every range starts as a single point at the easiest start: the ball a
 hand's width from the goal, the robot right behind it looking at it and
 at the goal, so that even a policy that only flails sometimes pushes the
@@ -45,7 +47,6 @@ those records.
 from __future__ import annotations
 
 from dataclasses import dataclass
-import math
 from typing import Any, Mapping, Sequence
 
 import torch
@@ -81,19 +82,22 @@ class ADRParameter:
 
 
 PARAMETERS = (
-    # Ball to the centre of the goal it is to be scored in.
-    ADRParameter("ball_goal_distance_m", 0.15, 6.0, 0.25, 0.02, 0.5),
-    # Robot base to ball (0.45 m: the robot's nose at the ball).
-    ADRParameter("robot_ball_distance_m", 0.4, 2.3, 0.45, 0.02, 0.25),
+    # Ball to the centre of the goal it is to be scored in (8.3 m: the far
+    # corners of the 8 x 5 m field).
+    ADRParameter("ball_goal_distance_m", 0.15, 8.3, 0.25, 0.02, 0.5),
+    # Robot base to ball (0.45 m: the robot's nose at the ball; 8 m: across
+    # the field).
+    ADRParameter("robot_ball_distance_m", 0.4, 8.0, 0.45, 0.02, 0.5),
     # Robot heading versus the bearing to the ball (either side).
     ADRParameter("facing_error_deg", 0.0, 180.0, 0.0, 2.0, 20.0),
     # Where the robot stands around the ball, from straight behind it.
     ADRParameter("robot_bearing_deg", 0.0, 180.0, 0.0, 2.0, 20.0),
+    # The ball's angle off the goal's centre line, seen from the goal
+    # centre (either side).
+    ADRParameter("ball_angle_deg", 0.0, 80.0, 0.5, 1.0, 10.0),
 )
 PARAMETER_INDEX = {parameter.name: index for index, parameter in enumerate(PARAMETERS)}
 
-# The ball sits within a degree of the goal's centre line, on either side.
-BALL_LATERAL_DEG = (0.1, 1.0)
 # A start is on the field when |x| and |y| are within these (metres).
 ROBOT_FIELD_LIMIT_XY = (3.65, 2.15)
 BALL_FIELD_LIMIT_XY = (3.97, 2.15)
@@ -107,9 +111,9 @@ def reset_geometry(values: torch.Tensor, generator: torch.Generator) -> tuple[Re
     """Episode starts realizing ``values`` (``[n,4]`` in PARAMETERS order)
     and whether each lies on the field.
 
-    The goal side, the ball's small lateral angle around the goal centre,
-    and which side of the ball the robot stands and turns to are drawn
-    here, uniformly, from ``generator``.  The geometry is exact even when a
+    The goal side and which side of the goal's centre line the ball is on,
+    which side of the ball the robot stands and which way it turns are
+    drawn here, uniformly, from ``generator``.  The geometry is exact even when a
     start does not fit; the caller decides what to do with those.
     """
 
@@ -119,13 +123,13 @@ def reset_geometry(values: torch.Tensor, generator: torch.Generator) -> tuple[Re
     robot_ball = values[:, PARAMETER_INDEX["robot_ball_distance_m"]]
     facing = torch.deg2rad(values[:, PARAMETER_INDEX["facing_error_deg"]])
     bearing = torch.deg2rad(values[:, PARAMETER_INDEX["robot_bearing_deg"]])
+    ball_angle = torch.deg2rad(values[:, PARAMETER_INDEX["ball_angle_deg"]])
 
     def sign() -> torch.Tensor:
         return torch.randint(0, 2, (count,), generator=generator, dtype=torch.float64) * 2.0 - 1.0
 
-    low, high = (math.radians(bound) for bound in BALL_LATERAL_DEG)
     goal_side = sign()
-    lateral = sign() * (low + (high - low) * torch.rand(count, generator=generator, dtype=torch.float64))
+    lateral = sign() * ball_angle
     goal_x = goal_side * GOAL_CENTER_X_M
     ball_x = goal_x - goal_side * ball_goal * torch.cos(lateral)
     ball_y = ball_goal * torch.sin(lateral)
@@ -391,6 +395,7 @@ class AutomaticDomainRandomization:
         """Everything needed to continue ADR from a checkpoint."""
 
         return {
+            "parameter_names": [parameter.name for parameter in PARAMETERS],
             "ranges": self._ranges.tolist(),
             "buffer_count": self._buffer_count.tolist(),
             "buffer_successes": self._buffer_successes.tolist(),
@@ -398,7 +403,23 @@ class AutomaticDomainRandomization:
         }
 
     def load_state_dict(self, state: Mapping[str, Any]) -> None:
-        self._ranges = torch.tensor(state["ranges"], dtype=torch.float64)
-        self._buffer_count = torch.tensor(state["buffer_count"], dtype=torch.long)
-        self._buffer_successes = torch.tensor(state["buffer_successes"], dtype=torch.long)
+        """Restore ranges, buffers and the generator.  Knobs the checkpoint
+        does not know (added since; older checkpoints list the first four
+        knobs, unnamed) start at their start values, clamped to today's
+        limits."""
+
+        names = state.get("parameter_names") or [parameter.name for parameter in PARAMETERS][: len(state["ranges"])]
+        saved = dict(zip(names, zip(state["ranges"], state["buffer_count"], state["buffer_successes"])))
+        for index, parameter in enumerate(PARAMETERS):
+            if parameter.name in saved:
+                (low, high), count, successes = saved[parameter.name]
+                self._ranges[index] = torch.tensor(
+                    [max(parameter.minimum, low), min(parameter.maximum, high)], dtype=torch.float64
+                )
+                self._buffer_count[index] = torch.tensor(count, dtype=torch.long)
+                self._buffer_successes[index] = torch.tensor(successes, dtype=torch.long)
+            else:
+                self._ranges[index] = parameter.start
+                self._buffer_count[index] = 0
+                self._buffer_successes[index] = 0
         self.generator.set_state(state["generator_state"])

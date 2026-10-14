@@ -85,11 +85,12 @@ class TrainLoopTest(unittest.TestCase):
                     record["completed_episodes"],
                 )
                 self.assertEqual(
-                    sum(row[4] for row in record["knob_grid"]), record["completed_episodes"]
+                    sum(row[5] for row in record["knob_grid"]), record["completed_episodes"]
                 )
                 self.assertEqual(
                     set(record["adr"]["knobs"]),
-                    {"ball_goal_distance_m", "robot_ball_distance_m", "facing_error_deg", "robot_bearing_deg"},
+                    {"ball_goal_distance_m", "robot_ball_distance_m", "facing_error_deg", "robot_bearing_deg",
+                     "ball_angle_deg"},
                 )
                 self.assertGreater(record["timing"]["transitions_per_second"], 0.0)
             probes = sum(
@@ -100,7 +101,7 @@ class TrainLoopTest(unittest.TestCase):
             )
             self.assertEqual(probes, sum(record["by_kind"]["probe"]["episodes"] for record in records))
             info = json.loads((first / "run_info.json").read_text())
-            self.assertEqual(len(info["adr_parameters"]), 4)
+            self.assertEqual(len(info["adr_parameters"]), 5)
             self.assertEqual(
                 sorted(path.name for path in first.glob("*.pt")),
                 ["model_iteration_0002.pt", "model_iteration_0003.pt"],
@@ -110,7 +111,7 @@ class TrainLoopTest(unittest.TestCase):
             # with no edge moves and no fixed-difficulty episodes: every
             # start must then come from the planted ranges.
             checkpoint = torch.load(first / "model_iteration_0002.pt", weights_only=True)
-            planted_ranges = [[3.0, 4.0], [1.0, 1.2], [90.0, 120.0], [0.0, 10.0]]
+            planted_ranges = [[3.0, 4.0], [1.0, 1.2], [90.0, 120.0], [0.0, 10.0], [5.0, 15.0]]
             checkpoint["adr_state"]["ranges"] = planted_ranges
             planted = Path(root) / "planted.pt"
             torch.save(checkpoint, planted)
@@ -123,12 +124,14 @@ class TrainLoopTest(unittest.TestCase):
             )
             resumed = [json.loads(line) for line in (second / "metrics.jsonl").read_text().splitlines()]
             self.assertEqual([record["iteration"] for record in resumed], [3])
-            cells = {tuple(row[:4]) for row in resumed[0]["knob_grid"]}
+            cells = {tuple(row[:5]) for row in resumed[0]["knob_grid"]}
             # Grid cells (metrics.KNOB_GRID_EDGES): ball-goal [3,4) or, for
             # an upper-edge probe at 4.0, [4,5); robot-ball [1.0,1.4);
-            # facing [90,135); bearing [0,10) or, at 10, [10,20).
+            # facing [90,135); bearing [0,10) or, at 10, [10,20); ball angle
+            # [2,10) or [10,20).
             self.assertTrue(cells, "no episodes finished")
-            for ball_goal, robot_ball, facing, bearing in cells:
+            for ball_goal, robot_ball, facing, bearing, ball_angle in cells:
+                self.assertIn(ball_angle, (1, 2))
                 self.assertIn(ball_goal, (7, 8))
                 self.assertEqual(robot_ball, 4)
                 self.assertEqual(facing, 4)

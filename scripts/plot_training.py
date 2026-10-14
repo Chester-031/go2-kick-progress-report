@@ -58,6 +58,7 @@ KNOB_LABEL = {
     "robot_ball_distance_m": "robot to ball (m)",
     "facing_error_deg": "facing error to ball (deg)",
     "robot_bearing_deg": "robot around ball (deg, 0 = behind)",
+    "ball_angle_deg": "ball off goal centre line (deg)",
 }
 KIND_LABEL = {"train": "training (current ranges)", "probe": "probes (one edge pinned)",
               "evaluation": "fixed difficulty (all)"}

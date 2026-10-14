@@ -27,10 +27,11 @@ OUTCOME_NAMES = ("goal", "own_goal", "fall", "boundary", "joint_hard_limit", "ti
 # Cell edges of the knob grid, per knob in ADR PARAMETERS order: fine near
 # the easy start, where ADR spends the early part of training.
 KNOB_GRID_EDGES = (
-    (0.15, 0.3, 0.5, 0.75, 1.0, 1.5, 2.0, 3.0, 4.0, 5.0, 6.0),  # ball-goal m
-    (0.4, 0.5, 0.6, 0.8, 1.0, 1.4, 1.8, 2.3),  # robot-ball m
+    (0.15, 0.3, 0.5, 0.75, 1.0, 1.5, 2.0, 3.0, 4.0, 5.0, 6.0, 8.3),  # ball-goal m
+    (0.4, 0.5, 0.6, 0.8, 1.0, 1.4, 1.8, 2.3, 3.5, 5.0, 8.0),  # robot-ball m
     (0.0, 10.0, 20.0, 45.0, 90.0, 135.0, 180.0),  # facing error deg
     (0.0, 10.0, 20.0, 45.0, 90.0, 135.0, 180.0),  # robot bearing deg
+    (0.0, 2.0, 10.0, 20.0, 40.0, 80.0),  # ball angle off the goal line deg
 )
 NATIVE_TICK_SECONDS = 0.02
 
@@ -45,8 +46,8 @@ def concatenate_episodes(batches: Sequence[Mapping[str, torch.Tensor]]) -> dict[
 
 
 def initial_geometry(episodes: Mapping[str, torch.Tensor]) -> dict[str, torch.Tensor]:
-    """Each episode's start measured from the reset poses as the four task
-    axes: robot-ball distance (m), ball-goal distance (m), the robot's
+    """Each episode's start measured from the reset poses as the five task
+    axes (the ball's angle off the goal's centre line too): robot-ball distance (m), ball-goal distance (m), the robot's
     facing error to the ball (deg, 0 = facing the ball, 180 = facing away)
     and the robot's bearing around the ball (deg, 0 = straight behind the
     ball in line with the goal, 180 = between the ball and the goal).
@@ -66,6 +67,7 @@ def initial_geometry(episodes: Mapping[str, torch.Tensor]) -> dict[str, torch.Te
         "ball_goal_m": torch.hypot(side * GOAL_CENTER_X_M - ball[:, 0], -ball[:, 1]),
         "facing_deg": torch.rad2deg(facing),
         "bearing_deg": torch.rad2deg(torch.atan2(torch.sin(around - behind), torch.cos(around - behind)).abs()),
+        "ball_angle_deg": torch.rad2deg(torch.atan2(ball[:, 1].abs(), (side * GOAL_CENTER_X_M - ball[:, 0]).abs())),
     }
 
 

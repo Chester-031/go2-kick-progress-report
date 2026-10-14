@@ -27,6 +27,7 @@ MEASURED = {
     "robot_ball_distance_m": "robot_ball_m",
     "facing_error_deg": "facing_deg",
     "robot_bearing_deg": "bearing_deg",
+    "ball_angle_deg": "ball_angle_deg",
 }
 
 
@@ -94,7 +95,7 @@ class RangeTest(unittest.TestCase):
 
     def test_failures_move_the_edge_in_but_never_past_the_other_edge(self) -> None:
         adr = AutomaticDomainRandomization(buffer_size=4)
-        adr.set_range("robot_ball_distance_m", 0.8, 0.85)
+        adr.set_range("robot_ball_distance_m", 0.8, 0.81)
         adr.record(probe_results("robot_ball_distance_m", UPPER, [False] * 4))
         self.assertEqual(adr.ranges()[INDEX["robot_ball_distance_m"]].tolist(), [0.8, 0.8])
 
@@ -119,6 +120,21 @@ class RangeTest(unittest.TestCase):
         results["adr_kind"] = torch.tensor([KIND["train"], KIND["evaluation"], KIND["train"]])
         self.assertEqual(adr.record(results), 0)
 
+    def test_a_checkpoint_from_before_a_knob_existed_still_loads(self) -> None:
+        old = AutomaticDomainRandomization(buffer_size=8)
+        old.set_range("ball_goal_distance_m", 0.5, 6.0)
+        state = old.state_dict()
+        # A four-knob state, as checkpoints before ball_angle_deg wrote it.
+        state["ranges"] = state["ranges"][:4]
+        state["buffer_count"] = state["buffer_count"][:4]
+        state["buffer_successes"] = state["buffer_successes"][:4]
+        state.pop("parameter_names", None)
+        restored = AutomaticDomainRandomization(buffer_size=8)
+        restored.load_state_dict(state)
+        self.assertEqual(restored.ranges()[INDEX["ball_goal_distance_m"]].tolist(), [0.5, 6.0])
+        start = PARAMETERS[INDEX["ball_angle_deg"]].start
+        self.assertEqual(restored.ranges()[INDEX["ball_angle_deg"]].tolist(), [start, start])
+
     def test_state_round_trip(self) -> None:
         adr = AutomaticDomainRandomization(buffer_size=8)
         adr.set_range("ball_goal_distance_m", 0.75, 3.0)
@@ -137,6 +153,7 @@ class SamplingTest(unittest.TestCase):
         adr.set_range("robot_ball_distance_m", 0.4, 2.3)
         adr.set_range("facing_error_deg", 0.0, 90.0)
         adr.set_range("robot_bearing_deg", 0.0, 180.0)
+        adr.set_range("ball_angle_deg", 0.0, 60.0)
         batch = adr(20_000)
         self.assertTrue(bool(on_field(batch).all()))
         kind = batch.tags["adr_kind"]
@@ -171,6 +188,24 @@ class SamplingTest(unittest.TestCase):
             self.assertAlmostEqual(high, parameter.maximum, places=5)
 
 
+class WholeFieldTest(unittest.TestCase):
+    def test_the_limits_reach_every_corner_of_the_field(self) -> None:
+        adr = AutomaticDomainRandomization(seed=5, probe_fraction=0.0, evaluation_fraction=0.0)
+        for parameter in PARAMETERS:
+            adr.set_range(parameter.name, parameter.minimum, parameter.maximum)
+        batch = adr(40_000)
+        for name, limit in (("ball_xy", BALL_FIELD_LIMIT_XY), ("robot_xy", ROBOT_FIELD_LIMIT_XY)):
+            xy = getattr(batch, name)
+            # Starts reach within 0.5 m of every edge of the field.
+            self.assertGreater(float(xy[:, 0].max()), limit[0] - 0.5, name)
+            self.assertLess(float(xy[:, 0].min()), -limit[0] + 0.5, name)
+            self.assertGreater(float(xy[:, 1].max()), limit[1] - 0.5, name)
+            self.assertLess(float(xy[:, 1].min()), -limit[1] + 0.5, name)
+        # The robot can start across the field from the ball.
+        separation = torch.linalg.vector_norm(batch.robot_xy - batch.ball_xy, dim=1)
+        self.assertGreater(float(separation.max()), 6.0)
+
+
 class GeometryTest(unittest.TestCase):
     def test_every_corner_realizes_its_knobs(self) -> None:
         corners = torch.tensor(
@@ -197,7 +232,7 @@ class GeometryTest(unittest.TestCase):
         self.assertTrue(bool((ball_ahead > 0.4).all()))
 
     def test_both_goal_sides_and_facing_signs_occur(self) -> None:
-        values = torch.tensor([[3.0, 1.0, 90.0, 0.0]]).repeat(2000, 1)
+        values = torch.tensor([[3.0, 1.0, 90.0, 0.0, 0.5]]).repeat(2000, 1)
         batch, _ = reset_geometry(values, torch.Generator().manual_seed(1))
         to_ball = batch.ball_xy - batch.robot_xy
         bearing = torch.atan2(to_ball[:, 1], to_ball[:, 0])

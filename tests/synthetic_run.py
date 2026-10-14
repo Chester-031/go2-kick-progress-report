@@ -26,7 +26,7 @@ def synthetic_episodes(adr: AutomaticDomainRandomization, count: int, skill: flo
     values = batch.tags["adr_values"].double()
     minimum = torch.tensor([parameter.minimum for parameter in PARAMETERS], dtype=torch.float64)
     maximum = torch.tensor([parameter.maximum for parameter in PARAMETERS], dtype=torch.float64)
-    hardness = ((values - minimum) / (maximum - minimum) * torch.tensor([0.45, 0.15, 0.2, 0.2], dtype=torch.float64)).sum(1)
+    hardness = ((values - minimum) / (maximum - minimum) * torch.tensor([0.4, 0.15, 0.15, 0.15, 0.15], dtype=torch.float64)).sum(1)
     goal = torch.rand(count, generator=generator, dtype=torch.float64) < torch.sigmoid(8.0 * (skill - hardness))
     # Non-goals end as own goal, fall, boundary, joint limit or timeout.
     other = torch.multinomial(torch.tensor([0.04, 0.25, 0.25, 0.06, 0.40]), count, replacement=True,

@@ -1,27 +1,35 @@
-"""Per-iteration episode summaries for training curves and geometry diagnostics.
+"""Per-iteration training records: one JSON line per PPO iteration.
 
 The environment reports finished episodes as columnar batches (field name ->
-CPU tensor, one row per episode).  ``concatenate_episodes`` joins one
-iteration's batches and ``summarize_episodes`` reduces them to the compact
-record ``TrainingMetrics`` appends to ``metrics.jsonl``; the plotting script
-reads only that file.
+CPU tensor, one row per episode, carrying the ADR tags of their start).
+``concatenate_episodes`` joins one iteration's batches and
+``summarize_episodes`` reduces them to rates, outcome counts, the goal rate
+of each fixed evaluation difficulty and a sparse grid of episodes over the
+three ADR knobs.  ``TrainingMetrics`` appends that summary, the ADR state,
+the PPO losses and the timing to ``metrics.jsonl``, writes the static run
+description to ``run_info.json`` once, and mirrors the headline numbers to
+TensorBoard.  ``scripts/plot_training.py`` reads only those two files.
 """
 
 from __future__ import annotations
 
 import json
-import math
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
 import torch
 
+from .adr import EPISODE_KINDS, EVALUATION, PARAMETERS
 from .rewards import GOAL_CENTER_X_M
 
-ROBOT_BALL_DISTANCE_BINS_M = (0.0, 1.0, 1.5, 2.0, 2.5, math.inf)
-BALL_GOAL_DISTANCE_BINS_M = (0.0, 2.0, 4.0, 6.0, 8.0, math.inf)
-FACING_ERROR_BINS_DEG = (0.0, 30.0, 60.0, 90.0, 120.0, 150.0, 180.000001)
 OUTCOME_NAMES = ("goal", "own_goal", "fall", "boundary", "joint_hard_limit", "timeout")
+# Cell edges of the knob grid, per knob in ADR PARAMETERS order.
+KNOB_GRID_EDGES = (
+    tuple(0.5 + 0.5 * index for index in range(12)),  # ball-goal 0.5..6.0 m
+    tuple(0.5 + 0.3 * index for index in range(7)),  # robot-ball 0.5..2.3 m
+    tuple(30.0 * index for index in range(7)),  # facing error 0..180 deg
+)
+NATIVE_TICK_SECONDS = 0.02
 
 
 def concatenate_episodes(batches: Sequence[Mapping[str, torch.Tensor]]) -> dict[str, torch.Tensor]:
@@ -34,9 +42,10 @@ def concatenate_episodes(batches: Sequence[Mapping[str, torch.Tensor]]) -> dict[
 
 
 def initial_geometry(episodes: Mapping[str, torch.Tensor]) -> dict[str, torch.Tensor]:
-    """Each episode's start as the three task axes: robot-ball distance (m),
-    ball-goal distance (m) and the robot's facing error to the ball (deg,
-    0 = facing the ball, 180 = facing straight away)."""
+    """Each episode's start measured from the reset poses as the three task
+    axes: robot-ball distance (m), ball-goal distance (m) and the robot's
+    facing error to the ball (deg, 0 = facing the ball, 180 = facing away).
+    These are the ADR knobs as realized in the simulator."""
 
     robot = episodes["reset_robot_xy_m"].double()
     ball = episodes["reset_ball_xy_m"].double()
@@ -52,36 +61,50 @@ def initial_geometry(episodes: Mapping[str, torch.Tensor]) -> dict[str, torch.Te
     }
 
 
-def _bin_labels(values: torch.Tensor, edges: Sequence[float], unit: str) -> list[str]:
-    names = []
-    for lower, upper in zip(edges, edges[1:]):
-        rendered_upper = "inf" if math.isinf(upper) else f"{upper:g}"
-        names.append(f"[{lower:g},{rendered_upper}){unit}")
-    index = torch.bucketize(values, torch.tensor(edges[1:-1], dtype=values.dtype), right=True)
-    if bool(((values < edges[0]) | (values >= edges[-1])).any()):
-        raise ValueError("a value is outside the declared bins")
-    return [names[i] for i in index.tolist()]
+def _rate(numerator: int, denominator: int) -> float | None:
+    return numerator / denominator if denominator else None
+
+
+def _knob_grid(episodes: Mapping[str, torch.Tensor]) -> list[list[int]]:
+    """Sparse ``[i, j, k, episodes, goals, contacts]`` rows over the grid
+    cells (KNOB_GRID_EDGES) of each episode's requested knob values."""
+
+    values = episodes["adr_values"].double()
+    cells = []
+    for axis, edges in enumerate(KNOB_GRID_EDGES):
+        inner = torch.tensor(edges[1:-1], dtype=torch.float64)
+        cells.append(torch.bucketize(values[:, axis], inner, right=True))
+    shape = tuple(len(edges) - 1 for edges in KNOB_GRID_EDGES)
+    flat = (cells[0] * shape[1] + cells[1]) * shape[2] + cells[2]
+    size = shape[0] * shape[1] * shape[2]
+    counts = torch.bincount(flat, minlength=size)
+    goals = torch.bincount(flat, weights=episodes["goal"].double(), minlength=size)
+    contacts = torch.bincount(flat, weights=episodes["contact_seen"].double(), minlength=size)
+    rows = []
+    for cell in torch.nonzero(counts).flatten().tolist():
+        rows.append(
+            [
+                cell // (shape[1] * shape[2]),
+                (cell // shape[2]) % shape[1],
+                cell % shape[2],
+                int(counts[cell]),
+                int(goals[cell]),
+                int(contacts[cell]),
+            ]
+        )
+    return rows
 
 
 def summarize_episodes(episodes: Mapping[str, torch.Tensor]) -> dict[str, Any]:
-    """Reduce one iteration's finished episodes to rates, outcome counts and
-    goal/contact counts by start geometry."""
+    """Reduce one iteration's finished episodes to the record fields.
+
+    Rates are over the episodes that finished this iteration; a rate is
+    ``None`` when no episode of that kind finished.
+    """
 
     count = int(episodes["outcome"].numel()) if episodes else 0
     if count == 0:
-        return {
-            "completed_episodes": 0,
-            "mean_episode_return": 0.0,
-            "mean_cumulative_progress_reward": 0.0,
-            "goal_count": 0,
-            "goal_rate": 0.0,
-            "contact_count": 0,
-            "contact_rate": 0.0,
-            "unsafe_count": 0,
-            "unsafe_rate": 0.0,
-            "outcomes": {},
-            "geometry_bins": {},
-        }
+        return {"completed_episodes": 0}
     goal = episodes["goal"]
     contact = episodes["contact_seen"]
     unsafe = episodes["unsafe_pre_goal"]
@@ -90,27 +113,32 @@ def summarize_episodes(episodes: Mapping[str, torch.Tensor]) -> dict[str, Any]:
     if not bool(torch.isfinite(returns).all()):
         raise ValueError("episode return is non-finite")
     outcomes = torch.bincount(episodes["outcome"], minlength=len(OUTCOME_NAMES))
+    seconds = episodes["episode_native_ticks"].double() * NATIVE_TICK_SECONDS
+    first_contact = episodes["first_true_contact_native_tick"]
 
-    geometry = initial_geometry(episodes)
-    robot_ball = _bin_labels(geometry["robot_ball_m"], ROBOT_BALL_DISTANCE_BINS_M, "m")
-    ball_goal = _bin_labels(geometry["ball_goal_m"], BALL_GOAL_DISTANCE_BINS_M, "m")
-    facing = _bin_labels(geometry["facing_deg"], FACING_ERROR_BINS_DEG, "deg")
-    bins: dict[str, dict[str, int]] = {}
-    for index, (goal_flag, contact_flag) in enumerate(zip(goal.tolist(), contact.tolist())):
-        for label in (
-            "robot_ball/" + robot_ball[index],
-            "ball_goal/" + ball_goal[index],
-            "facing/" + facing[index],
-            "facing_x_robot_ball/" + facing[index] + "/" + robot_ball[index],
-        ):
-            item = bins.setdefault(label, {"episodes": 0, "goals": 0, "contacts": 0})
-            item["episodes"] += 1
-            item["goals"] += int(goal_flag)
-            item["contacts"] += int(contact_flag)
+    by_kind = {}
+    for index, name in enumerate(EPISODE_KINDS):
+        rows = episodes["adr_kind"] == index
+        total = int(rows.sum())
+        by_kind[name] = {
+            "episodes": total,
+            "goal_rate": _rate(int(goal[rows].sum()), total),
+            "contact_rate": _rate(int(contact[rows].sum()), total),
+            "unsafe_rate": _rate(int(unsafe[rows].sum()), total),
+        }
+    evaluation = {}
+    difficulty = episodes["adr_difficulty"]
+    for value in sorted({float(item) for item in difficulty[episodes["adr_kind"] == EVALUATION].tolist()}):
+        rows = (episodes["adr_kind"] == EVALUATION) & (difficulty == value)
+        total = int(rows.sum())
+        evaluation[f"{value:g}"] = {
+            "episodes": total,
+            "goal_rate": _rate(int(goal[rows].sum()), total),
+            "contact_rate": _rate(int(contact[rows].sum()), total),
+        }
 
     goal_count = int(goal.sum())
     contact_count = int(contact.sum())
-    unsafe_count = int(unsafe.sum())
     return {
         "completed_episodes": count,
         "mean_episode_return": float(returns.mean()),
@@ -119,23 +147,44 @@ def summarize_episodes(episodes: Mapping[str, torch.Tensor]) -> dict[str, Any]:
         "goal_rate": goal_count / count,
         "contact_count": contact_count,
         "contact_rate": contact_count / count,
-        "unsafe_count": unsafe_count,
-        "unsafe_rate": unsafe_count / count,
-        "outcomes": {
-            name: int(outcomes[index]) for index, name in enumerate(OUTCOME_NAMES) if int(outcomes[index])
+        "unsafe_rate": int(unsafe.sum()) / count,
+        "outcomes": {name: int(outcomes[index]) for index, name in enumerate(OUTCOME_NAMES)},
+        "by_kind": by_kind,
+        "evaluation": evaluation,
+        "episode_seconds": {
+            "mean": float(seconds.mean()),
+            "mean_goal": float(seconds[goal].mean()) if goal_count else None,
+            "mean_first_contact": (
+                float(first_contact[contact].double().mean()) * NATIVE_TICK_SECONDS if contact_count else None
+            ),
         },
-        "geometry_bins": dict(sorted(bins.items())),
+        "mean_goal_axis_ball_displacement_m": float(episodes["requested_goal_axis_ball_displacement_m"].double().mean()),
+        "knob_grid": _knob_grid(episodes),
     }
 
 
 class TrainingMetrics:
-    """Write one compact JSON/TensorBoard record per PPO iteration."""
+    """Write one JSON line (and TensorBoard scalars) per PPO iteration."""
 
-    def __init__(self, output: str | Path, *, tensorboard: bool = True) -> None:
+    def __init__(
+        self,
+        output: str | Path,
+        *,
+        run_info: Mapping[str, Any],
+        tensorboard: bool = True,
+        completed_episodes: int = 0,
+    ) -> None:
         self.output = Path(output)
         self.output.mkdir(parents=True, exist_ok=True)
         self.jsonl = self.output / "metrics.jsonl"
-        self.completed_episodes = 0
+        self.completed_episodes = int(completed_episodes)
+        info = {
+            **run_info,
+            "adr_parameters": [vars(parameter) for parameter in PARAMETERS],
+            "knob_grid_edges": [list(edges) for edges in KNOB_GRID_EDGES],
+            "outcome_names": list(OUTCOME_NAMES),
+        }
+        (self.output / "run_info.json").write_text(json.dumps(info, indent=2, sort_keys=True) + "\n", encoding="utf-8")
         self.writer = None
         if tensorboard:
             try:
@@ -151,6 +200,8 @@ class TrainingMetrics:
         iteration: int,
         episodes: Mapping[str, torch.Tensor],
         losses: Mapping[str, Any],
+        adr: Mapping[str, Any],
+        timing: Mapping[str, float],
     ) -> dict[str, Any]:
         summary = summarize_episodes(episodes)
         self.completed_episodes += int(summary["completed_episodes"])
@@ -162,28 +213,32 @@ class TrainingMetrics:
             "iteration": int(iteration),
             "cumulative_completed_episodes": self.completed_episodes,
             **summary,
+            "adr": dict(adr),
+            "timing": dict(timing),
             "losses": {name: scalar(value) for name, value in losses.items()},
         }
         with self.jsonl.open("a", encoding="utf-8") as stream:
             stream.write(json.dumps(record, sort_keys=True, allow_nan=False) + "\n")
 
         if self.writer is not None:
-            step = self.completed_episodes
-            self.writer.add_scalar("train/episode_return", record["mean_episode_return"], step)
-            self.writer.add_scalar("train/goal_rate", record["goal_rate"], step)
-            self.writer.add_scalar("train/contact_rate", record["contact_rate"], step)
-            for label, values in record["geometry_bins"].items():
-                if values["episodes"]:
-                    self.writer.add_scalar(
-                        "geometry/" + label + "/goal_rate",
-                        values["goals"] / values["episodes"],
-                        step,
-                    )
-                    self.writer.add_scalar(
-                        "geometry/" + label + "/contact_rate",
-                        values["contacts"] / values["episodes"],
-                        step,
-                    )
+            step = int(iteration)
+            for name in ("goal_rate", "contact_rate", "unsafe_rate", "mean_episode_return"):
+                if name in record:
+                    self.writer.add_scalar(f"train/{name}", record[name], step)
+            for kind, values in record.get("by_kind", {}).items():
+                if values["goal_rate"] is not None:
+                    self.writer.add_scalar(f"kind/{kind}_goal_rate", values["goal_rate"], step)
+            for difficulty, values in record.get("evaluation", {}).items():
+                if values["goal_rate"] is not None:
+                    self.writer.add_scalar(f"evaluation/difficulty_{difficulty}_goal_rate", values["goal_rate"], step)
+            self.writer.add_scalar("adr/entropy", record["adr"]["entropy"], step)
+            for knob, values in record["adr"]["knobs"].items():
+                self.writer.add_scalar(f"adr/{knob}/low", values["low"], step)
+                self.writer.add_scalar(f"adr/{knob}/high", values["high"], step)
+            for name, value in record["timing"].items():
+                self.writer.add_scalar(f"timing/{name}", value, step)
+            for name, value in record["losses"].items():
+                self.writer.add_scalar(f"loss/{name}", value, step)
             self.writer.flush()
         return record
 

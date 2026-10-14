@@ -1,8 +1,9 @@
-"""Two-level no-Kick soccer environment used by Stage B training.
+"""Two-level no-Kick soccer environment.
 
 A recurrent high policy emits a three-axis velocity command at 10 Hz.  The
 frozen low policy executes that command for five native 50 Hz ticks.  Goal and
 safety termination are evaluated after every native tick and before reset.
+Episode starts come from a reset sampler (``resets.ResetSampler``).
 """
 
 from __future__ import annotations

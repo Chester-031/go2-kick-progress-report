@@ -10,7 +10,6 @@ import torch
 from .config import (
     ACTIVATION,
     ACTOR_HIDDEN_DIMS,
-    CHECKPOINT_ITERATIONS,
     CLIP_PARAM,
     COMMAND_AXIS_RANGES,
     COMMAND_RATE_LIMITS_PER_SECOND,
@@ -31,10 +30,11 @@ from .config import (
     POLICY_OBSERVATION_DIM,
     ROLLOUT_STEPS,
     SEED,
-    TRAINING_ITERATIONS,
     VALUE_LOSS_COEF,
 )
 from .low_policy import file_sha256, load_frozen_low_actor
+from .resets import ResetSampler
+
 TASK_ID = "Isaac-Go2-Soccer-Milestone2-v0"
 LOW_ACTOR_DIMS = (48, 512, 256, 128, 12)
 
@@ -55,31 +55,31 @@ def prepare_output_directory(path: str | Path) -> Path:
 def runner_config(
     *,
     device: str,
+    iterations: int,
     num_steps: int = ROLLOUT_STEPS,
     seed: int = SEED,
 ) -> dict[str, Any]:
-    """Return the PPO configuration used by the reported training run."""
+    """The full RSL-RL 3.1 runner configuration of the high policy: a
+    recurrent GRU actor-critic trained by PPO with a fixed learning rate.
 
-    from isaac_go2_low_level_rl.tasks.manager_based.locomotion.velocity.agents.rsl_rl_ppo_cfg import (
-        Go2LowLevelPPORunnerCfg,
-    )
+    Written out in full rather than derived from the Isaac Lab runner
+    config class: every policy and algorithm field is set here, so the
+    training configuration does not depend on Isaac Lab's defaults and can
+    be built without Isaac Lab.
+    """
 
-    cfg = Go2LowLevelPPORunnerCfg().to_dict()
-    cfg.update(
-        {
-            "seed": int(seed),
-            "device": device,
-            "num_steps_per_env": int(num_steps),
-            "max_iterations": TRAINING_ITERATIONS,
-            "save_interval": TRAINING_ITERATIONS + 1,
-            "experiment_name": "robot_soccer_stage_b",
-            "run_name": f"seed_{int(seed)}",
-            "obs_groups": {"policy": ["policy"], "critic": ["policy"]},
-            "clip_actions": None,
-        }
-    )
-    cfg["policy"].update(
-        {
+    return {
+        "seed": int(seed),
+        "device": device,
+        "num_steps_per_env": int(num_steps),
+        "max_iterations": int(iterations),
+        "save_interval": int(iterations) + 1,
+        "experiment_name": "robot_soccer_adr",
+        "run_name": f"seed_{int(seed)}",
+        "logger": "tensorboard",
+        "obs_groups": {"policy": ["policy"], "critic": ["policy"]},
+        "clip_actions": None,
+        "policy": {
             "class_name": "ActorCriticRecurrent",
             "rnn_type": "gru",
             "rnn_hidden_dim": GRU_HIDDEN_DIM,
@@ -92,10 +92,9 @@ def runner_config(
             "critic_obs_normalization": False,
             "noise_std_type": "scalar",
             "state_dependent_std": False,
-        }
-    )
-    cfg["algorithm"].update(
-        {
+        },
+        "algorithm": {
+            "class_name": "PPO",
             "schedule": "fixed",
             "learning_rate": LEARNING_RATE,
             "desired_kl": None,
@@ -111,9 +110,8 @@ def runner_config(
             "normalize_advantage_per_mini_batch": False,
             "rnd_cfg": None,
             "symmetry_cfg": None,
-        }
-    )
-    return cfg
+        },
+    }
 
 
 def make_environment(
@@ -123,10 +121,12 @@ def make_environment(
     num_envs: int,
     seed: int,
     device: str,
+    reset_sampler: ResetSampler,
     task: str = TASK_ID,
     render_mode: str | None = None,
 ):
-    """Construct the frozen-low soccer environment.
+    """Construct the frozen-low soccer environment, its RSL-RL adapter and
+    the loaded low actor; episode starts come from ``reset_sampler``.
 
     Isaac Lab must already be launched before this function is called.
     """
@@ -136,7 +136,6 @@ def make_environment(
     import isaac_go2_low_level_rl.tasks.manager_based.soccer  # noqa: F401
 
     from .env_cfg import SparseHighEnvCfg
-    from .resets import StageBResetSampler
     from .environment import (
         CurrentTaskProgressHighGoalEnv,
         CurrentTaskProgressHighRslAdapter,
@@ -167,7 +166,7 @@ def make_environment(
     env = CurrentTaskProgressHighGoalEnv(
         low_env=FrozenLowInferenceEnv(gym_env),
         frozen_low_actor=actor,
-        reset_sampler=StageBResetSampler(int(seed)),
+        reset_sampler=reset_sampler,
         command_vertices=COMMAND_VERTICES,
         command_axis_ranges=COMMAND_AXIS_RANGES,
         command_rate_limits=COMMAND_RATE_LIMITS_PER_SECOND,
@@ -205,18 +204,21 @@ def load_high_policy(
     policy: torch.nn.Module,
     checkpoint: str | Path,
     *,
-    expected_checkpoint_sha256: str,
-    require_pre_action_initial: bool = False,
-) -> int:
-    """Verify and strictly load high-policy weights."""
+    expected_checkpoint_sha256: str | None = None,
+) -> Mapping[str, Any]:
+    """Strictly load high-policy weights from ``checkpoint`` and return the
+    whole checkpoint payload (a resume also needs its optimizer state,
+    iteration and ADR state).  When ``expected_checkpoint_sha256`` is given
+    the file must match it."""
 
     path = Path(checkpoint).expanduser().resolve(strict=True)
-    actual_sha256 = file_sha256(path)
-    if actual_sha256 != expected_checkpoint_sha256:
-        raise RuntimeError(
-            "High checkpoint SHA256 mismatch: "
-            f"expected={expected_checkpoint_sha256} actual={actual_sha256}"
-        )
+    if expected_checkpoint_sha256 is not None:
+        actual_sha256 = file_sha256(path)
+        if actual_sha256 != expected_checkpoint_sha256:
+            raise RuntimeError(
+                "High checkpoint SHA256 mismatch: "
+                f"expected={expected_checkpoint_sha256} actual={actual_sha256}"
+            )
     payload = torch.load(
         path,
         map_location=next(policy.parameters()).device,
@@ -224,21 +226,8 @@ def load_high_policy(
     )
     if not isinstance(payload, Mapping) or "model_state_dict" not in payload:
         raise ValueError("checkpoint has no model_state_dict")
-    if require_pre_action_initial:
-        infos = payload.get("infos", {})
-        if not isinstance(infos, Mapping) or (
-            infos.get("architecture")
-            != "fresh_recurrent_high_v56_task_progress_70d_3d"
-            or infos.get("source") != "RUN_LOCAL_INITIAL_EVALUATION"
-            or infos.get("kind") != "initial_before_any_act"
-            or infos.get("v4d_weights_loaded") is not False
-            or infos.get("teacher_loaded") is not False
-            or int(payload.get("iter", -1)) != 0
-            or payload.get("optimizer_state_dict") is not None
-        ):
-            raise RuntimeError("initial high checkpoint is not the pre-action parent")
     policy.load_state_dict(payload["model_state_dict"], strict=True)
-    return int(payload.get("iter", 0))
+    return payload
 
 
 def save_high_policy(
@@ -247,8 +236,10 @@ def save_high_policy(
     policy: torch.nn.Module,
     optimizer: torch.optim.Optimizer,
     iteration: int,
+    adr_state: Mapping[str, Any],
 ) -> None:
-    """Atomically save a resume-capable high-policy checkpoint."""
+    """Atomically save a resume-capable checkpoint: policy, optimizer,
+    iteration and the ADR ranges and probe buffers."""
 
     destination = Path(path)
     destination.parent.mkdir(parents=True, exist_ok=True)
@@ -258,11 +249,11 @@ def save_high_policy(
             "model_state_dict": policy.state_dict(),
             "optimizer_state_dict": optimizer.state_dict(),
             "iter": int(iteration),
+            "adr_state": dict(adr_state),
             "infos": {
                 "observation_dim": POLICY_OBSERVATION_DIM,
                 "action_dim": POLICY_ACTION_DIM,
                 "policy_class": "ActorCriticRecurrent",
-                "checkpoint_iterations": list(CHECKPOINT_ITERATIONS),
             },
         },
         temporary,

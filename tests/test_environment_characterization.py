@@ -5,7 +5,8 @@ terminal state, contact timing, progress reward) is the part a speed
 refactor can silently break.  This test drives the wrapper on the
 deterministic fake Isaac scene with scripted resets and a scripted high
 policy and compares every finished episode, every reward sum and the final
-observation with a fixture recorded from the Stage B wrapper.
+observation with a fixture recorded from the wrapper (first from Stage B,
+re-recorded once for the exact command projection).
 
 Regenerate the fixture only when a behavior change is intended:
 ``REGENERATE_FIXTURE=1 python -m unittest tests.test_environment_characterization``.
@@ -13,6 +14,7 @@ Regenerate the fixture only when a behavior change is intended:
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 import json
 import math
 import os
@@ -37,7 +39,7 @@ from robot_soccer.config import (  # noqa: E402
     COMMAND_RATE_LIMITS_PER_SECOND,
     COMMAND_VERTICES,
 )
-from robot_soccer.resets import ResetBatch, ResetSample  # noqa: E402
+from robot_soccer.resets import ResetBatch  # noqa: E402
 
 FIXTURE = Path(__file__).parent / "fixtures" / "environment_characterization.json"
 NUM_ENVS = 24
@@ -88,20 +90,24 @@ SCRIPTED_PLACEMENTS = (
 )
 
 
-def scripted_reset(seed: int, serial: int) -> tuple[ResetSample, str]:
+@dataclass(frozen=True)
+class ScriptedStart:
+    robot_xy: tuple[float, float]
+    robot_yaw: float
+    ball_xy: tuple[float, float]
+    goal_side: int
+
+
+def scripted_reset(serial: int) -> ScriptedStart:
     """Cycle through SCRIPTED_PLACEMENTS with a small serial-keyed shift."""
 
-    del seed
     ball, robot, yaw = SCRIPTED_PLACEMENTS[(serial - 1) % len(SCRIPTED_PLACEMENTS)]
     shift = 0.01 * ((serial * 37) % 11 - 5)
-    return (
-        ResetSample(
-            robot_xy=(robot[0] + shift, robot[1] - shift),
-            robot_yaw=yaw,
-            ball_xy=(ball[0], ball[1] + shift),
-            goal_side=1,
-        ),
-        "SCRIPTED",
+    return ScriptedStart(
+        robot_xy=(robot[0] + shift, robot[1] - shift),
+        robot_yaw=yaw,
+        ball_xy=(ball[0], ball[1] + shift),
+        goal_side=1,
     )
 
 
@@ -154,7 +160,7 @@ class ScriptedResetSampler:
         samples = []
         for _ in range(count):
             self.serial += 1
-            samples.append(scripted_reset(7, self.serial)[0])
+            samples.append(scripted_reset(self.serial))
         return ResetBatch(
             robot_xy=torch.tensor([sample.robot_xy for sample in samples]),
             robot_yaw=torch.tensor([sample.robot_yaw for sample in samples]),

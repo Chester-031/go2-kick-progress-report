@@ -45,6 +45,7 @@ def synthetic_episodes(adr: AutomaticDomainRandomization, count: int, skill: flo
         "shaping_robot_ball": 0.05 * torch.rand(count, generator=generator, dtype=torch.float64),
         "shaping_base_height": -0.02 * torch.rand(count, generator=generator, dtype=torch.float64),
         "shaping_upright": -0.01 * torch.rand(count, generator=generator, dtype=torch.float64),
+        "shaping_joint_limit": -0.01 * torch.rand(count, generator=generator, dtype=torch.float64),
         "episode_native_ticks": ticks,
         "first_true_contact_native_tick": torch.where(contact, ticks // 3, torch.full_like(ticks, -1)),
         "requested_goal_axis_ball_displacement_m": torch.where(goal, values[:, 0], 0.2 * values[:, 0]).float(),

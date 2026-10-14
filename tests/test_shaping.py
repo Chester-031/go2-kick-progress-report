@@ -31,6 +31,7 @@ def random_states(count: int, generator: torch.Generator) -> ShapingState:
         goal_xy=torch.tensor([[4.11, 0.0]]).expand(count, 2),
         base_height_m=uniform(0.05, 0.45, count),
         up_z=uniform(-1.0, 1.0, count),
+        joint_limit_proximity=uniform(0.0, 3.0, count),
     )
 
 
@@ -64,18 +65,19 @@ class TelescopingTest(unittest.TestCase):
         before, after = random_states(8, generator), random_states(8, generator)
         terminal = torch.tensor([True, False] * 4)
         reward, components = shaping(before, after, terminal)
-        self.assertEqual(set(components), {"ball_goal", "robot_ball", "base_height", "upright"})
+        self.assertEqual(set(components), {"ball_goal", "robot_ball", "base_height", "upright", "joint_limit"})
         self.assertTrue(torch.allclose(sum(components.values()), reward, atol=1e-6))
 
 
 class DirectionTest(unittest.TestCase):
-    def state(self, *, robot=(0.0, 0.0), ball=(1.0, 0.0), height=0.32, up=1.0) -> ShapingState:
+    def state(self, *, robot=(0.0, 0.0), ball=(1.0, 0.0), height=0.32, up=1.0, joints=0.0) -> ShapingState:
         return ShapingState(
             robot_xy=torch.tensor([robot]),
             ball_xy=torch.tensor([ball]),
             goal_xy=torch.tensor([[4.11, 0.0]]),
             base_height_m=torch.tensor([height]),
             up_z=torch.tensor([up]),
+            joint_limit_proximity=torch.tensor([joints]),
         )
 
     def shaped(self, before: ShapingState, after: ShapingState) -> dict[str, float]:
@@ -99,6 +101,13 @@ class DirectionTest(unittest.TestCase):
         self.assertGreater(recover["base_height"], 0.0)
         tip = self.shaped(self.state(up=1.0), self.state(up=math.cos(0.5)))
         self.assertLess(tip["upright"], 0.0)
+
+    def test_moving_toward_the_joint_limits_is_penalized_and_backing_off_rewarded(self) -> None:
+        closer = self.shaped(self.state(joints=0.0), self.state(joints=0.6))
+        self.assertLess(closer["joint_limit"], 0.0)
+        away = self.shaped(self.state(joints=0.6), self.state(joints=0.1))
+        self.assertGreater(away["joint_limit"], 0.0)
+        self.assertEqual(self.shaped(self.state(), self.state())["joint_limit"], 0.0)
 
     def test_gamma_must_match_ppo(self) -> None:
         with self.assertRaises(ValueError):

@@ -133,11 +133,20 @@ class _Manager:
 class FakeSoccerBaseEnv:
     """The unwrapped ManagerBasedEnv surface the soccer wrapper uses."""
 
-    def __init__(self, num_envs: int, *, device: str = "cpu", direct_joint_control: bool = False) -> None:
+    def __init__(
+        self,
+        num_envs: int,
+        *,
+        device: str = "cpu",
+        direct_joint_control: bool = False,
+        joint_fault_overshoot_rad: float = 0.2,
+    ) -> None:
         """``direct_joint_control``: the joint actions drive the robot (as
         when the policy outputs joint targets) instead of the velocity
         command, and every step returns a small action-size penalty as the
-        scene's own reward (standing in for Isaac's motion regularizers)."""
+        scene's own reward (standing in for Isaac's motion regularizers).
+        ``joint_fault_overshoot_rad``: how far past its hard limit a joint
+        goes when a joint fault fires."""
 
         from robot_soccer.contact import ROBOT_BODY_NAMES
         from robot_soccer.native_safe_joint_action import NativeSafeJointPositionAction
@@ -145,6 +154,7 @@ class FakeSoccerBaseEnv:
         self.num_envs = int(num_envs)
         self.device = device
         self.direct_joint_control = direct_joint_control
+        self.joint_fault_overshoot_rad = float(joint_fault_overshoot_rad)
         self.cfg = SimpleNamespace(sim=SimpleNamespace(dt=0.005), decimation=4)
         self.tick = 0
         side = math.ceil(math.sqrt(self.num_envs))
@@ -273,7 +283,7 @@ class FakeSoccerBaseEnv:
         action_term._last_guard_correction.copy_(limited - target)
         joint = robot.default_joint_pos + 0.05 * torch.tanh(actions)
         fault = (env_index * 6_151 + self.tick * 15_485_863) % JOINT_FAULT_PERIOD_TICKS == 0
-        joint[fault, 0] = 1.01
+        joint[fault, 0] = 1.0 + self.joint_fault_overshoot_rad
         robot.joint_pos[:] = joint
         self.action_manager.prev_action[:] = actions
         self.tick += 1

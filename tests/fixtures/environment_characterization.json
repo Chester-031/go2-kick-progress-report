@@ -34,7 +34,7 @@
    ],
    "terminal_base_contact_force_n": 50.0,
    "terminal_contact_force_n": 0.0,
-   "terminal_joint_hard_limit_excess_rad": 0.009999990463256836,
+   "terminal_joint_hard_limit_excess_rad": 0.20000004768371582,
    "terminal_robot_xy_m": [
     2.9418106079101562,
     0.05994415283203125
@@ -75,7 +75,7 @@
    ],
    "terminal_base_contact_force_n": 0.0,
    "terminal_contact_force_n": 0.0,
-   "terminal_joint_hard_limit_excess_rad": 0.009999990463256836,
+   "terminal_joint_hard_limit_excess_rad": 0.20000004768371582,
    "terminal_robot_xy_m": [
     -3.1042346954345703,
     0.0
@@ -116,7 +116,7 @@
    ],
    "terminal_base_contact_force_n": 0.0,
    "terminal_contact_force_n": 0.0,
-   "terminal_joint_hard_limit_excess_rad": 0.009999990463256836,
+   "terminal_joint_hard_limit_excess_rad": 0.20000004768371582,
    "terminal_robot_xy_m": [
     3.059290885925293,
     0.04372692108154297
@@ -157,7 +157,7 @@
    ],
    "terminal_base_contact_force_n": 0.0,
    "terminal_contact_force_n": 0.0,
-   "terminal_joint_hard_limit_excess_rad": 0.009999990463256836,
+   "terminal_joint_hard_limit_excess_rad": 0.20000004768371582,
    "terminal_robot_xy_m": [
     -3.1790771484375,
     -0.0092010498046875
@@ -198,7 +198,7 @@
    ],
    "terminal_base_contact_force_n": 0.0,
    "terminal_contact_force_n": 0.0,
-   "terminal_joint_hard_limit_excess_rad": 0.009999990463256836,
+   "terminal_joint_hard_limit_excess_rad": 0.20000004768371582,
    "terminal_robot_xy_m": [
     3.1633400917053223,
     0.0424649715423584
@@ -239,7 +239,7 @@
    ],
    "terminal_base_contact_force_n": 0.0,
    "terminal_contact_force_n": 0.0,
-   "terminal_joint_hard_limit_excess_rad": 0.009999990463256836,
+   "terminal_joint_hard_limit_excess_rad": 0.20000004768371582,
    "terminal_robot_xy_m": [
     -3.2495059967041016,
     -0.0056667327880859375
@@ -280,7 +280,7 @@
    ],
    "terminal_base_contact_force_n": 0.0,
    "terminal_contact_force_n": 0.0,
-   "terminal_joint_hard_limit_excess_rad": 0.009999990463256836,
+   "terminal_joint_hard_limit_excess_rad": 0.20000004768371582,
    "terminal_robot_xy_m": [
     3.2736587524414062,
     0.05963611602783203
@@ -321,7 +321,7 @@
    ],
    "terminal_base_contact_force_n": 0.0,
    "terminal_contact_force_n": 0.0,
-   "terminal_joint_hard_limit_excess_rad": 0.009999990463256836,
+   "terminal_joint_hard_limit_excess_rad": 0.20000004768371582,
    "terminal_robot_xy_m": [
     -3.4166460037231445,
     -0.0194244384765625
@@ -1674,7 +1674,7 @@
    ],
    "terminal_base_contact_force_n": 0.0,
    "terminal_contact_force_n": 0.0,
-   "terminal_joint_hard_limit_excess_rad": 0.009999990463256836,
+   "terminal_joint_hard_limit_excess_rad": 0.20000004768371582,
    "terminal_robot_xy_m": [
     -1.9605350494384766,
     -0.5999317169189453
@@ -1715,7 +1715,7 @@
    ],
    "terminal_base_contact_force_n": 0.0,
    "terminal_contact_force_n": 0.0,
-   "terminal_joint_hard_limit_excess_rad": 0.009999990463256836,
+   "terminal_joint_hard_limit_excess_rad": 0.20000004768371582,
    "terminal_robot_xy_m": [
     1.9705276489257812,
     -0.38300514221191406
@@ -1797,7 +1797,7 @@
    ],
    "terminal_base_contact_force_n": 0.0,
    "terminal_contact_force_n": 0.0,
-   "terminal_joint_hard_limit_excess_rad": 0.009999990463256836,
+   "terminal_joint_hard_limit_excess_rad": 0.20000004768371582,
    "terminal_robot_xy_m": [
     -1.5347708463668823,
     0.13002872467041016
@@ -1961,7 +1961,7 @@
    ],
    "terminal_base_contact_force_n": 0.0,
    "terminal_contact_force_n": 0.0,
-   "terminal_joint_hard_limit_excess_rad": 0.009999990463256836,
+   "terminal_joint_hard_limit_excess_rad": 0.20000004768371582,
    "terminal_robot_xy_m": [
     3.4624252319335938,
     -0.002287924289703369
@@ -1971,5 +1971,5 @@
   }
  ],
  "final_observation_sum": 86.18521353027305,
- "reward_sum": 258.69081351161003
+ "reward_sum": 258.6908150613308
 }

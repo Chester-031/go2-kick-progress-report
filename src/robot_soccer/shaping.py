@@ -18,18 +18,22 @@ changes how quickly credit reaches the actions, never which behaviour is
 best.  Falling early, for example, earns nothing net: the -Phi(s) bonus on
 the fall transition exactly cancels the shaping collected before it.
 
-Phi is a weighted sum of four potentials, each higher in better states:
+Phi is a weighted sum of five potentials, each higher in better states:
 
 - ``ball_goal``: minus the ball's distance to the centre of the goal it is
   to be scored in (pulls the ball to the middle of the goal);
 - ``robot_ball``: minus the robot's distance to the ball;
 - ``base_height``: minus how far the base is from its nominal standing
   height;
-- ``upright``: minus (1 - cos of the base's tilt from vertical).
+- ``upright``: minus (1 - cos of the base's tilt from vertical);
+- ``joint_limit``: minus how deep the joints are in the margin next to
+  their hard limits (0 while every joint is at least the margin inside).
 
-The last two only make staying up and getting back up easier to learn.
-Because they are potentials, holding a good posture earns nothing per
-step; only changes in posture are scored.
+The last three only make staying up, getting back up and keeping the
+joints off their stops easier to learn.  Because they are potentials,
+holding a good posture earns nothing per step; only changes are scored,
+so they cannot forbid anything: what makes a large joint-limit overshoot
+costly is that it ends the episode.
 """
 
 from __future__ import annotations
@@ -48,6 +52,7 @@ class ShapingWeights:
     robot_ball: float = 0.5
     base_height: float = 2.0
     upright: float = 0.5
+    joint_limit: float = 0.5
     # The stock Go2 settles at 0.28 m standing on its PD drive (Isaac Lab).
     nominal_base_height_m: float = 0.28
 
@@ -56,14 +61,18 @@ class ShapingWeights:
 class ShapingState:
     """What the potentials read from a batch of states: robot and ball
     positions and the goal centre (``[N,2]``, one frame), the base height
-    (``[N]`` m) and ``up_z`` (``[N]``), the world-z component of the base's
-    up axis (1 upright, 0 on its side, -1 upside down)."""
+    (``[N]`` m), ``up_z`` (``[N]``), the world-z component of the base's up
+    axis (1 upright, 0 on its side, -1 upside down), and
+    ``joint_limit_proximity`` (``[N]``), summed over the joints, how far
+    each is into the margin next to its nearest hard limit, in margins (0
+    outside the margin, 1 at the limit, more past it)."""
 
     robot_xy: torch.Tensor
     ball_xy: torch.Tensor
     goal_xy: torch.Tensor
     base_height_m: torch.Tensor
     up_z: torch.Tensor
+    joint_limit_proximity: torch.Tensor
 
 
 class PotentialShaping:
@@ -84,6 +93,7 @@ class PotentialShaping:
             "robot_ball": -weights.robot_ball * torch.linalg.vector_norm(state.ball_xy - state.robot_xy, dim=1),
             "base_height": -weights.base_height * (state.base_height_m - weights.nominal_base_height_m).abs(),
             "upright": -weights.upright * (1.0 - state.up_z),
+            "joint_limit": -weights.joint_limit * state.joint_limit_proximity,
         }
 
     def potential(self, state: ShapingState) -> torch.Tensor:

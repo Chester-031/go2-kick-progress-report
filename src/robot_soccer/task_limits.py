@@ -31,5 +31,9 @@ BALL_SIDE_BOUNDARY_M = _canonical_float32(2.61)
 CONTACT_FORCE_THRESHOLD_N = _canonical_float32(1.0)
 # Any contact force on the base (the trunk touching the ground) is a fall.
 BASE_FALL_FORCE_THRESHOLD_N = _canonical_float32(1.0)
-# How far past a joint's hard limit counts as violating it.
-JOINT_HARD_LIMIT_TOLERANCE_RAD = _canonical_float32(1.0e-5)
+# How far past a joint's hard limit ends the episode.  Hard kicks push the
+# simulated joints a little past their stops; ending every such episode
+# (the old 1e-5 rad) ended about a fifth of all episodes.
+JOINT_HARD_LIMIT_TOLERANCE_RAD = _canonical_float32(0.05)
+# The margin inside each hard limit the joint-limit shaping potential sees.
+JOINT_LIMIT_MARGIN_RAD = _canonical_float32(0.1)

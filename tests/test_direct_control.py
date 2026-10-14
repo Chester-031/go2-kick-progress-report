@@ -74,6 +74,7 @@ class DirectControlTest(unittest.TestCase):
                     ),
                     base_height_m=torch.full((done_ids.numel(),), 0.30),
                     up_z=torch.ones(done_ids.numel()),
+                    joint_limit_proximity=torch.zeros(done_ids.numel()),
                 )
                 # The shaping still discounts to -Phi(start) ...
                 expected = -env.shaping.potential(start).double()

@@ -19,11 +19,13 @@ observation the stock walking policies use.  On top of it this config
   * ``"position"``: joint position targets around the standing pose
     (scale 0.25 rad), tracked by the stock Go2 PD drive (Kp 25, Kd 0.5);
   * ``"velocity"``: joint velocity targets (scale ``VELOCITY_ACTION_SCALE``
-    rad/s) tracked with damping ``VELOCITY_DRIVE_DAMPING``, plus a weak
-    spring (stiffness ``VELOCITY_DRIVE_STIFFNESS``) toward the standing
+    rad/s) tracked with damping ``VELOCITY_DRIVE_DAMPING``, plus the stock
+    spring (stiffness ``VELOCITY_DRIVE_STIFFNESS``, Kp 25) toward the standing
     pose so that, as in position control, zero action means "stand".  A
     damping-only drive (no spring) lets a fresh policy collapse into the
-    joint limits within half a second.  The gains are a first guess.
+    joint limits within half a second, and Kp 10 sags it into a 0.17 m
+    crouch where random commands hit the joint limits.  Gains are a first
+    guess.
 
 Importing this module needs Isaac Lab (launch the app first).
 """
@@ -46,7 +48,7 @@ CONTROLS = ("position", "velocity")
 POSITION_ACTION_SCALE = 0.25
 VELOCITY_ACTION_SCALE = 6.0
 VELOCITY_DRIVE_DAMPING = 1.0
-VELOCITY_DRIVE_STIFFNESS = 10.0
+VELOCITY_DRIVE_STIFFNESS = 25.0
 # The stock reward terms kept as motion regularizers.
 REGULARIZERS = ("dof_torques_l2", "dof_acc_l2", "action_rate_l2")
 FIELD_ASSETS = (

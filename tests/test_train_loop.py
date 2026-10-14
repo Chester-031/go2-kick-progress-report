@@ -19,30 +19,42 @@ install_isaaclab_stub()
 
 from robot_soccer import environment, runtime, train  # noqa: E402
 from robot_soccer.shaping import PotentialShaping, ShapingWeights  # noqa: E402
-from robot_soccer.config import (  # noqa: E402
-    GAMMA,
-    COMMAND_AXIS_RANGES,
-    COMMAND_RATE_LIMITS_PER_SECOND,
-    COMMAND_VERTICES,
-)
+from robot_soccer.config import TRAINING_BY_CONTROL  # noqa: E402
+from robot_soccer.controls import DirectJointControl  # noqa: E402
+from tests.test_environment_characterization import held_command_control  # noqa: E402
 
 
-def fake_make_environment(*, num_envs, reset_sampler, device, **_):
-    actor = frozen_low_actor(device)
-    env = environment.CurrentTaskProgressHighGoalEnv(
-        low_env=environment.FrozenLowInferenceEnv(FakeGymEnv(FakeSoccerBaseEnv(num_envs, device=device))),
-        frozen_low_actor=actor,
-        reset_sampler=reset_sampler,
-        shaping=PotentialShaping(ShapingWeights(), gamma=GAMMA),
-        command_vertices=COMMAND_VERTICES,
-        command_axis_ranges=COMMAND_AXIS_RANGES,
-        command_rate_limits=COMMAND_RATE_LIMITS_PER_SECOND,
+def fake_make_environment(*, control, num_envs, reset_sampler, device, **_):
+    """runtime.make_environment on the fake scene."""
+
+    gamma = TRAINING_BY_CONTROL[control].gamma
+    if control == "hierarchical":
+        actor = frozen_low_actor(device)
+        low_env = environment.FrozenLowInferenceEnv(FakeGymEnv(FakeSoccerBaseEnv(num_envs, device=device)))
+        env = environment.CurrentTaskProgressHighGoalEnv(
+            low_env=low_env,
+            control=held_command_control(low_env, actor),
+            reset_sampler=reset_sampler,
+            shaping=PotentialShaping(ShapingWeights(), gamma=gamma),
+        )
+        return env, environment.CurrentTaskProgressHighRslAdapter(env), actor
+    low_env = environment.FrozenLowInferenceEnv(
+        FakeGymEnv(FakeSoccerBaseEnv(num_envs, device=device, direct_joint_control=True))
     )
-    return env, environment.CurrentTaskProgressHighRslAdapter(env), actor
+    env = environment.CurrentTaskProgressHighGoalEnv(
+        low_env=low_env,
+        control=DirectJointControl(num_envs=num_envs, device=torch.device(device)),
+        reset_sampler=reset_sampler,
+        shaping=PotentialShaping(ShapingWeights(), gamma=gamma),
+        native_reward_scale=1.0,
+    )
+    return env, environment.CurrentTaskProgressHighRslAdapter(env), None
 
 
 def arguments(output: Path, **overrides) -> argparse.Namespace:
-    args = train._parser().parse_args(["--low-checkpoint", "unused", "--low-checkpoint-sha256", "unused"])
+    args = train._parser().parse_args(
+        ["--control", "hierarchical", "--low-checkpoint", "unused", "--low-checkpoint-sha256", "unused"]
+    )
     args.output_dir = output
     args.device = "cpu"
     args.num_envs = 64
@@ -124,6 +136,24 @@ class TrainLoopTest(unittest.TestCase):
             summary = json.loads((second / "training_summary.json").read_text())
             self.assertEqual(summary["first_iteration"], 3)
             self.assertEqual(summary["adr_final_ranges"], planted_ranges)
+
+class DirectJointTrainLoopTest(unittest.TestCase):
+    def test_position_and_velocity_controls_train_a_feed_forward_policy(self) -> None:
+        for control in ("position", "velocity"):
+            with self.subTest(control=control), tempfile.TemporaryDirectory() as root, mock.patch.object(
+                runtime, "make_environment", fake_make_environment
+            ):
+                output = Path(root) / control
+                args = arguments(output, control=control, steps_per_env=60, iterations=2, checkpoint_interval=2)
+                self.assertEqual(train.run(args), 0)
+                records = [json.loads(line) for line in (output / "metrics.jsonl").read_text().splitlines()]
+                self.assertEqual(len(records), 2)
+                self.assertGreater(sum(record["completed_episodes"] for record in records), 0)
+                checkpoint = torch.load(output / "model_iteration_0002.pt", weights_only=True)
+                self.assertFalse(any(name.startswith("memory_") for name in checkpoint["model_state_dict"]))
+                summary = json.loads((output / "training_summary.json").read_text())
+                self.assertEqual(summary["control"], control)
+
 
 if __name__ == "__main__":
     unittest.main()

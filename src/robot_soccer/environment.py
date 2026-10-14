@@ -1,25 +1,25 @@
-"""Two-level no-Kick soccer environment.
+"""The no-Kick soccer task over the Isaac Lab Go2 scene.
 
-A recurrent high policy emits a three-axis velocity command at 10 Hz.  The
-frozen low policy executes that command for five native 50 Hz ticks.  Goal and
-safety termination are evaluated after every native tick and before reset.
-Episode starts come from a reset sampler (``resets.ResetSampler``).
+The policy acts through a control (``controls``): either 12 joint actions
+every native 50 Hz tick, or a body-velocity command held for five ticks and
+executed by a frozen low-level policy.  Goal and safety termination are
+evaluated after every native tick and before reset.  Episode starts come
+from a reset sampler (``resets.ResetSampler``).
 """
 
 from __future__ import annotations
 
 import math
 from types import SimpleNamespace
-from typing import Any, Sequence
+from typing import Any
 
 import torch
 from tensordict import TensorDict
 
 from .resets import ResetSampler
 from .observations import build_entity_observation
-from .commands import CommandSurface
-from .config import FieldGeometry, POLICY_ACTION_DIM, POLICY_OBSERVATION_DIM
-from .native_safe_joint_action import NativeSafeJointPositionAction
+from .config import FieldGeometry, POLICY_OBSERVATION_DIM
+from .controls import Control
 from .contact import ROBOT_BODY_NAMES, validate_live_robot_body_names
 from .shaping import PotentialShaping, ShapingState
 from .task_limits import (
@@ -95,8 +95,12 @@ def writable_command(base_env: Any) -> torch.Tensor:
 
 
 def live_action_term(base_env: Any) -> Any:
-    manager = base_env.action_manager
-    return manager.get_term("joint_pos") if hasattr(manager, "get_term") else manager._terms["joint_pos"]
+    """The scene's one action term (joint position or joint velocity)."""
+
+    terms = list(base_env.action_manager._terms.values())
+    if len(terms) != 1:
+        raise RuntimeError(f"expected one action term, found {len(terms)}")
+    return terms[0]
 
 
 def yaw_from_quaternion(quaternion: torch.Tensor) -> torch.Tensor:
@@ -140,13 +144,14 @@ class FrozenLowInferenceEnv:
 
 
 class CurrentTaskProgressHighGoalEnv:
-    """The 10 Hz soccer task over the frozen 50 Hz low policy.
+    """The soccer task, stepped through a ``control``.
 
-    One high action is held for five native ticks.  After every tick the
-    task checks goal, own goal, boundary, fall and joint hard limit; an
-    unsafe event on the same tick as a goal cancels the goal.  A slot that
-    terminates is frozen at that tick (its command is zeroed and its post
-    state stops updating) while the other slots finish the held action.
+    One policy action is held for ``control.ticks_per_action`` native
+    ticks.  After every tick the task checks goal, own goal, boundary, fall
+    and joint hard limit; an unsafe event on the same tick as a goal
+    cancels the goal.  A slot that terminates is frozen at that tick (its
+    joint action is zeroed and its post state stops updating) while the
+    other slots finish the held action.
     The 20 s horizon is a true finite horizon, so the RSL adapter exposes
     no ``time_outs`` and PPO never bootstraps across it.
 
@@ -154,7 +159,9 @@ class CurrentTaskProgressHighGoalEnv:
     potential-based shaping of ``shaping`` between the state before the
     held action and the state it ended in (the terminal tick's state for a
     slot that terminated), with no potential after any terminal
-    transition, timeout included.
+    transition, timeout included, plus ``native_reward_scale`` times the
+    scene's own reward-manager reward over the active ticks (the motion
+    regularizers of the direct-joint scene; 0 ignores it).
 
     Where each episode starts comes from ``reset_sampler`` (see
     ``resets.ResetBatch``); the environment only writes those poses and
@@ -168,39 +175,28 @@ class CurrentTaskProgressHighGoalEnv:
     """
 
     num_obs = POLICY_OBSERVATION_DIM
-    num_actions = POLICY_ACTION_DIM
     num_privileged_obs = None
 
     def __init__(
         self,
         *,
         low_env: FrozenLowInferenceEnv,
-        frozen_low_actor: torch.nn.Module,
+        control: Control,
         reset_sampler: ResetSampler,
         shaping: PotentialShaping,
-        command_vertices: Sequence[Sequence[float]],
-        command_axis_ranges: Sequence[Sequence[float]],
-        command_rate_limits: Sequence[float],
+        native_reward_scale: float = 0.0,
         episode_seconds: float = 20.0,
-        low_steps_per_high_action: int = 5,
         geometry: FieldGeometry = FieldGeometry(),
     ) -> None:
-        if episode_seconds <= 0.0 or low_steps_per_high_action <= 0:
-            raise ValueError("episode duration and action hold must be positive")
+        if episode_seconds <= 0.0:
+            raise ValueError("episode duration must be positive")
         self.low_env = low_env
         self.base_env = low_env.unwrapped
         self.device = torch.device(low_env.device)
         self.num_envs = int(low_env.num_envs)
-        self.low_actor = frozen_low_actor
-        self.low_actor.eval()
-        if any(parameter.requires_grad for parameter in self.low_actor.parameters()):
-            raise RuntimeError("qualified low actor is unexpectedly trainable")
-        actor_devices = {
-            value.device
-            for value in tuple(self.low_actor.parameters()) + tuple(self.low_actor.buffers())
-        }
-        if actor_devices != {self.device}:
-            raise RuntimeError(f"low actor and environment devices differ: {actor_devices}")
+        self.control = control
+        self.num_actions = int(control.num_actions)
+        self.native_reward_scale = float(native_reward_scale)
 
         self.robot = self.base_env.scene["robot"]
         self.ball = self.base_env.scene["ball"]
@@ -212,20 +208,16 @@ class CurrentTaskProgressHighGoalEnv:
             raise RuntimeError("base contact sensor lacks base")
         self.base_body_index = base_names.index("base")
         self.action_term = live_action_term(self.base_env)
-        if not isinstance(self.action_term, NativeSafeJointPositionAction):
-            raise RuntimeError(f"unexpected action term: {type(self.action_term).__name__}")
+        # The guarded joint action reports how much it clamped; others don't.
+        self.guard_correction = getattr(self.action_term, "last_guard_correction", None)
         self.command = writable_command(self.base_env)
         self.env_origins = self.base_env.scene.env_origins
         self.low_control_dt = float(self.base_env.cfg.sim.dt) * int(self.base_env.cfg.decimation)
         if not math.isclose(self.low_control_dt, 0.02, abs_tol=1.0e-12):
             raise RuntimeError(f"live low control period changed: {self.low_control_dt}")
-        self.low_steps_per_high_action = int(low_steps_per_high_action)
+        self.low_steps_per_high_action = int(control.ticks_per_action)
         self.high_control_dt = self.low_control_dt * self.low_steps_per_high_action
-        if not math.isclose(self.high_control_dt, 0.1, abs_tol=1.0e-12):
-            raise RuntimeError(f"high control period changed: {self.high_control_dt}")
-        self.max_episode_length = math.ceil(episode_seconds / self.high_control_dt)
-        if self.max_episode_length != 200:
-            raise RuntimeError("episode horizon must be exactly 200 high ticks")
+        self.max_episode_length = round(episode_seconds / self.high_control_dt)
         self.episode_length_buf = torch.zeros(self.num_envs, dtype=torch.long, device=self.device)
         # This is a true finite horizon.  The adapter intentionally omits the
         # RSL `time_outs` key so PPO never bootstraps across the 20-second end.
@@ -233,15 +225,6 @@ class CurrentTaskProgressHighGoalEnv:
         self.geometry = geometry
         self.reset_sampler = reset_sampler
         self.shaping = shaping
-
-        self.command_surface = CommandSurface(
-            vertices=command_vertices,
-            axis_ranges=command_axis_ranges,
-            rate_limits_per_second=command_rate_limits,
-            high_control_dt=self.high_control_dt,
-            device=self.device,
-        )
-        self.previous_command = torch.zeros(self.num_envs, 3, device=self.device)
 
         self.goal_xy_w = torch.zeros(self.num_envs, 2, device=self.device)
         self.contact_seen = torch.zeros(self.num_envs, dtype=torch.bool, device=self.device)
@@ -258,6 +241,7 @@ class CurrentTaskProgressHighGoalEnv:
         # per potential (in SHAPING_COMPONENTS order).
         self.episode_shaping_return = torch.zeros(self.num_envs, device=self.device)
         self.episode_shaping_components = torch.zeros(self.num_envs, len(SHAPING_COMPONENTS), device=self.device)
+        self.episode_native_reward = torch.zeros(self.num_envs, device=self.device)
         self.vector_steps = 0
 
         self._observation = torch.zeros(self.num_envs, self.num_obs, device=self.device)
@@ -308,7 +292,7 @@ class CurrentTaskProgressHighGoalEnv:
         self.ball.write_root_pose_to_sim(ball_pose, env_ids=ids)
         self.ball.write_root_velocity_to_sim(ball_velocity, env_ids=ids)
         self.command[ids, :3] = 0.0
-        self.previous_command[ids] = 0.0
+        self.control.reset(ids)
         self.action_term.reset(ids)
         self.contact_seen[ids] = False
         self.maximum_contact_force[ids] = 0.0
@@ -317,6 +301,7 @@ class CurrentTaskProgressHighGoalEnv:
         self.episode_length_buf[ids] = 0
         self.episode_shaping_return[ids] = 0.0
         self.episode_shaping_components[ids] = 0.0
+        self.episode_native_reward[ids] = 0.0
         if hasattr(self.base_env, "episode_length_buf"):
             self.base_env.episode_length_buf[ids] = 0
 
@@ -359,7 +344,7 @@ class CurrentTaskProgressHighGoalEnv:
         # refreshes standing flags.  That clearing was not the command the low
         # executed and must not corrupt the next high observation.  Reinstall
         # the held command without advancing physics or processing an action.
-        self.command[:, :3] = self.previous_command
+        self.command[:, :3] = self.control.held_command()
         low_observation = extract_policy_tensor(self.low_env.get_observations())
         if low_observation.shape != (self.num_envs, 48):
             raise RuntimeError(f"low observation changed: {tuple(low_observation.shape)}")
@@ -377,7 +362,7 @@ class CurrentTaskProgressHighGoalEnv:
         )
         if observation.shape != (self.num_envs, POLICY_OBSERVATION_DIM):
             raise RuntimeError(f"high observation shape changed: {tuple(observation.shape)}")
-        if not bool(torch.allclose(observation[:, 9:12], self.previous_command, rtol=0.0, atol=1.0e-6)):
+        if not bool(torch.allclose(observation[:, 9:12], self.control.held_command(), rtol=0.0, atol=1.0e-6)):
             raise RuntimeError("70-D high observation lost the held applied command")
         return observation
 
@@ -394,7 +379,7 @@ class CurrentTaskProgressHighGoalEnv:
 
     @torch.inference_mode(False)
     def step(self, latent_action: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, dict[str, Any]]:
-        if latent_action.shape != (self.num_envs, POLICY_ACTION_DIM):
+        if latent_action.shape != (self.num_envs, self.num_actions):
             raise RuntimeError(f"policy action shape changed: {tuple(latent_action.shape)}")
         if not bool(torch.isfinite(latent_action).all()):
             raise RuntimeError("policy action is non-finite")
@@ -406,10 +391,7 @@ class CurrentTaskProgressHighGoalEnv:
         pre_height = self.robot.data.root_pos_w[:, 2].detach().clone()
         pre_up = -self.robot.data.projected_gravity_b[:, 2].detach().clone()
 
-        applied_command, bounded_action = self.command_surface.limit(
-            latent_action.detach().to(self.device), self.previous_command
-        )
-        self.previous_command = applied_command.clone()
+        bounded_action = self.control.start(latent_action.detach().to(self.device))
 
         active = torch.ones(self.num_envs, dtype=torch.bool, device=self.device)
         terminal_goal = torch.zeros_like(active)
@@ -434,33 +416,36 @@ class CurrentTaskProgressHighGoalEnv:
         post_guard_max = torch.zeros(self.num_envs, device=self.device)
         post_height = pre_height.clone()
         post_up = pre_up.clone()
+        native_reward = torch.zeros(self.num_envs, device=self.device)
+
+        def native_observation() -> torch.Tensor:
+            value = extract_policy_tensor(self.low_env.get_observations())
+            if value.shape != (self.num_envs, 48):
+                raise RuntimeError(f"low observation changed: {tuple(value.shape)}")
+            return value
 
         for _low_tick in range(self.low_steps_per_high_action):
             tick_active = active.clone()
-            self.command[:, :3] = torch.where(tick_active.unsqueeze(1), applied_command, torch.zeros_like(applied_command))
-            native_observation = extract_policy_tensor(self.low_env.get_observations())
-            if native_observation.shape != (self.num_envs, 48):
-                raise RuntimeError(f"low observation changed: {tuple(native_observation.shape)}")
-            failed |= ~torch.isfinite(native_observation).all()
-            failed |= (native_observation[:, 9:12] - self.command[:, :3]).abs().amax() > 1.0e-6
-            with torch.no_grad():
-                low_action = torch.where(
-                    tick_active.unsqueeze(1),
-                    self.low_actor(native_observation),
-                    torch.zeros(self.num_envs, 12, device=self.device),
-                )
-            failed |= ~torch.isfinite(low_action).all()
-            native_done = normalize_done(
-                self.low_env.step(low_action.detach()),
-                num_envs=self.num_envs,
-                device=self.device,
-            )
+            joint_action, control_failed = self.control.tick_action(tick_active, native_observation)
+            failed |= control_failed | ~torch.isfinite(joint_action).all()
+            native_step = self.low_env.step(joint_action.detach())
+            native_done = normalize_done(native_step, num_envs=self.num_envs, device=self.device)
             failed |= native_done.any()
+            if self.native_reward_scale != 0.0:
+                native_reward += torch.where(
+                    tick_active,
+                    self.native_reward_scale * torch.as_tensor(native_step[1], device=self.device).float(),
+                    torch.zeros_like(native_reward),
+                )
 
             contact_force = self._ball_contact_force()
             base_force = self._base_contact_force()
             hard_excess = self._joint_hard_excess()
-            guard = self.action_term.last_guard_correction.abs()
+            guard = (
+                self.guard_correction.abs()
+                if self.guard_correction is not None
+                else torch.zeros(self.num_envs, 12, device=self.device)
+            )
             robot_xy = self.robot.data.root_pos_w[:, :2] - self.env_origins[:, :2]
             ball_xy = self.ball.data.root_pos_w[:, :2] - self.env_origins[:, :2]
             keep = tick_active.unsqueeze(1)
@@ -514,7 +499,7 @@ class CurrentTaskProgressHighGoalEnv:
             ShapingState(post_robot_xy, post_ball_xy, goal_xy, post_height, post_up),
             done,
         )
-        reward = shaping + terminal_goal.to(shaping.dtype) - terminal_own.to(shaping.dtype)
+        reward = shaping + native_reward + terminal_goal.to(shaping.dtype) - terminal_own.to(shaping.dtype)
         failed |= ~torch.isfinite(reward).all()
         if bool(failed):
             raise RuntimeError(
@@ -522,6 +507,7 @@ class CurrentTaskProgressHighGoalEnv:
                 "a lost command, or a native termination"
             )
         self.episode_shaping_return += shaping
+        self.episode_native_reward += native_reward
         self.episode_shaping_components += torch.stack([components[name] for name in SHAPING_COMPONENTS], dim=1)
         done_ids = torch.nonzero(done, as_tuple=False).flatten()
         episodes: dict[str, torch.Tensor] = {}
@@ -552,6 +538,7 @@ class CurrentTaskProgressHighGoalEnv:
                 "terminal_joint_hard_limit_excess_rad": post_hard_excess[done_ids],
                 "native_safe_guard_max_correction_rad": post_guard_max[done_ids],
                 "shaping_return": self.episode_shaping_return[done_ids],
+                "native_reward_return": self.episode_native_reward[done_ids],
                 **{
                     f"shaping_{name}": self.episode_shaping_components[done_ids, index]
                     for index, name in enumerate(SHAPING_COMPONENTS)
@@ -596,9 +583,19 @@ class CurrentTaskProgressHighGoalEnv:
         return observation, reward, done, extras
 
     def _ball_contact_force(self) -> torch.Tensor:
-        history = getattr(self.ball_contact.data, "force_matrix_w_history", None)
-        expected = (self.num_envs, 4, 1, len(ROBOT_BODY_NAMES), 3)
-        if not torch.is_tensor(history) or tuple(history.shape) != expected:
+        """The largest robot-ball contact force over the last native tick:
+        over every physics substep when the sensor keeps a filtered-force
+        history (Isaac Lab >= 2.1), otherwise at the last substep."""
+
+        data = self.ball_contact.data
+        history = getattr(data, "force_matrix_w_history", None)
+        if history is None and torch.is_tensor(getattr(data, "force_matrix_w", None)):
+            history = data.force_matrix_w.unsqueeze(1)
+        if (
+            not torch.is_tensor(history)
+            or history.ndim != 5
+            or tuple(history.shape[i] for i in (0, 2, 3, 4)) != (self.num_envs, 1, len(ROBOT_BODY_NAMES), 3)
+        ):
             actual = None if not torch.is_tensor(history) else tuple(history.shape)
             raise RuntimeError(f"robot-ball ContactSensor shape changed: {actual}")
         return torch.linalg.vector_norm(history, dim=-1).amax(dim=(1, 2, 3))
@@ -611,7 +608,10 @@ class CurrentTaskProgressHighGoalEnv:
 
     def _joint_hard_excess(self) -> torch.Tensor:
         position = self.robot.data.joint_pos
-        limits = self.robot.data.joint_pos_limits
+        # Isaac Lab 2.0 calls the hard limits joint_limits.
+        limits = getattr(self.robot.data, "joint_pos_limits", None)
+        if limits is None:
+            limits = self.robot.data.joint_limits
         below = torch.clamp(limits[..., 0] - position, min=0.0)
         above = torch.clamp(position - limits[..., 1], min=0.0)
         return torch.maximum(below, above).amax(dim=1)

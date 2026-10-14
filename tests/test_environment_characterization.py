@@ -39,6 +39,8 @@ from robot_soccer.config import (  # noqa: E402
     COMMAND_RATE_LIMITS_PER_SECOND,
     COMMAND_VERTICES,
 )
+from robot_soccer.commands import CommandSurface  # noqa: E402
+from robot_soccer.controls import HeldCommandControl  # noqa: E402
 from robot_soccer.resets import ResetBatch  # noqa: E402
 from robot_soccer.shaping import PotentialShaping, ShapingState, ShapingWeights  # noqa: E402
 
@@ -167,15 +169,31 @@ class ScriptedResetSampler:
         )
 
 
+def held_command_control(low_env, actor) -> HeldCommandControl:
+    """The Stage B hierarchy on the fake scene."""
+
+    device = torch.device(low_env.device)
+    return HeldCommandControl(
+        low_actor=actor,
+        command_surface=CommandSurface(
+            vertices=COMMAND_VERTICES,
+            axis_ranges=COMMAND_AXIS_RANGES,
+            rate_limits_per_second=COMMAND_RATE_LIMITS_PER_SECOND,
+            high_control_dt=0.1,
+            device=device,
+        ),
+        command=environment_module.writable_command(low_env.unwrapped),
+        num_envs=low_env.num_envs,
+        device=device,
+    )
+
+
 def make_wrapper(low_env, actor):
     return environment_module.CurrentTaskProgressHighGoalEnv(
         low_env=low_env,
-        frozen_low_actor=actor,
+        control=held_command_control(low_env, actor),
         reset_sampler=ScriptedResetSampler(),
         shaping=PotentialShaping(ShapingWeights(), gamma=0.997),
-        command_vertices=COMMAND_VERTICES,
-        command_axis_ranges=COMMAND_AXIS_RANGES,
-        command_rate_limits=COMMAND_RATE_LIMITS_PER_SECOND,
     )
 
 

@@ -58,6 +58,8 @@ ENV_SPACING_M = 12.0
 PUSH_RADIUS_M = 0.35
 FALL_PERIOD_TICKS = 2_311
 JOINT_FAULT_PERIOD_TICKS = 3_137
+# Weight of the fake regularizer reward in direct-joint mode.
+NATIVE_PENALTY = 0.01
 
 
 def _rows(env_ids: Any, count: int) -> torch.Tensor:
@@ -131,12 +133,18 @@ class _Manager:
 class FakeSoccerBaseEnv:
     """The unwrapped ManagerBasedEnv surface the soccer wrapper uses."""
 
-    def __init__(self, num_envs: int, *, device: str = "cpu") -> None:
+    def __init__(self, num_envs: int, *, device: str = "cpu", direct_joint_control: bool = False) -> None:
+        """``direct_joint_control``: the joint actions drive the robot (as
+        when the policy outputs joint targets) instead of the velocity
+        command, and every step returns a small action-size penalty as the
+        scene's own reward (standing in for Isaac's motion regularizers)."""
+
         from robot_soccer.contact import ROBOT_BODY_NAMES
         from robot_soccer.native_safe_joint_action import NativeSafeJointPositionAction
 
         self.num_envs = int(num_envs)
         self.device = device
+        self.direct_joint_control = direct_joint_control
         self.cfg = SimpleNamespace(sim=SimpleNamespace(dt=0.005), decimation=4)
         self.tick = 0
         side = math.ceil(math.sqrt(self.num_envs))
@@ -220,7 +228,12 @@ class FakeSoccerBaseEnv:
             2.0 * (quaternion[:, 0] * quaternion[:, 3] + quaternion[:, 1] * quaternion[:, 2]),
             1.0 - 2.0 * (quaternion[:, 2].square() + quaternion[:, 3].square()),
         )
-        command = self.command_tensor
+        if self.direct_joint_control:
+            command = torch.stack(
+                (actions[:, 0:4].mean(dim=1), actions[:, 4:8].mean(dim=1), actions[:, 8:12].mean(dim=1)), dim=1
+            ).clamp(-0.6, 0.6)
+        else:
+            command = self.command_tensor
         cosine, sine = torch.cos(yaw), torch.sin(yaw)
         velocity_w = torch.stack(
             (cosine * command[:, 0] - sine * command[:, 1], sine * command[:, 0] + cosine * command[:, 1]),
@@ -265,7 +278,10 @@ class FakeSoccerBaseEnv:
         self.action_manager.prev_action[:] = actions
         self.tick += 1
         done = torch.zeros(self.num_envs, dtype=torch.bool, device=self.device)
-        return self._observations(), torch.zeros(self.num_envs, device=self.device), done, done, {}
+        reward = -NATIVE_PENALTY * actions.square().mean(dim=1) if self.direct_joint_control else torch.zeros(
+            self.num_envs, device=self.device
+        )
+        return self._observations(), reward, done, done, {}
 
     def close(self) -> None:
         return None

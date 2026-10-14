@@ -1,7 +1,14 @@
-"""Train the recurrent no-Kick high policy with automatic domain
-randomization (ADR) over where episodes start.
+"""Train the soccer policy with automatic domain randomization (ADR) over
+where episodes start.
 
-Each PPO iteration collects ``--steps-per-env`` high-level steps in every
+``--control`` picks what the policy outputs: ``position`` or ``velocity``
+targets for the 12 joints every 50 Hz tick (one policy learns to walk and
+to play), or ``hierarchical``, a 10 Hz body-velocity command executed by a
+frozen low-level policy (needs ``--low-checkpoint``).  Each control has its
+own PPO settings (``config.TRAINING_BY_CONTROL``); ``--steps-per-env``,
+``--iterations`` and ``--checkpoint-interval`` override them.
+
+Each PPO iteration collects ``--steps-per-env`` policy steps in every
 environment, feeds every finished probe episode to ADR as it finishes (so
 the knob ranges move during the rollout), then runs one PPO update.  ADR
 (``adr.py``) chooses every episode start: most from the current ranges,
@@ -32,31 +39,23 @@ import time
 import traceback
 from typing import Any, Mapping
 
-from .config import (
-    CHECKPOINT_INTERVAL,
-    NUM_ENVS,
-    NUM_LEARNING_EPOCHS,
-    NUM_MINI_BATCHES,
-    ROLLOUT_STEPS,
-    SEED,
-    TRAINING_ITERATIONS,
-)
+from .config import NUM_ENVS, NUM_LEARNING_EPOCHS, NUM_MINI_BATCHES, SEED, TRAINING_BY_CONTROL
 
 
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--low-checkpoint", type=Path)
-    parser.add_argument("--low-checkpoint-sha256")
+    parser.add_argument("--control", choices=tuple(TRAINING_BY_CONTROL), default="position")
+    parser.add_argument("--low-checkpoint", type=Path, help="hierarchical control only")
+    parser.add_argument("--low-checkpoint-sha256", help="hierarchical control only")
     start = parser.add_mutually_exclusive_group()
     start.add_argument("--initial-checkpoint", type=Path, help="start from these high-policy weights")
     start.add_argument("--resume", type=Path, help="continue the run that wrote this checkpoint")
     parser.add_argument("--initial-checkpoint-sha256")
     parser.add_argument("--output-dir", type=Path)
-    parser.add_argument("--task", default="Isaac-Go2-Soccer-Milestone2-v0")
     parser.add_argument("--num-envs", type=int, default=NUM_ENVS)
-    parser.add_argument("--steps-per-env", type=int, default=ROLLOUT_STEPS)
-    parser.add_argument("--iterations", type=int, default=TRAINING_ITERATIONS, help="last iteration to run")
-    parser.add_argument("--checkpoint-interval", type=int, default=CHECKPOINT_INTERVAL)
+    parser.add_argument("--steps-per-env", type=int, help="default: the control's setting")
+    parser.add_argument("--iterations", type=int, help="last iteration to run (default: the control's setting)")
+    parser.add_argument("--checkpoint-interval", type=int, help="default: the control's setting")
     parser.add_argument("--seed", type=int, default=SEED)
     parser.add_argument("--no-tensorboard", action="store_true")
     parser.add_argument("--adr-buffer-size", type=int, default=256, help="probe results per edge decision")
@@ -114,6 +113,10 @@ def run(args: argparse.Namespace) -> int:
         save_high_policy,
     )
 
+    settings = TRAINING_BY_CONTROL[args.control]
+    for name in ("steps_per_env", "iterations", "checkpoint_interval"):
+        if getattr(args, name) is None:
+            setattr(args, name, getattr(settings, name))
     if args.num_envs < NUM_MINI_BATCHES or args.num_envs % NUM_MINI_BATCHES != 0:
         raise ValueError(f"num-envs must be a positive multiple of {NUM_MINI_BATCHES}")
     if args.steps_per_env < 2 or args.iterations < 1 or args.checkpoint_interval < 1:
@@ -140,19 +143,20 @@ def run(args: argparse.Namespace) -> int:
         raise ValueError(f"the resumed run is already at iteration {first_iteration - 1}")
 
     env, adapter, low_policy = make_environment(
+        control=args.control,
         low_checkpoint=args.low_checkpoint,
         low_checkpoint_sha256=args.low_checkpoint_sha256,
         num_envs=args.num_envs,
         seed=args.seed,
         device=args.device,
-        task=args.task,
         reset_sampler=adr,
     )
     torch.manual_seed(args.seed)
-    low_before = clone_module_state(low_policy)
+    low_before = clone_module_state(low_policy) if low_policy is not None else None
     runner = OnPolicyRunner(
         adapter,
         runner_config(
+            settings=settings,
             device=args.device,
             iterations=args.iterations,
             num_steps=args.steps_per_env,
@@ -218,16 +222,20 @@ def run(args: argparse.Namespace) -> int:
             rollout_seconds = time.perf_counter() - rollout_started
 
             update_started = time.perf_counter()
-            actor_hidden = clone_hidden_state(policy.memory_a.hidden_state)
-            critic_hidden = clone_hidden_state(policy.memory_c.hidden_state)
-            if actor_hidden is None or critic_hidden is None:
-                raise RuntimeError("recurrent hidden state is absent")
+            if settings.rnn_hidden_dim:
+                # compute_returns runs the critic once more, which advances a
+                # recurrent policy's hidden state; keep the rollout's.
+                actor_hidden = clone_hidden_state(policy.memory_a.hidden_state)
+                critic_hidden = clone_hidden_state(policy.memory_c.hidden_state)
+                if actor_hidden is None or critic_hidden is None:
+                    raise RuntimeError("recurrent hidden state is absent")
             # compute_returns rebinds advantages; no_grad keeps a normal tensor
             # with a version counter, unlike inference_mode.
             with torch.no_grad():
                 runner.alg.compute_returns(observation)
-            restore_hidden_state(policy.memory_a, actor_hidden)
-            restore_hidden_state(policy.memory_c, critic_hidden)
+            if settings.rnn_hidden_dim:
+                restore_hidden_state(policy.memory_a, actor_hidden)
+                restore_hidden_state(policy.memory_c, critic_hidden)
 
             losses = runner.alg.update()
             if not _losses_finite(losses):
@@ -278,10 +286,9 @@ def run(args: argparse.Namespace) -> int:
         metrics.close()
 
     policy_after = clone_module_state(policy)
-    low_after = clone_module_state(low_policy)
-    if not module_state_equal(low_before, low_after):
+    if low_policy is not None and not module_state_equal(low_before, clone_module_state(low_policy)):
         raise RuntimeError("frozen low policy changed during high-policy training")
-    if not _component_changed(policy_before, policy_after, ("memory_a.", "actor.")):
+    if not _component_changed(policy_before, policy_after, ("memory_a.", "actor.", "std")):
         raise RuntimeError("actor parameters did not update")
     if not _component_changed(policy_before, policy_after, ("memory_c.", "critic.")):
         raise RuntimeError("critic parameters did not update")
@@ -290,6 +297,7 @@ def run(args: argparse.Namespace) -> int:
 
     summary = {
         "status": "COMPLETE",
+        "control": args.control,
         "first_iteration": first_iteration,
         "last_iteration": args.iterations,
         "num_envs": args.num_envs,
@@ -311,11 +319,10 @@ def main(argv: list[str] | None = None) -> int:
 
     AppLauncher.add_app_launcher_args(parser)
     args = parser.parse_args(argv)
-    missing = [
-        name
-        for name in ("low_checkpoint", "low_checkpoint_sha256", "output_dir")
-        if getattr(args, name) is None
-    ]
+    required = ["output_dir"]
+    if args.control == "hierarchical":
+        required += ["low_checkpoint", "low_checkpoint_sha256"]
+    missing = [name for name in required if getattr(args, name) is None]
     if missing:
         names = ", ".join("--" + name.replace("_", "-") for name in missing)
         parser.error("missing required arguments: " + names)

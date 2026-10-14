@@ -1,7 +1,8 @@
 """Record what a trained checkpoint does, without Isaac's renderer.
 
 Plays the policy's mean action from ADR's fixed-difficulty starts and saves,
-for the first ``--episodes`` finished episodes per difficulty, every robot
+for the first episode of each of the first ``--episodes`` environment slots
+per difficulty (an unbiased sample), every robot
 body position and the ball position at every 50 Hz tick, plus the start
 knobs and how the episode ended.  ``scripts/render_trajectories.py`` turns
 the file into a video anywhere matplotlib runs.  Use this when Isaac
@@ -24,7 +25,7 @@ def main() -> None:
     parser.add_argument("--control", choices=("position", "velocity"), required=True)
     parser.add_argument("--checkpoint", type=Path, required=True)
     parser.add_argument("--difficulty", type=float, action="append", required=True)
-    parser.add_argument("--episodes", type=int, default=6, help="finished episodes kept per difficulty")
+    parser.add_argument("--episodes", type=int, default=6, help="episodes kept per difficulty (<= num envs)")
     parser.add_argument("--num-envs", type=int, default=16)
     parser.add_argument("--seed", type=int, default=3)
     parser.add_argument("--out", type=Path, required=True)
@@ -68,6 +69,7 @@ def main() -> None:
         bodies: list[list[np.ndarray]] = [[] for _ in range(env.num_envs)]
         balls: list[list[np.ndarray]] = [[] for _ in range(env.num_envs)]
         kept = 0
+        first_done = [False] * env.num_envs
         with torch.inference_mode():
             while kept < args.episodes:
                 # The state before the step: the environment resets a
@@ -83,7 +85,11 @@ def main() -> None:
                 observation, _, done, extras = adapter.step(policy.act_inference(observation))
                 done_ids = torch.nonzero(done).flatten().tolist()
                 for row, slot in enumerate(done_ids):
-                    if kept < args.episodes:
+                    # Keep only the first episode of slots 0..episodes-1:
+                    # keeping whichever episodes finish first would favour
+                    # the quickest outcomes.
+                    if slot < args.episodes and not first_done[slot]:
+                        first_done[slot] = True
                         key = f"{args.control}_d{difficulty:g}_e{kept}"
                         saved[key + "_bodies"] = np.stack(bodies[slot]).astype(np.float32)
                         saved[key + "_ball"] = np.stack(balls[slot]).astype(np.float32)

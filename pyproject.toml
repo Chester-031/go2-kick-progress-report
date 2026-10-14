@@ -3,9 +3,9 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "robot-soccer-stage-b-training"
+name = "robot-soccer-adr-training"
 version = "2026.10.3"
-description = "Stage B no-Kick recurrent high-policy training for Go2 robot soccer"
+description = "No-Kick recurrent high-policy training with ADR for Go2 robot soccer"
 requires-python = ">=3.10"
 
 [tool.setuptools.packages.find]

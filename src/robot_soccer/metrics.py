@@ -73,7 +73,7 @@ def _knob_grid(episodes: Mapping[str, torch.Tensor]) -> list[list[int]]:
     cells = []
     for axis, edges in enumerate(KNOB_GRID_EDGES):
         inner = torch.tensor(edges[1:-1], dtype=torch.float64)
-        cells.append(torch.bucketize(values[:, axis], inner, right=True))
+        cells.append(torch.bucketize(values[:, axis].contiguous(), inner, right=True))
     shape = tuple(len(edges) - 1 for edges in KNOB_GRID_EDGES)
     flat = (cells[0] * shape[1] + cells[1]) * shape[2] + cells[2]
     size = shape[0] * shape[1] * shape[2]

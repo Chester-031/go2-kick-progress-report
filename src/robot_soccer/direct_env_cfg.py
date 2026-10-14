@@ -19,9 +19,11 @@ observation the stock walking policies use.  On top of it this config
   * ``"position"``: joint position targets around the standing pose
     (scale 0.25 rad), tracked by the stock Go2 PD drive (Kp 25, Kd 0.5);
   * ``"velocity"``: joint velocity targets (scale ``VELOCITY_ACTION_SCALE``
-    rad/s), tracked by a damping-only drive (Kp 0, Kd
-    ``VELOCITY_DRIVE_DAMPING``) so nothing pulls the joints back to a pose.
-    These two numbers are a first guess, not tuned.
+    rad/s) tracked with damping ``VELOCITY_DRIVE_DAMPING``, plus a weak
+    spring (stiffness ``VELOCITY_DRIVE_STIFFNESS``) toward the standing
+    pose so that, as in position control, zero action means "stand".  A
+    damping-only drive (no spring) lets a fresh policy collapse into the
+    joint limits within half a second.  The gains are a first guess.
 
 Importing this module needs Isaac Lab (launch the app first).
 """
@@ -34,6 +36,7 @@ from pathlib import Path
 
 from isaaclab.sensors import ContactSensorCfg
 from isaaclab.envs import mdp
+from isaaclab.envs.mdp.actions.joint_actions import JointVelocityAction
 from isaaclab.utils import configclass
 from isaaclab_tasks.manager_based.locomotion.velocity.config.go2.flat_env_cfg import UnitreeGo2FlatEnvCfg
 
@@ -41,8 +44,9 @@ from .contact import exact_robot_filter_paths
 
 CONTROLS = ("position", "velocity")
 POSITION_ACTION_SCALE = 0.25
-VELOCITY_ACTION_SCALE = 4.0
-VELOCITY_DRIVE_DAMPING = 1.5
+VELOCITY_ACTION_SCALE = 6.0
+VELOCITY_DRIVE_DAMPING = 1.0
+VELOCITY_DRIVE_STIFFNESS = 10.0
 # The stock reward terms kept as motion regularizers.
 REGULARIZERS = ("dof_torques_l2", "dof_acc_l2", "action_rate_l2")
 FIELD_ASSETS = (
@@ -59,6 +63,23 @@ FIELD_ASSETS = (
     "negative_goal_lower",
     "negative_goal_back",
 )
+
+
+class StandingPoseVelocityAction(JointVelocityAction):
+    """Joint velocity targets from the policy, with every joint's position
+    target held at the standing pose (Isaac Lab starts position targets at
+    0 rad, which a nonzero drive stiffness would pull the legs toward)."""
+
+    def apply_actions(self) -> None:
+        super().apply_actions()
+        self._asset.set_joint_position_target(
+            self._asset.data.default_joint_pos[:, self._joint_ids], joint_ids=self._joint_ids
+        )
+
+
+@configclass
+class StandingPoseVelocityActionCfg(mdp.JointVelocityActionCfg):
+    class_type: type = StandingPoseVelocityAction
 
 
 def _field_template():
@@ -117,14 +138,14 @@ class DirectSoccerEnvCfg(UnitreeGo2FlatEnvCfg):
             self.actions.joint_pos.use_default_offset = True
         else:
             self.actions.joint_pos = None
-            self.actions.joint_vel = mdp.JointVelocityActionCfg(
+            self.actions.joint_vel = StandingPoseVelocityActionCfg(
                 asset_name="robot",
                 joint_names=[".*"],
                 scale=VELOCITY_ACTION_SCALE,
                 use_default_offset=False,
             )
             for actuator in self.scene.robot.actuators.values():
-                actuator.stiffness = 0.0
+                actuator.stiffness = VELOCITY_DRIVE_STIFFNESS
                 actuator.damping = VELOCITY_DRIVE_DAMPING
 
         # The soccer environment owns rewards, terminations and resets.

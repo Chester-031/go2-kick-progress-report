@@ -48,7 +48,8 @@ class ShapingWeights:
     robot_ball: float = 0.5
     base_height: float = 2.0
     upright: float = 0.5
-    nominal_base_height_m: float = 0.32
+    # The stock Go2 settles at 0.28 m standing on its PD drive (Isaac Lab).
+    nominal_base_height_m: float = 0.28
 
 
 @dataclass(frozen=True)

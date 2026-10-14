@@ -94,6 +94,8 @@ class DirectSoccerEnvCfg(UnitreeGo2FlatEnvCfg):
         self.scene.env_spacing = 12.0
         self.scene.ball = deepcopy(field.ball)
         ball = self.scene.ball.spawn
+        # The robot-ball contact sensor lives on the ball.
+        ball.activate_contact_sensors = True
         # Rolling and air resistance (Coulomb friction alone barely slows a
         # rolling ball), as in the validated Stage B field.
         ball.rigid_props.linear_damping = 0.35

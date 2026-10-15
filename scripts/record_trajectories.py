@@ -2,12 +2,14 @@
 
 Plays the policy's mean action from ADR's fixed-difficulty starts and saves,
 for the first episode of each of the first ``--episodes`` environment slots
-per difficulty (an unbiased sample), every robot
-body position and the ball position at every 50 Hz tick, plus the start
-knobs and how the episode ended.  ``scripts/render_trajectories.py`` turns
-the file into a video anywhere matplotlib runs.  Use this when Isaac
-Sim's camera rendering is unavailable (it needs a working RTX/Vulkan
-setup; this only needs the physics).
+per difficulty (an unbiased sample), every robot body pose and the ball
+pose (positions relative to the environment origin, quaternions w, x, y,
+z) at every 50 Hz tick, plus the start knobs and how the episode ended.
+``scripts/render_trajectories.py`` turns the file into a stick-figure video
+anywhere matplotlib runs; ``scripts/replay_isaac6.py`` replays the poses
+on the real robot model in Isaac Sim 6.  Use this when Isaac Sim 4.5's
+camera rendering is unavailable (its RTX renderer segfaults on NVIDIA
+driver 610; this only needs the physics).
 
     python scripts/record_trajectories.py --headless --control velocity \
         --checkpoint RUN/model_iteration_3000.pt --difficulty 0.25 --difficulty 1 --out traj.npz
@@ -67,7 +69,9 @@ def main() -> None:
             adr.set_range(parameter.name, low, high)
         observation = adapter.reset()
         bodies: list[list[np.ndarray]] = [[] for _ in range(env.num_envs)]
+        body_quats: list[list[np.ndarray]] = [[] for _ in range(env.num_envs)]
         balls: list[list[np.ndarray]] = [[] for _ in range(env.num_envs)]
+        ball_quats: list[list[np.ndarray]] = [[] for _ in range(env.num_envs)]
         kept = 0
         first_done = [False] * env.num_envs
         with torch.inference_mode():
@@ -76,12 +80,16 @@ def main() -> None:
                 # finished slot inside step, so the post-step state of a
                 # terminal slot is already the next episode's start.
                 body_xyz = (env.robot.data.body_pos_w - origins[:, None, :]).cpu().numpy()
+                body_wxyz = env.robot.data.body_quat_w.cpu().numpy()
                 ball_xyz = (env.ball.data.root_pos_w - origins).cpu().numpy()
+                ball_wxyz = env.ball.data.root_quat_w.cpu().numpy()
                 values = env.reset_tags["adr_values"].cpu().numpy()
                 sides = env.goal_side.cpu().numpy()
                 for slot in range(env.num_envs):
                     bodies[slot].append(body_xyz[slot])
+                    body_quats[slot].append(body_wxyz[slot])
                     balls[slot].append(ball_xyz[slot])
+                    ball_quats[slot].append(ball_wxyz[slot])
                 observation, _, done, extras = adapter.step(policy.act_inference(observation))
                 done_ids = torch.nonzero(done).flatten().tolist()
                 for row, slot in enumerate(done_ids):
@@ -92,7 +100,9 @@ def main() -> None:
                         first_done[slot] = True
                         key = f"{args.control}_d{difficulty:g}_e{kept}"
                         saved[key + "_bodies"] = np.stack(bodies[slot]).astype(np.float32)
+                        saved[key + "_body_quats"] = np.stack(body_quats[slot]).astype(np.float32)
                         saved[key + "_ball"] = np.stack(balls[slot]).astype(np.float32)
+                        saved[key + "_ball_quat"] = np.stack(ball_quats[slot]).astype(np.float32)
                         index.append({
                             "key": key,
                             "control": args.control,
@@ -104,7 +114,9 @@ def main() -> None:
                         })
                         kept += 1
                     bodies[slot] = []
+                    body_quats[slot] = []
                     balls[slot] = []
+                    ball_quats[slot] = []
         print(f"[trajectories] difficulty={difficulty} kept={kept}", flush=True)
     saved["index_json"] = np.frombuffer(
         json.dumps({"body_names": list(env.robot.body_names), "episodes": index}).encode(), dtype=np.uint8

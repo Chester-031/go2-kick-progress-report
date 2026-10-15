@@ -40,7 +40,20 @@ import time
 import traceback
 from typing import Any, Mapping
 
-from .config import NUM_ENVS, NUM_LEARNING_EPOCHS, NUM_MINI_BATCHES, SEED, TRAINING_BY_CONTROL
+from .config import NUM_ENVS, SEED, TRAINING_BY_CONTROL
+
+# PPO settings that can be overridden from the command line (the control's
+# TrainingSettings supplies the rest and the defaults).
+PPO_OVERRIDES = (
+    ("learning_rate", float),
+    ("schedule", str),
+    ("desired_kl", float),
+    ("lam", float),
+    ("entropy_coef", float),
+    ("num_learning_epochs", int),
+    ("num_mini_batches", int),
+    ("clip_param", float),
+)
 
 
 def _parser() -> argparse.ArgumentParser:
@@ -61,6 +74,8 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--no-tensorboard", action="store_true")
     parser.add_argument("--adr-buffer-size", type=int, default=256, help="probe results per edge decision")
     parser.add_argument("--gamma", type=float, help="PPO and shaping discount (default: the control's)")
+    for name, kind in PPO_OVERRIDES:
+        parser.add_argument("--" + name.replace("_", "-"), type=kind, help="default: the control's setting")
     parser.add_argument("--adr-low-threshold", type=float, default=0.2)
     parser.add_argument("--adr-high-threshold", type=float, default=0.4)
     parser.add_argument(
@@ -122,13 +137,15 @@ def run(args: argparse.Namespace) -> int:
     )
 
     settings = TRAINING_BY_CONTROL[args.control]
-    if args.gamma is not None:
-        settings = dataclasses.replace(settings, gamma=args.gamma)
+    overrides = {name: getattr(args, name) for name in ("gamma", *(name for name, _ in PPO_OVERRIDES))}
+    settings = dataclasses.replace(settings, **{name: value for name, value in overrides.items() if value is not None})
+    if settings.schedule not in ("fixed", "adaptive"):
+        raise ValueError("schedule must be fixed or adaptive")
     for name in ("steps_per_env", "iterations", "checkpoint_interval"):
         if getattr(args, name) is None:
             setattr(args, name, getattr(settings, name))
-    if args.num_envs < NUM_MINI_BATCHES or args.num_envs % NUM_MINI_BATCHES != 0:
-        raise ValueError(f"num-envs must be a positive multiple of {NUM_MINI_BATCHES}")
+    if args.num_envs < settings.num_mini_batches or args.num_envs % settings.num_mini_batches != 0:
+        raise ValueError(f"num-envs must be a positive multiple of {settings.num_mini_batches}")
     if args.steps_per_env < 2 or args.iterations < 1 or args.checkpoint_interval < 1:
         raise ValueError("steps-per-env must be >= 2 and iterations, checkpoint-interval >= 1")
     output = prepare_output_directory(args.output_dir)
@@ -208,12 +225,13 @@ def run(args: argparse.Namespace) -> int:
             "arguments": {name: str(value) for name, value in vars(args).items()},
             "first_iteration": first_iteration,
             "ppo_gamma": settings.gamma,
+            "ppo_settings": dataclasses.asdict(settings),
             "transitions_per_iteration": args.num_envs * args.steps_per_env,
         },
         tensorboard=not args.no_tensorboard,
     )
     checkpoints: list[str] = []
-    updates_per_iteration = NUM_LEARNING_EPOCHS * NUM_MINI_BATCHES
+    updates_per_iteration = settings.num_learning_epochs * settings.num_mini_batches
 
     try:
         for iteration in range(first_iteration, args.iterations + 1):

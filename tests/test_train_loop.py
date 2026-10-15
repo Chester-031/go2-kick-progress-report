@@ -160,6 +160,28 @@ class DirectJointTrainLoopTest(unittest.TestCase):
                 summary = json.loads((output / "training_summary.json").read_text())
                 self.assertEqual(summary["control"], control)
 
+    def test_ppo_overrides_reach_the_update(self) -> None:
+        """Epochs and minibatches set the optimizer steps per update, which
+        the loop checks; the rest is recorded with the run."""
+
+        with tempfile.TemporaryDirectory() as root, mock.patch.object(
+            runtime, "make_environment", fake_make_environment
+        ):
+            output = Path(root) / "ppo"
+            args = arguments(
+                output, control="position", steps_per_env=30, iterations=1, checkpoint_interval=1,
+                learning_rate=3e-4, schedule="fixed", desired_kl=0.02, lam=0.9, entropy_coef=0.002,
+                num_learning_epochs=2, num_mini_batches=2, clip_param=0.15,
+            )
+            self.assertEqual(train.run(args), 0)
+            settings = json.loads((output / "run_info.json").read_text())["ppo_settings"]
+            self.assertEqual(
+                {name: settings[name] for name in ("learning_rate", "schedule", "lam", "entropy_coef",
+                                                    "num_learning_epochs", "num_mini_batches", "clip_param")},
+                {"learning_rate": 3e-4, "schedule": "fixed", "lam": 0.9, "entropy_coef": 0.002,
+                 "num_learning_epochs": 2, "num_mini_batches": 2, "clip_param": 0.15},
+            )
+
     def test_gamma_override_reaches_ppo_and_the_shaping(self) -> None:
         with tempfile.TemporaryDirectory() as root, mock.patch.object(
             runtime, "make_environment", fake_make_environment

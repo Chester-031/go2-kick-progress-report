@@ -113,6 +113,9 @@ class TrainingSettings:
     actor_hidden_dims: tuple[int, ...]
     critic_hidden_dims: tuple[int, ...]
     rnn_hidden_dim: int
+    num_learning_epochs: int = NUM_LEARNING_EPOCHS
+    num_mini_batches: int = NUM_MINI_BATCHES
+    clip_param: float = CLIP_PARAM
 
 
 # Policy straight on the joints at 50 Hz: Isaac Lab's stock Go2 walking

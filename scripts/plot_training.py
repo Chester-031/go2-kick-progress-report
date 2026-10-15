@@ -1,7 +1,7 @@
 """Standard training plots for ADR soccer runs.
 
     python scripts/plot_training.py RUN_DIR [RUN_DIR ...] --out PLOT_DIR
-        [--labels a,b] [--smooth 5] [--window 0.2]
+        [--labels a,b] [--smooth 5] [--window 0.2] [--bin-width N]
 
 Each RUN_DIR is a training output directory; only its ``run_info.json`` and
 ``metrics.jsonl`` are read (``robot_soccer.metrics`` writes both), so the
@@ -11,10 +11,14 @@ a fixed order; figures that need many episodes (heatmaps, goal rate along a
 knob) pool the runs.  x is the PPO iteration everywhere.
 
 Figures:
+  00_overview        is training still paying off: whole-field goal rate with
+                     its trend over the last third, share of the full task
+                     ADR trains on, seconds on the ground per episode
   01_goal_rates      headline: goal rate at each fixed difficulty (the only
                      goal rate that compares across runs and over training,
                      since the ADR training task keeps changing), and by
-                     episode kind
+                     episode kind; pooled per --bin-width iterations with a
+                     95% interval
   02_adr_ranges      each knob's [low, high] over training, with its limits
   03_adr_probes      probe success at every range edge against the move
                      thresholds, and when the edge moved
@@ -146,27 +150,136 @@ def direct_label(axis: plt.Axes, x: np.ndarray, y: np.ndarray, text: str, color:
         axis.plot([x[last]], [y[last]], "o", ms=4, color=color)
 
 
-def plot_goal_rates(runs: list[dict], out: Path, window: int) -> None:
+def pooled_goal_rate(run: dict, keys: tuple[str, ...], bin_width: int
+                     ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    """Goal rate of the episodes under ``record[keys]`` (a dict with
+    ``episodes`` and ``goal_rate``), pooled over bins of ``bin_width``
+    iterations, with a 95% Wilson interval.
+
+    Each iteration holds only a few fixed-difficulty episodes, so its own
+    goal rate jumps between 0 and 1 and a moving average of those rates
+    weights a 1-episode iteration like a 30-episode one.  Pooling counts
+    goals over episodes instead.  Returns bin centres (iterations), rate,
+    and the interval's low and high ends; bins without episodes are left out.
+    """
+
+    goals: dict[int, float] = {}
+    episodes: dict[int, float] = {}
+    for record in run["records"]:
+        entry = record
+        for key in keys:
+            entry = entry.get(key) if isinstance(entry, dict) else None
+        if not entry or not entry.get("episodes"):
+            continue
+        number = (int(record["iteration"]) - 1) // bin_width
+        episodes[number] = episodes.get(number, 0.0) + entry["episodes"]
+        goals[number] = goals.get(number, 0.0) + entry["episodes"] * entry["goal_rate"]
+    bins = np.array(sorted(episodes), int)
+    count = np.array([episodes[number] for number in bins], float)
+    rate = np.array([goals[number] for number in bins], float) / np.maximum(count, 1.0)
+    z = 1.96
+    centre = (rate + z * z / (2 * count)) / (1 + z * z / count)
+    half = z * np.sqrt(rate * (1 - rate) / count + z * z / (4 * count * count)) / (1 + z * z / count)
+    return bin_width * bins + 1 + (bin_width - 1) / 2, rate, centre - half, centre + half
+
+
+def default_bin_width(runs: list[dict]) -> int:
+    """About 60 bins over the longest run."""
+
+    return max(1, round(max(run["iteration"][-1] for run in runs) / 60))
+
+
+def plot_goal_rates(runs: list[dict], out: Path, bin_width: int) -> None:
     difficulties = sorted({key for run in runs for record in run["records"]
                            for key in record.get("evaluation", {})}, key=float)
-    panels = [(f"difficulty {difficulty}", ("evaluation", difficulty, "goal_rate")) for difficulty in difficulties]
-    panels += [(KIND_LABEL[kind], ("by_kind", kind, "goal_rate")) for kind in ("train", "probe")]
+    panels = [(f"difficulty {difficulty}", ("evaluation", difficulty)) for difficulty in difficulties]
+    panels += [(KIND_LABEL[kind], ("by_kind", kind)) for kind in ("train", "probe")]
     fig, axes = plt.subplots(1, len(panels), figsize=(3.4 * len(panels), 3.4), sharey=True, squeeze=False)
     for axis, (title, keys) in zip(axes[0], panels):
         for index, run in enumerate(runs):
             color = SERIES[index % len(SERIES)]
-            raw = field(run, *keys)
-            axis.plot(run["iteration"], raw, color=color, lw=0.6, alpha=0.25)
-            axis.plot(run["iteration"], smooth(raw, window), color=color)
+            centres, rate, low, high = pooled_goal_rate(run, keys, bin_width)
+            axis.fill_between(centres, low, high, color=color, alpha=0.18, lw=0)
+            axis.plot(centres, rate, color=color)
         axis.set_title(title)
         axis.set_xlabel("PPO iteration")
         axis.set_ylim(-0.02, 1.02)
     axes[0][0].set_ylabel("goal rate of finished episodes")
     fig.suptitle("Goal rate.  Fixed difficulty d: every knob drawn from its start value out to d of the way to "
-                 "its limits (same task in every run).  Thin = per iteration, thick = moving average", y=1.04)
+                 f"its limits (same task in every run).  Pooled per {bin_width} iterations, band = 95% interval",
+                 y=1.04)
     run_legend(fig, runs, y=-0.04)
     fig.tight_layout()
     save(fig, out, "01_goal_rates.png")
+
+
+def label_line_ends(axis: plt.Axes, ends: list[tuple[np.ndarray, np.ndarray, str, str]]) -> None:
+    """Label each line at its last finite point, in text ink with a colour
+    dot, spreading the labels apart vertically so close lines' labels do
+    not overlap (unlike ``direct_label``, which places one label alone)."""
+
+    points = []
+    for x, y, text, color in ends:
+        finite = np.flatnonzero(np.isfinite(y))
+        if finite.size:
+            points.append((float(y[finite[-1]]), float(x[finite[-1]]), text, color))
+    low, high = axis.get_ylim()
+    gap = 0.07 * (high - low)
+    placed: list[float] = []
+    for y, x, text, color in sorted(points):
+        label_y = max([y] + [previous + gap for previous in placed[-1:]])
+        placed.append(label_y)
+        axis.plot([x], [y], "o", ms=4, color=color)
+        nudge = 0.015 * (axis.get_xlim()[1] - axis.get_xlim()[0])
+        axis.text(x + nudge, label_y, text, va="center", fontsize=7.5, color=INK_2, clip_on=False)
+
+
+def plot_overview(runs: list[dict], out: Path, bin_width: int, window: int) -> None:
+    """One figure that says whether training is still paying off: the
+    whole-field goal rate with its trend over the last third of training,
+    how much of the full task ADR has opened, and time spent fallen over."""
+
+    parameters = runs[0]["info"]["adr_parameters"]
+    hardest = max((key for run in runs for record in run["records"] for key in record.get("evaluation", {})),
+                  key=float)
+    fig, axes = plt.subplots(1, 3, figsize=(14, 3.9))
+    trend_notes = []
+    ends: list[list[tuple[np.ndarray, np.ndarray, str, str]]] = [[], [], []]
+    for index, run in enumerate(runs):
+        color = SERIES[index % len(SERIES)]
+        centres, rate, low, high = pooled_goal_rate(run, ("evaluation", hardest), bin_width)
+        axes[0].fill_between(centres, low, high, color=color, alpha=0.18, lw=0)
+        axes[0].plot(centres, rate, color=color)
+        recent = centres >= centres[-1] - (centres[-1] - centres[0]) / 3
+        if recent.sum() >= 3:
+            slope, intercept = np.polyfit(centres[recent], rate[recent], 1)
+            axes[0].plot(centres[recent], slope * centres[recent] + intercept, color=INK_2, lw=1.2, ls="--")
+            trend_notes.append(f"{run['label']} {1000 * slope:+.3f}")
+        ends[0].append((centres, rate, run["label"], color))
+        coverage = np.mean([
+            (field(run, "adr", "knobs", p["name"], "high") - field(run, "adr", "knobs", p["name"], "low"))
+            / (p["maximum"] - p["minimum"]) for p in parameters], axis=0)
+        axes[1].plot(run["iteration"], coverage, color=color)
+        ends[1].append((run["iteration"], coverage, run["label"], color))
+        ground = smooth(field(run, "mean_seconds_on_ground"), window)
+        axes[2].plot(run["iteration"], ground, color=color)
+        ends[2].append((run["iteration"], ground, run["label"], color))
+    axes[0].set_title(f"goal rate on the whole field (difficulty {hardest})")
+    axes[0].set_ylim(-0.02, 1.02)
+    if trend_notes:
+        axes[0].text(0.02, 0.97, "dashed: trend over the last third, goal rate per 1000 iterations\n"
+                     + ",  ".join(trend_notes), transform=axes[0].transAxes, va="top", fontsize=7.5, color=INK_2)
+    axes[1].set_title("share of the full task ADR trains on (mean of knobs)")
+    axes[1].set_ylim(-0.02, 1.02)
+    axes[2].set_title("seconds on the ground per episode")
+    axes[2].set_ylim(bottom=0)
+    for axis, axis_ends in zip(axes, ends):
+        axis.set_xlabel("PPO iteration")
+        label_line_ends(axis, axis_ends)
+    fig.suptitle("Overview: is training still paying off?  Rising goal rate and ADR share mean keep training", y=1.03)
+    run_legend(fig, runs, y=-0.06)
+    fig.tight_layout()
+    save(fig, out, "00_overview.png")
 
 
 def plot_adr_ranges(runs: list[dict], out: Path) -> None:
@@ -463,6 +576,8 @@ def main() -> None:
     parser.add_argument("--labels", help="comma-separated run labels (default: directory names)")
     parser.add_argument("--smooth", type=int, default=5, help="moving-average window in iterations")
     parser.add_argument("--window", type=float, default=0.2, help="share of training pooled for heatmaps")
+    parser.add_argument("--bin-width", type=int, default=0,
+                        help="iterations pooled per goal-rate point (default: about 60 points per run)")
     args = parser.parse_args()
     labels = args.labels.split(",") if args.labels else [path.name for path in args.runs]
     if len(labels) != len(args.runs):
@@ -470,7 +585,9 @@ def main() -> None:
     runs = [load_run(path, label) for path, label in zip(args.runs, labels)]
     args.out.mkdir(parents=True, exist_ok=True)
     style()
-    plot_goal_rates(runs, args.out, args.smooth)
+    bin_width = args.bin_width or default_bin_width(runs)
+    plot_overview(runs, args.out, bin_width, args.smooth)
+    plot_goal_rates(runs, args.out, bin_width)
     plot_adr_ranges(runs, args.out)
     plot_adr_probes(runs, args.out, args.smooth)
     plot_adr_health(runs, args.out)

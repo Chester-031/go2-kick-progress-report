@@ -184,6 +184,24 @@ def run_trial(trial: optuna.trial.Trial, args: argparse.Namespace) -> None:
         args.study.tell(trial, value)
 
 
+def open_study(storage: optuna.storages.BaseStorage, study_name: str, seed: int, worker: int,
+               budget_steps: int) -> optuna.Study:
+    """Create or join the shared study as one worker.  Each worker (Slurm
+    array task) seeds its sampler with ``seed + worker``: with one shared
+    seed every worker draws the same random startup trials."""
+
+    return optuna.create_study(
+        study_name=study_name,
+        storage=storage,
+        direction="maximize",
+        load_if_exists=True,
+        sampler=optuna.samplers.TPESampler(seed=seed + worker, multivariate=True, group=True, constant_liar=True),
+        # Scores near the start of a run say little (every trial is near 0
+        # at full difficulty), so prune only past 40% of the budget.
+        pruner=optuna.pruners.MedianPruner(n_startup_trials=8, n_warmup_steps=int(0.4 * budget_steps / 1e6)),
+    )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--storage", type=Path, required=True, help="Optuna journal file shared by the workers")
@@ -197,19 +215,11 @@ def main() -> None:
     parser.add_argument("--seed", type=int, default=0)
     args = parser.parse_args()
     args.out_dir.mkdir(parents=True, exist_ok=True)
-    storage = JournalStorage(JournalFileBackend(str(args.storage)))
-    study = optuna.create_study(
-        study_name=args.study_name,
-        storage=storage,
-        direction="maximize",
-        load_if_exists=True,
-        sampler=optuna.samplers.TPESampler(seed=args.seed, multivariate=True, group=True, constant_liar=True),
-        # Scores near the start of a run say little (every trial is near 0
-        # at full difficulty), so prune only past 40% of the budget.
-        pruner=optuna.pruners.MedianPruner(n_startup_trials=8, n_warmup_steps=int(0.4 * args.budget_steps / 1e6)),
-    )
+    worker = int(os.environ.get("SLURM_ARRAY_TASK_ID", "0"))
+    study = open_study(JournalStorage(JournalFileBackend(str(args.storage))), args.study_name, args.seed, worker,
+                       args.budget_steps)
     args.study = study
-    if os.environ.get("SLURM_ARRAY_TASK_ID", "0") == "0" and not study.trials:
+    if worker == 0 and not study.trials:
         for baseline in BASELINE_TRIALS:
             study.enqueue_trial(baseline)
     else:

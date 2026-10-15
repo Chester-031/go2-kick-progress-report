@@ -68,5 +68,19 @@ class ScoreTest(unittest.TestCase):
         self.assertEqual(tune.score([{"iteration": 1}]), 0.0)
 
 
+class WorkerTest(unittest.TestCase):
+    def test_workers_sharing_a_study_draw_different_first_trials(self) -> None:
+        """Array tasks share one study and one --seed.  If every worker's
+        sampler gets the same seed, their random startup trials are the same
+        trial run many times over (ppo-control-v1: 27 distinct of 40)."""
+
+        storage = optuna.storages.InMemoryStorage()
+        drawn = []
+        for worker in (1, 2, 3):
+            study = tune.open_study(storage, "shared", seed=0, worker=worker, budget_steps=150_000_000)
+            drawn.append(tuple(sorted(tune.suggest(study.ask()).items())))
+        self.assertEqual(len(set(drawn)), 3, drawn)
+
+
 if __name__ == "__main__":
     unittest.main()

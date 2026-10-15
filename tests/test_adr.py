@@ -188,6 +188,55 @@ class SamplingTest(unittest.TestCase):
             self.assertAlmostEqual(high, parameter.maximum, places=5)
 
 
+class LeadKnobTest(unittest.TestCase):
+    """A lead knob widens alone: until its upper edge reaches a value, it is
+    the only knob probed and every other knob stays at its start."""
+
+    def wide_ranges(self, adr: AutomaticDomainRandomization) -> None:
+        adr.set_range("ball_goal_distance_m", 0.15, 5.0)
+        adr.set_range("facing_error_deg", 0.0, 120.0)
+        adr.set_range("robot_bearing_deg", 0.0, 90.0)
+        adr.set_range("ball_angle_deg", 0.0, 40.0)
+
+    def test_before_the_gate_only_the_lead_knob_moves(self) -> None:
+        adr = AutomaticDomainRandomization(
+            seed=1, probe_fraction=0.5, evaluation_fraction=0.0,
+            lead_parameter="robot_ball_distance_m", lead_until=4.0,
+        )
+        self.wide_ranges(adr)
+        adr.set_range("robot_ball_distance_m", 0.45, 2.0)
+        batch = adr(4000)
+        kind, values = batch.tags["adr_kind"], batch.tags["adr_values"].double()
+        probes = kind == KIND["probe"]
+        self.assertTrue(bool((batch.tags["adr_parameter"][probes] == INDEX["robot_ball_distance_m"]).all()))
+        for parameter in PARAMETERS:
+            if parameter.name != "robot_ball_distance_m":
+                column = values[:, INDEX[parameter.name]]
+                self.assertTrue(torch.allclose(column, torch.full_like(column, parameter.start)), parameter.name)
+        self.assertGreater(float(values[:, INDEX["robot_ball_distance_m"]].max()), 1.5)
+        # Probe results for other knobs (from before the gate) move nothing.
+        self.assertEqual(adr.record(probe_results("ball_goal_distance_m", UPPER, [True] * 400)), 0)
+
+    def test_once_the_lead_knob_reaches_its_target_every_knob_is_in_play(self) -> None:
+        adr = AutomaticDomainRandomization(
+            seed=2, probe_fraction=0.5, evaluation_fraction=0.0,
+            lead_parameter="robot_ball_distance_m", lead_until=4.0, buffer_size=1,
+        )
+        self.wide_ranges(adr)
+        adr.set_range("robot_ball_distance_m", 0.45, 3.9)
+        adr.record(probe_results("robot_ball_distance_m", UPPER, [True]))
+        self.assertGreaterEqual(float(adr.ranges()[INDEX["robot_ball_distance_m"], UPPER]), 4.0)
+        # The gate stays open even if the lead knob later narrows again.
+        adr.set_range("robot_ball_distance_m", 0.45, 3.0)
+        batch = adr(4000)
+        probes = batch.tags["adr_kind"] == KIND["probe"]
+        self.assertEqual(set(batch.tags["adr_parameter"][probes].tolist()), set(range(len(PARAMETERS))))
+        self.assertGreater(float(batch.tags["adr_values"][:, INDEX["ball_goal_distance_m"]].max()), 1.0)
+        restored = AutomaticDomainRandomization(lead_parameter="robot_ball_distance_m", lead_until=4.0)
+        restored.load_state_dict(adr.state_dict())
+        self.assertTrue(restored.lead_done)
+
+
 class WholeFieldTest(unittest.TestCase):
     def test_the_limits_reach_every_corner_of_the_field(self) -> None:
         adr = AutomaticDomainRandomization(seed=5, probe_fraction=0.0, evaluation_fraction=0.0)

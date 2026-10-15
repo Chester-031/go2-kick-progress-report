@@ -19,15 +19,17 @@ install_isaaclab_stub()
 
 from robot_soccer import environment, runtime, train  # noqa: E402
 from robot_soccer.shaping import PotentialShaping, ShapingWeights  # noqa: E402
-from robot_soccer.config import TRAINING_BY_CONTROL  # noqa: E402
 from robot_soccer.controls import DirectJointControl  # noqa: E402
 from tests.test_environment_characterization import held_command_control  # noqa: E402
 
 
-def fake_make_environment(*, control, num_envs, reset_sampler, device, **_):
+MADE_WITH_GAMMA: list[float] = []
+
+
+def fake_make_environment(*, control, num_envs, reset_sampler, device, gamma, **_):
     """runtime.make_environment on the fake scene."""
 
-    gamma = TRAINING_BY_CONTROL[control].gamma
+    MADE_WITH_GAMMA.append(gamma)
     if control == "hierarchical":
         actor = frozen_low_actor(device)
         low_env = environment.FrozenLowInferenceEnv(FakeGymEnv(FakeSoccerBaseEnv(num_envs, device=device)))
@@ -118,7 +120,8 @@ class TrainLoopTest(unittest.TestCase):
             second = Path(root) / "second"
             self.assertEqual(
                 train.run(
-                    arguments(second, resume=planted, adr_buffer_size=10_000, adr_evaluation_fraction=0.0)
+                    arguments(second, resume=planted, adr_buffer_size=10_000, adr_evaluation_fraction=0.0,
+                              adr_lead_knob="none")
                 ),
                 0,
             )
@@ -156,6 +159,19 @@ class DirectJointTrainLoopTest(unittest.TestCase):
                 self.assertFalse(any(name.startswith("memory_") for name in checkpoint["model_state_dict"]))
                 summary = json.loads((output / "training_summary.json").read_text())
                 self.assertEqual(summary["control"], control)
+
+    def test_gamma_override_reaches_ppo_and_the_shaping(self) -> None:
+        with tempfile.TemporaryDirectory() as root, mock.patch.object(
+            runtime, "make_environment", fake_make_environment
+        ):
+            output = Path(root) / "gamma"
+            args = arguments(output, control="position", steps_per_env=30, iterations=1, checkpoint_interval=1,
+                             gamma=0.998)
+            MADE_WITH_GAMMA.clear()
+            self.assertEqual(train.run(args), 0)
+            self.assertEqual(MADE_WITH_GAMMA, [0.998])
+            info = json.loads((output / "run_info.json").read_text())
+            self.assertEqual(info["ppo_gamma"], 0.998)
 
 
 if __name__ == "__main__":

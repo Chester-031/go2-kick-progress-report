@@ -30,6 +30,7 @@ iteration count; write to a new output directory).
 from __future__ import annotations
 
 import argparse
+import dataclasses
 import json
 import math
 import os
@@ -59,8 +60,15 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--seed", type=int, default=SEED)
     parser.add_argument("--no-tensorboard", action="store_true")
     parser.add_argument("--adr-buffer-size", type=int, default=256, help="probe results per edge decision")
-    parser.add_argument("--adr-low-threshold", type=float, default=0.3)
-    parser.add_argument("--adr-high-threshold", type=float, default=0.6)
+    parser.add_argument("--gamma", type=float, help="PPO and shaping discount (default: the control's)")
+    parser.add_argument("--adr-low-threshold", type=float, default=0.2)
+    parser.add_argument("--adr-high-threshold", type=float, default=0.4)
+    parser.add_argument(
+        "--adr-lead-knob",
+        default="robot_ball_distance_m",
+        help="widen this knob alone until its upper edge reaches --adr-lead-until ('none': no lead)",
+    )
+    parser.add_argument("--adr-lead-until", type=float, default=4.0)
     parser.add_argument("--adr-probe-fraction", type=float, default=0.2)
     parser.add_argument("--adr-evaluation-fraction", type=float, default=0.05)
     parser.add_argument(
@@ -114,6 +122,8 @@ def run(args: argparse.Namespace) -> int:
     )
 
     settings = TRAINING_BY_CONTROL[args.control]
+    if args.gamma is not None:
+        settings = dataclasses.replace(settings, gamma=args.gamma)
     for name in ("steps_per_env", "iterations", "checkpoint_interval"):
         if getattr(args, name) is None:
             setattr(args, name, getattr(settings, name))
@@ -131,6 +141,8 @@ def run(args: argparse.Namespace) -> int:
         evaluation_fraction=args.adr_evaluation_fraction,
         evaluation_difficulties=[float(value) for value in args.adr_evaluation_difficulties.split(",")],
         seed=args.seed,
+        lead_parameter=None if args.adr_lead_knob == "none" else args.adr_lead_knob,
+        lead_until=args.adr_lead_until,
     )
     resumed: Mapping[str, Any] | None = None
     if args.resume is not None:
@@ -150,6 +162,7 @@ def run(args: argparse.Namespace) -> int:
         seed=args.seed,
         device=args.device,
         reset_sampler=adr,
+        gamma=settings.gamma,
     )
     torch.manual_seed(args.seed)
     low_before = clone_module_state(low_policy) if low_policy is not None else None
@@ -194,6 +207,7 @@ def run(args: argparse.Namespace) -> int:
         run_info={
             "arguments": {name: str(value) for name, value in vars(args).items()},
             "first_iteration": first_iteration,
+            "ppo_gamma": settings.gamma,
             "transitions_per_iteration": args.num_envs * args.steps_per_env,
         },
         tensorboard=not args.no_tensorboard,

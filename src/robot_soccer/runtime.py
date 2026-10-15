@@ -132,11 +132,12 @@ def make_environment(
     low_checkpoint: str | Path | None = None,
     low_checkpoint_sha256: str | None = None,
     render_mode: str | None = None,
+    gamma: float | None = None,
 ):
     """Construct the soccer environment for ``control``, its RSL-RL adapter
     and the frozen low actor (``None`` for the direct-joint controls).
-    Episode starts come from ``reset_sampler``; the shaping discount is the
-    control's PPO discount.
+    Episode starts come from ``reset_sampler``; the shaping discount is
+    ``gamma``, which must be the PPO discount (default: the control's).
 
     Isaac Lab must already be launched before this function is called.
     """
@@ -152,7 +153,9 @@ def make_environment(
 
     if control not in TRAINING_BY_CONTROL:
         raise ValueError(f"control must be one of {tuple(TRAINING_BY_CONTROL)}")
-    shaping = PotentialShaping(ShapingWeights(), gamma=TRAINING_BY_CONTROL[control].gamma)
+    shaping = PotentialShaping(
+        ShapingWeights(), gamma=TRAINING_BY_CONTROL[control].gamma if gamma is None else gamma
+    )
 
     if control != "hierarchical":
         from isaaclab.envs import ManagerBasedRLEnv

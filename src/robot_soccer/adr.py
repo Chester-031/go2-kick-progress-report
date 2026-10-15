@@ -31,6 +31,13 @@ except a probe's pinned one, and the free choices.  A probe whose pinned
 value admits no start on the field with the current ranges becomes a
 training episode instead.
 
+A lead knob (``lead_parameter``) can be widened first: until its upper
+edge reaches ``lead_until``, it is the only knob probed and every other
+knob stays at its start value in training and probe episodes.  The robot's
+distance from the ball leads by default in training, so the policy learns
+to cover distance to the ball before the other knobs make the approach
+awkward.  Once the gate opens it stays open.
+
 A small share of episodes are fixed-difficulty episodes
 (``difficulty_ranges``): difficulty d spans each knob from its start value
 d of the way out to its limits.  Those ranges depend on d alone, so their
@@ -176,6 +183,8 @@ class AutomaticDomainRandomization:
         evaluation_fraction: float = 0.05,
         evaluation_difficulties: Sequence[float] = (0.25, 0.5, 1.0),
         seed: int = 0,
+        lead_parameter: str | None = None,
+        lead_until: float = 0.0,
     ) -> None:
         if not 0.0 <= low_threshold < high_threshold <= 1.0:
             raise ValueError("need 0 <= low_threshold < high_threshold <= 1")
@@ -191,6 +200,11 @@ class AutomaticDomainRandomization:
         self.probe_fraction = float(probe_fraction)
         self.evaluation_fraction = float(evaluation_fraction)
         self.evaluation_difficulties = tuple(float(value) for value in evaluation_difficulties)
+        if lead_parameter is not None and lead_parameter not in PARAMETER_INDEX:
+            raise ValueError(f"unknown lead knob {lead_parameter}")
+        self.lead_index = None if lead_parameter is None else PARAMETER_INDEX[lead_parameter]
+        self.lead_until = float(lead_until)
+        self.lead_done = lead_parameter is None
         self.generator = torch.Generator().manual_seed(int(seed))
         self._ranges = torch.tensor(
             [[parameter.start, parameter.start] for parameter in PARAMETERS], dtype=torch.float64
@@ -240,10 +254,15 @@ class AutomaticDomainRandomization:
             dtype=torch.float64,
         )
 
+    def _open_gate_if_due(self) -> None:
+        if not self.lead_done and float(self._ranges[self.lead_index, UPPER]) >= self.lead_until:
+            self.lead_done = True
+
     def __call__(self, count: int) -> ResetBatch:
         """Starts for ``count`` new episodes, each a training, probe or
         fixed-difficulty episode, tagged for ``record`` and the metrics."""
 
+        self._open_gate_if_due()
         generator = self.generator
         draw = torch.rand(count, generator=generator, dtype=torch.float64)
         kind = torch.full((count,), TRAIN, dtype=torch.long)
@@ -265,6 +284,15 @@ class AutomaticDomainRandomization:
         parameter = torch.randint(0, len(PARAMETERS), (count,), generator=generator)
         edge = torch.randint(0, 2, (count,), generator=generator)
         probe = kind == PROBE
+        if not self.lead_done:
+            # Only the lead knob is probed; the others stay at their starts.
+            parameter[:] = self.lead_index
+            starts = torch.tensor([p.start for p in PARAMETERS], dtype=torch.float64)
+            others = torch.ones(len(PARAMETERS), dtype=torch.bool)
+            others[self.lead_index] = False
+            playing = ~evaluation
+            low[playing.unsqueeze(1) & others] = starts.expand(count, -1)[playing.unsqueeze(1) & others]
+            high[playing.unsqueeze(1) & others] = starts.expand(count, -1)[playing.unsqueeze(1) & others]
         rows = torch.nonzero(probe).flatten()
         # A probe's range for its pinned knob is the edge itself.
         pinned = self._ranges[parameter[rows], edge[rows]]
@@ -324,6 +352,8 @@ class AutomaticDomainRandomization:
             episodes["adr_edge"][probe].tolist(),
             episodes["goal"][probe].tolist(),
         ):
+            if not self.lead_done and index != self.lead_index:
+                continue
             self._period_results[index, edge] += 1
             self._period_successes[index, edge] += int(success)
             self._buffer_count[index, edge] += 1
@@ -342,6 +372,7 @@ class AutomaticDomainRandomization:
             if self._move(index, edge, direction):
                 self._period_moves[index, edge] += direction
                 moves += 1
+                self._open_gate_if_due()
         return moves
 
     def _move(self, index: int, edge: int, direction: int) -> bool:
@@ -389,13 +420,14 @@ class AutomaticDomainRandomization:
         self._period_successes.zero_()
         self._period_moves.zero_()
         self._period_unplaced_probes.zero_()
-        return {"entropy": self.entropy(), "knobs": knobs}
+        return {"entropy": self.entropy(), "lead_done": self.lead_done, "knobs": knobs}
 
     def state_dict(self) -> dict[str, Any]:
         """Everything needed to continue ADR from a checkpoint."""
 
         return {
             "parameter_names": [parameter.name for parameter in PARAMETERS],
+            "lead_done": self.lead_done,
             "ranges": self._ranges.tolist(),
             "buffer_count": self._buffer_count.tolist(),
             "buffer_successes": self._buffer_successes.tolist(),
@@ -422,4 +454,6 @@ class AutomaticDomainRandomization:
                 self._ranges[index] = parameter.start
                 self._buffer_count[index] = 0
                 self._buffer_successes[index] = 0
+        self.lead_done = self.lead_index is None or bool(state.get("lead_done", False))
+        self._open_gate_if_due()
         self.generator.set_state(state["generator_state"])

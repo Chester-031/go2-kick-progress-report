@@ -220,11 +220,16 @@ def main() -> None:
                 # USD multiplies row vectors: world = local * parent world.
                 link_ops[name].Set(world[name] * frame_of_parent.GetInverse())
             ball_op.Set(pose(ball_positions[tick], ball_quaternions[tick]))
-            # Side camera on the robot-ball midpoint, smoothed so it glides.
-            focus = 0.5 * (positions[tick, base] + ball_positions[tick]).astype(np.float64)
+            # Side camera aimed between robot and ball, weighted to the ball so
+            # shots stay in view, smoothed so it glides, and pulled back when
+            # robot and ball are far apart.
+            robot_xyz = positions[tick, base].astype(np.float64)
+            ball_xyz = ball_positions[tick].astype(np.float64)
+            focus = 0.4 * robot_xyz + 0.6 * ball_xyz
             focus[2] = 0.2
-            target = focus if target is None else 0.92 * target + 0.08 * focus
-            eye = target + np.array([-1.0, -3.0, 1.6])
+            target = focus if target is None else 0.85 * target + 0.15 * focus
+            separation = float(np.linalg.norm(robot_xyz[:2] - ball_xyz[:2]))
+            eye = target + float(np.clip(separation / 2.0, 1.0, 2.2)) * np.array([-1.0, -3.0, 1.6])
             view = Gf.Matrix4d(1.0).SetLookAt(Gf.Vec3d(*map(float, eye)), Gf.Vec3d(*map(float, target)),
                                               Gf.Vec3d(0.0, 0.0, 1.0))
             camera_op.Set(view.GetInverse())

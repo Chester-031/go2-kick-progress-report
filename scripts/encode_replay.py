@@ -71,17 +71,18 @@ def main() -> None:
         frames = sorted((args.frames / episode["key"]).glob("*.jpg"))
         if not frames:
             raise SystemExit(f"no frames for {episode['key']} in {args.frames}")
-        image = None
         for frame, path in enumerate(frames):
-            image = cv2.cvtColor(cv2.imread(str(path)), cv2.COLOR_BGR2RGB)
+            raw = cv2.cvtColor(cv2.imread(str(path)), cv2.COLOR_BGR2RGB)
+            image = raw.copy()
             caption(image, header)
             caption(image, [f"t = {frame / FPS:4.1f} s"], corner="bottom")
             writer.append_data(image)
-        if image is not None:
-            ending = episode["outcome"].replace("_", " ").upper()
-            caption(image, [f"{ending} after {episode['seconds']:.1f} s"], scale=1.4, corner="bottom")
-            for _ in range(int(HOLD_SECONDS * FPS)):
-                writer.append_data(image)
+        # Hold the last frame with the outcome in place of the clock.
+        caption(raw, header)
+        ending = episode["outcome"].replace("_", " ").upper()
+        caption(raw, [f"{ending} after {episode['seconds']:.1f} s"], scale=1.4, corner="bottom")
+        for _ in range(int(HOLD_SECONDS * FPS)):
+            writer.append_data(raw)
         print(f"[encode] {episode['key']}: {len(frames)} frames, {episode['outcome']}", flush=True)
     writer.close()
     print(f"[encode] wrote {args.out}", flush=True)

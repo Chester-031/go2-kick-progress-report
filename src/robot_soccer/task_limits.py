@@ -22,12 +22,15 @@ def _canonical_float32(value: float) -> float:
 GOAL_CENTER_X_M = _canonical_float32(4.11)
 # Half the width of the goal mouth the ball's centre must pass through.
 TERMINAL_GOAL_HALF_WIDTH_M = _canonical_float32(0.49)
-# The robot's base out past these ends the episode.
-ROBOT_FIELD_HALF_LENGTH_M = _canonical_float32(4.0)
-ROBOT_FIELD_HALF_WIDTH_M = _canonical_float32(2.5)
+# The robot's base past these has left the walled arena (over a side wall,
+# or behind a goal's back wall at 4.6 m), which ends the episode.  Inside
+# the arena, goal boxes included, the robot may go anywhere.
+ROBOT_ARENA_HALF_LENGTH_M = _canonical_float32(4.7)
+ROBOT_ARENA_HALF_WIDTH_M = _canonical_float32(2.6)
 # The ball out past this |y| ends the episode.
 BALL_SIDE_BOUNDARY_M = _canonical_float32(2.61)
 # Robot-ball contact force that counts as touching the ball.
 CONTACT_FORCE_THRESHOLD_N = _canonical_float32(1.0)
-# Any contact force on the base (the trunk touching the ground) is a fall.
+# Any contact force on the base (the trunk on the ground) counts as being
+# down.  Being down ends nothing; episodes count falls and time down.
 BASE_FALL_FORCE_THRESHOLD_N = _canonical_float32(1.0)

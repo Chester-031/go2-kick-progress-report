@@ -145,6 +145,7 @@ class FakeSoccerBaseEnv:
         self.num_envs = int(num_envs)
         self.device = device
         self.direct_joint_control = direct_joint_control
+        self.trunk_on_ground = torch.zeros(num_envs, dtype=torch.bool, device=device)
         self.cfg = SimpleNamespace(sim=SimpleNamespace(dt=0.005), decimation=4)
         self.tick = 0
         side = math.ceil(math.sqrt(self.num_envs))
@@ -265,7 +266,8 @@ class FakeSoccerBaseEnv:
         base[:] = torch.roll(base, 1, dims=1)
         base[:, 0] = 0.0
         fall = (env_index * 7_919 + self.tick * 104_729) % FALL_PERIOD_TICKS == 0
-        base[:, 0, 0, 2] = torch.where(fall, 50.0, 0.0)
+        # Slots with ``trunk_on_ground`` set lie on their trunk every tick.
+        base[:, 0, 0, 2] = torch.where(fall | self.trunk_on_ground, 50.0, 0.0)
 
         action_term = self.action_manager.get_term("joint_pos")
         target = 0.25 * actions

@@ -33,7 +33,8 @@ class JointLimitTest(unittest.TestCase):
         )
         self.assertNotIn("joint_hard_limit", environment.OUTCOMES)
         overshoots = []
-        for _ in range(400):
+        # Falls end nothing, so episodes end at the 20 s (1000-step) horizon.
+        for _ in range(1010):
             _, _, _, extras = env.step(torch.zeros(NUM_ENVS, 12))
             if extras["episodes"]:
                 overshoots += extras["episodes"]["max_joint_overshoot_rad"].tolist()

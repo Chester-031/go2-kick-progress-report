@@ -8,15 +8,16 @@ conditions make it hold here:
 
 - ``gamma`` must be the discount PPO uses for the same transitions;
 - Phi is 0 at absorbing states, so on the transition into a terminal state
-  (goal, own goal, fall, boundary, joint limit, or the end of the finite
+  (goal, own goal, ball or robot out of the arena, or the end of the finite
   horizon, which the observation's time-remaining feature makes part of
   the state) the shaping is just -Phi(s).
 
 Then the discounted shaping along any episode adds up to -Phi(s0)
 (Corollary 2: V' = V - Phi), whatever the policy does, so shaping only
 changes how quickly credit reaches the actions, never which behaviour is
-best.  Falling early, for example, earns nothing net: the -Phi(s) bonus on
-the fall transition exactly cancels the shaping collected before it.
+best.  Ending an episode early, for example, earns nothing net: the
+-Phi(s) bonus on the terminal transition exactly cancels the shaping
+collected before it.
 
 Phi is a weighted sum of four potentials, each higher in better states:
 

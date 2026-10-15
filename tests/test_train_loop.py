@@ -121,7 +121,7 @@ class TrainLoopTest(unittest.TestCase):
             self.assertEqual(
                 train.run(
                     arguments(second, resume=planted, adr_buffer_size=10_000, adr_evaluation_fraction=0.0,
-                              adr_lead_knob="none")
+                              adr_lead_knob="none", steps_per_env=210)
                 ),
                 0,
             )

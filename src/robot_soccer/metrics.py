@@ -23,7 +23,7 @@ import torch
 from .adr import EPISODE_KINDS, EVALUATION, PARAMETERS
 from .task_limits import GOAL_CENTER_X_M
 
-OUTCOME_NAMES = ("goal", "own_goal", "fall", "boundary", "timeout")
+OUTCOME_NAMES = ("goal", "own_goal", "boundary", "timeout")
 # Cell edges of the knob grid, per knob in ADR PARAMETERS order: fine near
 # the easy start, where ADR spends the early part of training.
 KNOB_GRID_EDGES = (
@@ -170,6 +170,9 @@ def summarize_episodes(episodes: Mapping[str, torch.Tensor]) -> dict[str, Any]:
             ),
         },
         "mean_goal_axis_ball_displacement_m": float(episodes["requested_goal_axis_ball_displacement_m"].double().mean()),
+        "falls_per_episode": float(episodes["falls"].double().mean()),
+        "share_of_episodes_with_a_fall": float((episodes["falls"] > 0).double().mean()),
+        "mean_seconds_on_ground": float(episodes["seconds_on_ground"].double().mean()),
         "max_joint_overshoot_rad": {
             "mean": float(episodes["max_joint_overshoot_rad"].double().mean()),
             "max": float(episodes["max_joint_overshoot_rad"].max()),

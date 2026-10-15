@@ -62,7 +62,7 @@ KNOB_LABEL = {
 }
 KIND_LABEL = {"train": "training (current ranges)", "probe": "probes (one edge pinned)",
               "evaluation": "fixed difficulty (all)"}
-OUTCOME_LABEL = {"goal": "goal", "own_goal": "own goal", "fall": "fall", "boundary": "out of bounds",
+OUTCOME_LABEL = {"goal": "goal", "own_goal": "own goal", "boundary": "out of the arena",
                  "timeout": "timeout (20 s)"}
 
 
@@ -379,7 +379,8 @@ def plot_episode_timing(runs: list[dict], out: Path, window: int) -> None:
         ("mean time to first ball contact (s)", ("episode_seconds", "mean_first_contact")),
         ("mean ball progress toward goal (m)", ("mean_goal_axis_ball_displacement_m",)),
         ("ball-contact rate", ("contact_rate",)),
-        ("unsafe-end rate", ("unsafe_rate",)),
+        ("falls per episode", ("falls_per_episode",)),
+        ("mean seconds on the ground per episode", ("mean_seconds_on_ground",)),
         ("mean largest joint overshoot past a limit (rad)", ("max_joint_overshoot_rad", "mean")),
     )
     fig, axes = plt.subplots(2, 4, figsize=(17, 6.4), sharex=True)

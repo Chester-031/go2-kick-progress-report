@@ -27,8 +27,8 @@ from .task_limits import (
     BASE_FALL_FORCE_THRESHOLD_N,
     CONTACT_FORCE_THRESHOLD_N,
     GOAL_CENTER_X_M,
-    ROBOT_FIELD_HALF_LENGTH_M,
-    ROBOT_FIELD_HALF_WIDTH_M,
+    ROBOT_ARENA_HALF_LENGTH_M,
+    ROBOT_ARENA_HALF_WIDTH_M,
     TERMINAL_GOAL_HALF_WIDTH_M,
 )
 
@@ -42,7 +42,7 @@ TRUE_CONTACT_FORCE_THRESHOLD_N = CONTACT_FORCE_THRESHOLD_N
 # Episode outcomes, by code (the ``outcome`` episode column).  When several
 # events happen on one tick the earliest listed wins: a goal is only a goal
 # if nothing unsafe happened on that tick.
-OUTCOMES = ("goal", "own_goal", "fall", "boundary", "timeout")
+OUTCOMES = ("goal", "own_goal", "boundary", "timeout")
 # The shaping potentials, in the order of the per-episode shaping columns.
 SHAPING_COMPONENTS = ("ball_goal", "robot_ball", "base_height", "upright")
 
@@ -117,8 +117,8 @@ def boundary_violation(
     ball_end_outside_mouth = (
         ball_xy[:, 0].abs() > GOAL_CENTER_X_M
     ) & ~inside_mouth
-    robot = (robot_xy[:, 0].abs() > ROBOT_FIELD_HALF_LENGTH_M) | (
-        robot_xy[:, 1].abs() > ROBOT_FIELD_HALF_WIDTH_M
+    robot = (robot_xy[:, 0].abs() > ROBOT_ARENA_HALF_LENGTH_M) | (
+        robot_xy[:, 1].abs() > ROBOT_ARENA_HALF_WIDTH_M
     )
     return robot | ball_side | ball_end_outside_mouth
 
@@ -146,8 +146,11 @@ class CurrentTaskProgressHighGoalEnv:
     """The soccer task, stepped through a ``control``.
 
     One policy action is held for ``control.ticks_per_action`` native
-    ticks.  After every tick the task checks goal, own goal, boundary and
-    fall; an unsafe event on the same tick as a goal cancels the goal.
+    ticks.  After every tick the task checks goal, own goal and boundary
+    (the ball leaving the arena, or the robot getting out of it); an own
+    goal or boundary on the same tick as a goal cancels the goal.  Falling
+    ends nothing and cancels nothing: the robot can get up and carry on,
+    and each episode records how often it fell and how long it was down.
     Joint hard limits end nothing (the simulator enforces them; hitting a
     stop matters only on a real robot); each episode records its largest
     overshoot past one.  A slot that terminates is frozen at that tick (its
@@ -245,6 +248,10 @@ class CurrentTaskProgressHighGoalEnv:
         self.episode_native_reward = torch.zeros(self.num_envs, device=self.device)
         # Largest distance any joint went past its hard limit this episode.
         self.episode_max_joint_overshoot = torch.zeros(self.num_envs, device=self.device)
+        # Falls (trunk touching down) and native ticks spent down this episode.
+        self.robot_down = torch.zeros(self.num_envs, dtype=torch.bool, device=self.device)
+        self.episode_falls = torch.zeros(self.num_envs, dtype=torch.long, device=self.device)
+        self.episode_ticks_down = torch.zeros(self.num_envs, dtype=torch.long, device=self.device)
         self.vector_steps = 0
 
         self._observation = torch.zeros(self.num_envs, self.num_obs, device=self.device)
@@ -306,6 +313,9 @@ class CurrentTaskProgressHighGoalEnv:
         self.episode_shaping_components[ids] = 0.0
         self.episode_native_reward[ids] = 0.0
         self.episode_max_joint_overshoot[ids] = 0.0
+        self.robot_down[ids] = False
+        self.episode_falls[ids] = 0
+        self.episode_ticks_down[ids] = 0
         if hasattr(self.base_env, "episode_length_buf"):
             self.base_env.episode_length_buf[ids] = 0
 
@@ -402,7 +412,6 @@ class CurrentTaskProgressHighGoalEnv:
         terminal_goal = torch.zeros_like(active)
         terminal_own = torch.zeros_like(active)
         terminal_boundary = torch.zeros_like(active)
-        terminal_fall = torch.zeros_like(active)
         terminal_requested = torch.zeros_like(active)
         contact_this_high = torch.zeros_like(active)
         # Any per-tick failure is recorded here and raised once after the loop.
@@ -483,20 +492,22 @@ class CurrentTaskProgressHighGoalEnv:
             requested_line = self.contact_seen & (selected >= GOAL_CENTER_X_M) & inside & tick_active
             own = (selected <= -GOAL_CENTER_X_M) & inside & tick_active
             boundary = boundary_violation(robot_xy, ball_xy, self.geometry) & tick_active
-            fall = (base_force > BASE_FALL_FORCE_THRESHOLD_N) & tick_active
-            unsafe = own | boundary | fall
+            down = (base_force > BASE_FALL_FORCE_THRESHOLD_N) & tick_active
+            self.episode_falls += (down & ~self.robot_down).long()
+            self.episode_ticks_down += down.long()
+            self.robot_down = torch.where(tick_active, down, self.robot_down)
+            unsafe = own | boundary
 
             terminal_goal |= requested_line & ~unsafe
             terminal_own |= own
             terminal_boundary |= boundary
-            terminal_fall |= fall
             terminal_requested |= requested_line
             active &= ~(requested_line | unsafe)
 
         self.episode_length_buf += 1
         timeout = (self.episode_length_buf >= self.max_episode_length) & active
 
-        done = terminal_goal | terminal_own | terminal_boundary | terminal_fall | timeout
+        done = terminal_goal | terminal_own | terminal_boundary | timeout
         goal_xy = torch.zeros_like(pre_robot_xy)
         goal_xy[:, 0] = pre_goal_side.to(goal_xy.dtype) * GOAL_CENTER_X_M
         shaping, components = self.shaping(
@@ -522,7 +533,6 @@ class CurrentTaskProgressHighGoalEnv:
                 (
                     ("goal", terminal_goal),
                     ("own_goal", terminal_own),
-                    ("fall", terminal_fall),
                     ("boundary", terminal_boundary),
                 )
             ):
@@ -556,7 +566,8 @@ class CurrentTaskProgressHighGoalEnv:
                 "goal": terminal_goal[done_ids],
                 "own_goal": terminal_own[done_ids],
                 "boundary": terminal_boundary[done_ids],
-                "fall": terminal_fall[done_ids],
+                "falls": self.episode_falls[done_ids],
+                "ticks_on_ground": self.episode_ticks_down[done_ids],
                 "timeout": timeout[done_ids],
                 "requested_goal_line_reached": terminal_requested[done_ids],
                 "contact_seen": self.contact_seen[done_ids],
@@ -567,10 +578,11 @@ class CurrentTaskProgressHighGoalEnv:
             }
             episodes = _to_host_columns(float_columns, torch.float32)
             episodes.update(_to_host_columns(integer_columns, torch.long))
-            for name in ("goal", "own_goal", "boundary", "fall", "timeout",
+            for name in ("goal", "own_goal", "boundary", "timeout",
                          "requested_goal_line_reached", "contact_seen"):
                 episodes[name] = episodes[name].bool()
-            episodes["unsafe_pre_goal"] = episodes["own_goal"] | episodes["boundary"] | episodes["fall"]
+            episodes["unsafe_pre_goal"] = episodes["own_goal"] | episodes["boundary"]
+            episodes["seconds_on_ground"] = episodes.pop("ticks_on_ground").float() * self.low_control_dt
             for name, value in self.reset_tags.items():
                 episodes[name] = value[done_ids].cpu()
             self._reset_idx(done_ids)

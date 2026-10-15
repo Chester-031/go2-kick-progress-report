@@ -57,7 +57,8 @@ COMPARED_FIELDS = (
     "goal",
     "own_goal",
     "boundary",
-    "fall",
+    "falls",
+    "seconds_on_ground",
     "timeout",
     "unsafe_pre_goal",
     "requested_goal_line_reached",
@@ -224,7 +225,7 @@ class EnvironmentCharacterizationTest(unittest.TestCase):
         result = run_scripted_rollout(make_wrapper)
         outcomes = {event["outcome"] for event in result["events"]}
         # The script must keep exercising every terminal branch.
-        self.assertTrue({"goal", "own_goal", "boundary", "fall", "timeout"} <= outcomes, outcomes)
+        self.assertTrue({"goal", "own_goal", "boundary", "timeout"} <= outcomes, outcomes)
         if os.environ.get("REGENERATE_FIXTURE") == "1":
             FIXTURE.parent.mkdir(parents=True, exist_ok=True)
             FIXTURE.write_text(json.dumps(result, indent=1, sort_keys=True) + "\n", encoding="utf-8")

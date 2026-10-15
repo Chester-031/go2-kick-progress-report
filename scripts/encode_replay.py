@@ -1,8 +1,9 @@
 """Turn ``replay_isaac6.py`` frames into one captioned highlight reel.
 
-Picks the most impressive goals of a ``record_trajectories.py`` file (the
-hardest fixed difficulty first, then the longest start: robot-ball plus
-ball-goal distance), captions every frame with the difficulty, the start
+Picks either the most impressive goals of a ``record_trajectories.py`` file
+(``--pick best``: the hardest fixed difficulty first, then the longest
+start: robot-ball plus ball-goal distance) or an unbiased sample
+(``--pick first``), captions every frame with the difficulty, the start
 knobs and the elapsed time, holds each episode's last frame for a second
 with its outcome, and writes them back to back as one 25 fps MP4.
 
@@ -22,9 +23,16 @@ FPS = 25
 HOLD_SECONDS = 1.0
 
 
-def choose(episodes: list[dict], count: int) -> list[dict]:
-    """The reel's episodes: goals before other outcomes, then the hardest
-    difficulty, then the longest start distance."""
+def choose(episodes: list[dict], count: int, pick: str) -> list[dict]:
+    """The reel's episodes.  ``best``: goals before other outcomes, then the
+    hardest difficulty, then the longest start distance (a highlight reel).
+    ``first``: the first recorded episodes at the hardest difficulty, which
+    are an unbiased sample (record_trajectories.py keeps each slot's first
+    episode), failures included."""
+
+    if pick == "first":
+        hardest = max(episode["difficulty"] for episode in episodes)
+        return [episode for episode in episodes if episode["difficulty"] == hardest][:count]
 
     def rank(episode: dict) -> tuple:
         knobs = episode["knobs"]
@@ -40,12 +48,14 @@ def main() -> None:
     parser.add_argument("--frames", type=Path, help="replay_isaac6.py --out-dir")
     parser.add_argument("--out", type=Path)
     parser.add_argument("--episodes", type=int, default=4)
+    parser.add_argument("--pick", choices=("best", "first"), default="best",
+                        help="best: highlight reel; first: unbiased sample at the hardest difficulty")
     parser.add_argument("--title", default="")
     parser.add_argument("--list", action="store_true", help="print the chosen episode keys and stop")
     args = parser.parse_args()
     data = np.load(args.trajectories)
     index = json.loads(bytes(data["index_json"]).decode())
-    chosen = choose(index["episodes"], args.episodes)
+    chosen = choose(index["episodes"], args.episodes, args.pick)
     if args.list:
         print(" ".join(episode["key"] for episode in chosen))
         return

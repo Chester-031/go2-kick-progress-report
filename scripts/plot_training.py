@@ -225,13 +225,16 @@ def label_line_ends(axis: plt.Axes, ends: list[tuple[np.ndarray, np.ndarray, str
             points.append((float(y[finite[-1]]), float(x[finite[-1]]), text, color))
     low, high = axis.get_ylim()
     gap = 0.07 * (high - low)
+    points.sort()
     placed: list[float] = []
-    for y, x, text, color in sorted(points):
-        label_y = max([y] + [previous + gap for previous in placed[-1:]])
-        placed.append(label_y)
+    for y, _, _, _ in points:
+        placed.append(max([y] + [previous + gap for previous in placed[-1:]]))
+    # Labels pushed past the top of the axis move down together.
+    overflow = max(0.0, (placed[-1] if placed else low) - (high - gap / 2))
+    nudge = 0.015 * (axis.get_xlim()[1] - axis.get_xlim()[0])
+    for (y, x, text, color), label_y in zip(points, placed):
         axis.plot([x], [y], "o", ms=4, color=color)
-        nudge = 0.015 * (axis.get_xlim()[1] - axis.get_xlim()[0])
-        axis.text(x + nudge, label_y, text, va="center", fontsize=7.5, color=INK_2, clip_on=False)
+        axis.text(x + nudge, label_y - overflow, text, va="center", fontsize=7.5, color=INK_2, clip_on=False)
 
 
 def plot_overview(runs: list[dict], out: Path, bin_width: int, window: int) -> None:

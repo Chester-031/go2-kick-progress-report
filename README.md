@@ -8,6 +8,43 @@ This branch started from the Stage B code (`codex/stage-b-training-2026-10-03`).
 Stage B's 10 Hz command hierarchy over a frozen low-level policy is kept as
 the `hierarchical` control.
 
+## Results
+
+The best policy so far is the `position` control at iteration 16,800:
+[`checkpoints/go2_soccer_position_it16800.pt`](checkpoints/README.md). On
+the whole field (fixed difficulty 1: every knob drawn from its whole range)
+it scores in **92%** of episodes (n = 3574, ±0.9%). Mean time to a goal is
+3.2 s.
+
+![Overview: goal rate on the whole field, share of the task ADR trains on, time on the ground](docs/results/00_overview.png)
+
+Both arms train from scratch with the same PPO settings (Optuna trial 34,
+below), seed 83001, 4096 envs:
+
+| Control | Iteration | Difficulty 0.5 | **Difficulty 1** | Share of the task ADR trains on | Seconds on the ground per episode |
+|---|---|---|---|---|---|
+| `position` | 6,000 | 0.88 | 0.44 | 0.85 | 2.1 |
+| `position` | 12,000 | 0.99 | 0.81 | 0.99 | 0.5 |
+| `position` | 16,800 | 0.99 | **0.92** | 0.98 | 0.3 |
+| `velocity` | 15,900 | 0.99 | **0.85** | 0.96 | 1.5 |
+
+Goal rates are pooled over the 500 iterations before each point. The
+velocity arm falls far less (13% of episodes against 92% for position,
+whose falls are brief trunk contacts during head-down pushes). There is one
+seed per arm, so the gap between the arms is not yet established. Both runs
+were still improving when these numbers were taken (`01_goal_rates` and
+`02_adr_ranges` are in [`docs/results`](docs/results)).
+
+What made the difference, in order:
+
+- **Falls no longer end episodes.** With falls terminal, ADR stalled: most
+  falls happened before the robot reached the ball, so far starts never
+  succeeded. Without the termination the robot learns to get back up.
+- **Tuned PPO settings**, mainly an entropy coefficient 5× below the stock
+  0.01.
+- **Training long enough.** At 6,000 iterations the position arm looked flat
+  on the whole field (0.44); by 16,800 it reached 0.92.
+
 ## Controls (`--control`)
 
 | Control | Policy output | Rate | Scene |
@@ -42,9 +79,15 @@ velocity gains are a first guess, not tuned.
   are not potential-based: they deliberately bias toward smooth, low-effort
   motion.
 
-Episodes end on a goal, own goal, fall (trunk contact), boundary, joint hard
-limit, or after 20 s. An unsafe event on the same tick as a goal cancels the
-goal.
+Episodes end on a goal, own goal, boundary (the ball or the robot leaves the
+arena), or after 20 s. An own goal or boundary on the same tick as a goal
+cancels the goal.
+
+Falls and joint hard limits do **not** end episodes. Falling is allowed
+(a lunge or a fall that scores is fine), and the robot has to get up and
+keep playing. PhysX enforces the joint limits, so overshoot is only
+logged. Each episode records its falls (trunk contact above 1 N), seconds
+on the ground and largest joint overshoot.
 
 ## Automatic domain randomization (`src/robot_soccer/adr.py`)
 
@@ -57,21 +100,32 @@ the robot learns to stand and push, large ones once it can play.
 
 | Knob | Limits | Start | Step near start → near limit |
 |---|---|---|---|
-| ball distance from the goal centre | 0.15 – 6.0 m | 0.25 m | 0.02 → 0.5 m |
-| robot distance from the ball | 0.4 – 2.3 m | 0.45 m (nose at the ball) | 0.02 → 0.25 m |
+| ball distance from the goal centre | 0.15 – 8.3 m | 0.25 m | 0.02 → 0.5 m |
+| robot distance from the ball | 0.4 – 8.0 m | 0.45 m (nose at the ball) | 0.02 → 0.5 m |
 | robot facing error to the ball (0 = looking at it) | 0 – 180° | 0° | 2 → 20° |
 | robot position around the ball (0 = straight behind, 180 = between ball and goal) | 0 – 180° | 0° | 2 → 20° |
+| ball angle off the goal's centre line | 0 – 80° | 0.5° | 1 → 10° |
+
+The limits cover the whole field.
 
 Episodes come in three kinds:
 
 - **Training** (75% of episodes): every knob is drawn from its current
   range.
-- **Probes** (20%): one knob is pinned at one edge of its range. Each edge
-  collects 256 results. At ≥ 0.6 goal rate the edge moves out one step; at
-  ≤ 0.3 it moves in.
+- **Probes** (20%): one knob is pinned at one edge of its range and the
+  others are drawn from their current ranges. Each edge collects 256
+  results. At ≥ 0.4 goal rate the edge moves out one step; at ≤ 0.2 it
+  moves in (`--adr-high-threshold`, `--adr-low-threshold`). With every
+  other knob drawn from its whole current range, a probe is harder than its
+  edge alone, so the thresholds sit below OpenAI's.
 - **Fixed difficulty** (5%): drawn at difficulty 0.25, 0.5 or 1. Each knob
   spans from its start d of the way to its limits. This goal rate compares
   across runs.
+
+A **lead knob** opens first (`--adr-lead-knob`, default robot to ball,
+until its upper edge reaches `--adr-lead-until`, 4 m): only it is probed,
+and the other knobs stay at their starts. The robot learns to walk to the
+ball before the task widens in every direction.
 
 Starts that don't fit on the field are redrawn, keeping a probe's pinned
 value. A probe that can't be placed at all becomes a training episode, and
@@ -112,6 +166,40 @@ The direct defaults (`config.DIRECT_JOINT_TRAINING`) are:
 - adaptive learning rate 1e-3, entropy 0.01;
 - γ 0.995 (also the shaping discount), λ 0.95.
 
+Every PPO setting is also a flag (`--gamma`, `--lam`, `--learning-rate`,
+`--schedule`, `--desired-kl`, `--entropy-coef`, `--steps-per-env`,
+`--num-mini-batches`, `--num-learning-epochs`, `--clip-param`). The results
+above use the tuned settings below, not the defaults, and ran for 16,800
+iterations; [`checkpoints/README.md`](checkpoints/README.md) has the exact
+command.
+
+### Tuning (`scripts/tune_optuna.py`)
+
+The tuner is an Optuna worker:
+
+- TPE (multivariate, constant liar) over the control (position or
+  velocity) and the PPO settings;
+- a median pruner past 40% of each trial's step budget;
+- a journal file shared by a Slurm array of workers, each seeding its
+  sampler with `--seed` plus its array task.
+
+A trial's score is its mean fixed-difficulty goal rate over the last 10%
+of training.
+
+Study `ppo-control-v1` (40 trials of 150M steps, on the environment where
+falls still ended episodes) picked trial 34:
+
+- `position` control;
+- γ 0.9968, λ 0.955;
+- learning rate 1.13e-3, adaptive, KL 0.0104;
+- entropy 0.00186;
+- 4 epochs, 4 minibatches, 24 steps, clip 0.171.
+
+It scored 0.79, against 0.51 for the stock settings. Learning rates of
+2e-3 and above diverged. The velocity arm was under-explored in that study
+because its workers shared one sampler seed (since fixed), so the study
+does not say which control is better.
+
 `scripts/smoke_isaac.py --headless --control position` builds the real
 scene and steps it with zero and random actions before a long job. The
 `hierarchical` control needs `--low-checkpoint` and `--low-checkpoint-sha256`
@@ -127,6 +215,26 @@ There are three ways to start a run:
 The output directory holds `run_info.json`, `metrics.jsonl` (one record per
 iteration), TensorBoard scalars, checkpoints and `training_summary.json`.
 
+## Videos
+
+Isaac Sim 4.5, the training stack, segfaults as soon as its RTX renderer
+starts on NVIDIA driver 610 (isaac-sim/IsaacSim#650). So cameras do not
+work there, and `scripts/record_policy.py` needs a supported driver. Videos
+are made in two steps instead:
+
+1. `scripts/record_trajectories.py` plays a checkpoint headless from ADR's
+   fixed-difficulty starts and saves every link pose and the ball pose at
+   50 Hz. It keeps the first episode of each env slot, an unbiased sample.
+2. `cluster/render_isaac6.sbatch` replays those poses on the Go2 model in
+   the Isaac Sim 6.2 container (`scripts/replay_isaac6.py`: no physics,
+   path traced with the OptiX denoiser). It then encodes a captioned MP4
+   with `scripts/encode_replay.py`: `PICK=best` takes the longest goals at
+   the hardest difficulty, and `PICK=sample` takes a random draw, failures
+   included.
+
+`scripts/render_trajectories.py` draws a stick-figure video of the same
+file with matplotlib, anywhere.
+
 ## Plots
 
 ```bash
@@ -138,14 +246,15 @@ matplotlib and numpy. It overlays several runs (seeds or arms) and writes:
 
 | Figure | Shows |
 |---|---|
-| `01_goal_rates` | goal rate at each fixed difficulty (the comparable score), and for training and probe episodes |
+| `00_overview` | whether training is still paying off: whole-field goal rate with its trend over the last third, share of the task ADR trains on, seconds on the ground |
+| `01_goal_rates` | goal rate at each fixed difficulty (the comparable score), and for training and probe episodes, pooled per `--bin-width` iterations with a 95% interval |
 | `02_adr_ranges` | each knob's range over training, with its limits and start value |
 | `03_adr_probes` | probe goal rate at every range edge against the move thresholds, with each edge move marked |
 | `04_adr_health` | ADR entropy, share of the limits covered, cumulative edge moves |
-| `05_outcomes` | how episodes end: goal, own goal, fall, out of bounds, joint limit, timeout |
+| `05_outcomes` | how episodes end: goal, own goal, out of the arena, timeout |
 | `06_knob_heatmaps` | goal rate, and where episodes started, over each pair of knobs, late in training |
 | `07_goal_by_knob` | goal rate along each knob, early vs late in training |
-| `08_episode_timing` | episode length, time to goal, time to first contact, ball progress, contact and unsafe rates |
+| `08_episode_timing` | episode length, time to goal and to first contact, ball progress, contact rate, falls, seconds on the ground, joint overshoot |
 | `09_ppo` | PPO losses, mean episode return, and the shaping return per potential |
 | `10_throughput` | transitions per second and how each iteration's time splits between environment, policy and update |
 
@@ -163,5 +272,11 @@ PYTHONPATH=src:. python -m unittest discover -s tests -t .
   scripted rollout with a recorded fixture.
 - `test_train_loop` runs the whole training loop (RSL-RL PPO, ADR,
   metrics, checkpoints, resume) on the fake scene.
+- `test_adr`, `test_shaping`, `test_terminations`, `test_joint_limits` and
+  `test_direct_control` cover the curriculum, the shaping's invariance,
+  what ends an episode and the direct controls.
+- `test_tune_optuna`, `test_plot_training` and `test_encode_replay` cover
+  the tuning worker, the plots and the choice of replay episodes. The first
+  also needs `optuna`.
 - `scripts/benchmark_environment.py` times the wrapper on the fake scene.
 - `tests/synthetic_run.py` writes a plausible run directory for the plots.

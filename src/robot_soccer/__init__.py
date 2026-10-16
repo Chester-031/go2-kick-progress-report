@@ -1,13 +1,9 @@
-"""Stage B no-Kick robot-soccer training."""
+"""No-Kick Go2 robot-soccer training with automatic domain randomization."""
 
 from .config import FieldGeometry, POLICY_ACTION_DIM, POLICY_OBSERVATION_DIM
-from .resets import ResetSample, activate_for_iteration, sample_training_reset
 
 __all__ = [
     "FieldGeometry",
     "POLICY_ACTION_DIM",
     "POLICY_OBSERVATION_DIM",
-    "ResetSample",
-    "activate_for_iteration",
-    "sample_training_reset",
 ]

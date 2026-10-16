@@ -2,7 +2,7 @@ __pycache__/
 *.py[cod]
 .pytest_cache/
 .mypy_cache/
-checkpoints/
+checkpoints/*
 runs/
 videos/
 *.pt
@@ -14,3 +14,6 @@ videos/
 *.tar
 *.tar.gz
 tensorboard/
+# Published checkpoints (see checkpoints/README.md).
+!checkpoints/README.md
+!checkpoints/go2_soccer_*.pt

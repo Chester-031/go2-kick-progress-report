@@ -77,31 +77,83 @@ LOW_STEPS_PER_HIGH_ACTION = 5
 EPISODE_SECONDS = 20.0
 MAX_EPISODE_HIGH_STEPS = 200
 
-# Stage B training settings.
+# Training run settings shared by every control.
 SEED = 83_001
 NUM_ENVS = 4_096
-ROLLOUT_STEPS = 200
-TRAINING_ITERATIONS = 30
-CHECKPOINT_ITERATIONS = (5, 10, 15, 30)
-
-# Recurrent high-policy architecture.
-GRU_HIDDEN_DIM = 256
-GRU_LAYERS = 1
-ACTOR_HIDDEN_DIMS = (256, 256, 128)
-CRITIC_HIDDEN_DIMS = (256, 256, 128)
 ACTIVATION = "elu"
-
-# PPO settings.
-LEARNING_RATE = 3.0e-4
-GAMMA = 0.997
-LAMBDA = 0.98
-ENTROPY_COEF = 0.03
 NUM_LEARNING_EPOCHS = 5
 NUM_MINI_BATCHES = 4
 CLIP_PARAM = 0.2
 VALUE_LOSS_COEF = 1.0
 MAX_GRAD_NORM = 1.0
 INITIAL_NOISE_STD = 1.0
+# The recurrent policy of the held-command hierarchy.
+GRU_HIDDEN_DIM = 256
+GRU_LAYERS = 1
+
+
+@dataclass(frozen=True)
+class TrainingSettings:
+    """Policy, PPO and run-length settings of one control.
+
+    ``gamma`` is also the shaping discount (potential-based shaping keeps
+    the optimal policy only when the two match).  ``rnn_hidden_dim`` 0
+    means a feed-forward policy.
+    """
+
+    gamma: float
+    lam: float
+    learning_rate: float
+    schedule: str
+    desired_kl: float | None
+    entropy_coef: float
+    steps_per_env: int
+    iterations: int
+    checkpoint_interval: int
+    actor_hidden_dims: tuple[int, ...]
+    critic_hidden_dims: tuple[int, ...]
+    rnn_hidden_dim: int
+    num_learning_epochs: int = NUM_LEARNING_EPOCHS
+    num_mini_batches: int = NUM_MINI_BATCHES
+    clip_param: float = CLIP_PARAM
+
+
+# Policy straight on the joints at 50 Hz: Isaac Lab's stock Go2 walking
+# PPO, with a longer discount (0.995: ~4 s) for a 20 s scoring task.
+DIRECT_JOINT_TRAINING = TrainingSettings(
+    gamma=0.995,
+    lam=0.95,
+    learning_rate=1.0e-3,
+    schedule="adaptive",
+    desired_kl=0.01,
+    entropy_coef=0.01,
+    steps_per_env=24,
+    iterations=3_000,
+    checkpoint_interval=100,
+    actor_hidden_dims=(512, 256, 128),
+    critic_hidden_dims=(512, 256, 128),
+    rnn_hidden_dim=0,
+)
+# The Stage B hierarchy: recurrent 10 Hz command policy.
+HELD_COMMAND_TRAINING = TrainingSettings(
+    gamma=0.997,
+    lam=0.98,
+    learning_rate=3.0e-4,
+    schedule="fixed",
+    desired_kl=None,
+    entropy_coef=0.03,
+    steps_per_env=200,
+    iterations=300,
+    checkpoint_interval=25,
+    actor_hidden_dims=(256, 256, 128),
+    critic_hidden_dims=(256, 256, 128),
+    rnn_hidden_dim=GRU_HIDDEN_DIM,
+)
+TRAINING_BY_CONTROL = {
+    "position": DIRECT_JOINT_TRAINING,
+    "velocity": DIRECT_JOINT_TRAINING,
+    "hierarchical": HELD_COMMAND_TRAINING,
+}
 
 # Qualified continuous command surface: (vx, vy, wz).
 COMMAND_AXIS_RANGES = (

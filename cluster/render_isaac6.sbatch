@@ -9,7 +9,8 @@
 
 # Render recorded episodes (scripts/record_trajectories.py) on the Go2
 # model with Isaac Sim 6's path tracer, then encode one captioned MP4.
-#   sbatch --export=ALL,SIF=isaac-sim-6.2.0.sif,NPZ=traj.npz,OUT=videos,PYTHON=ISAAC_LAB_PYTHON \
+# Submit from the repository root (or set REPO), with absolute paths:
+#   sbatch --export=ALL,SIF=/abs/isaac-sim-6.2.0.sif,NPZ=/abs/traj.npz,OUT=/abs/videos,PYTHON=ISAAC_LAB_PYTHON \
 #       cluster/render_isaac6.sbatch
 # Isaac Sim 4.5 (the training stack) segfaults in its RTX renderer on NVIDIA
 # driver 610, so rendering runs in the Isaac Sim 6.2 container
@@ -20,9 +21,16 @@
 # SAMPLES (path-tracing samples per pixel, default 64), TITLE, ROBOT_USD.
 # On Torch, H100 nodes crashed at Kit startup; A100 and L40S render.
 
-set -Euo pipefail
+set -Eeuo pipefail
 : "${SIF:?}" "${NPZ:?}" "${OUT:?}" "${PYTHON:?}"
-PACKAGE_ROOT=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
+# sbatch runs a copy of this file from the Slurm spool, so the repository
+# is where sbatch was called from, not next to the running script.
+PACKAGE_ROOT=${REPO:-${SLURM_SUBMIT_DIR:-$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)}}
+if [[ ! -f "$PACKAGE_ROOT/scripts/replay_isaac6.py" ]]; then
+  echo "no scripts/replay_isaac6.py under $PACKAGE_ROOT: submit from the repository root or set REPO" >&2
+  exit 2
+fi
+mkdir -p "$OUT"
 NAME=${NAME:-$(basename "$NPZ" .npz)}
 STATE=$OUT/.isaac6-state
 mkdir -p "$STATE"/kit-cache "$STATE"/kit-data "$STATE"/kit-logs "$STATE"/home
